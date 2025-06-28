@@ -81,4 +81,11 @@ public class PeliculaController {
         Pelicula peliculaActualizada = peliculaService.editPelicula(pelicula);
         return ResponseEntity.ok(peliculaActualizada);
     }
+
+    @GetMapping("/cartelera")
+    @Operation (summary = "Listado de peliculas en cartelera")
+    public ResponseEntity <List<Pelicula>> peliculasEnCartelera(){
+        List<Pelicula> lista = peliculaService.findIsPeliculasCartelera();
+        return new ResponseEntity<>(lista,HttpStatus.ACCEPTED);
+    }
 }
