@@ -85,7 +85,7 @@ public class PeliculaController {
     @GetMapping("/cartelera")
     @Operation (summary = "Listado de peliculas en cartelera")
     public ResponseEntity <List<Pelicula>> peliculasEnCartelera(){
-        List<Pelicula> lista = peliculaService.findIsPeliculasCartelera();
+        List<Pelicula> lista = peliculaService.peliculasEnCartelera();
         return new ResponseEntity<>(lista,HttpStatus.ACCEPTED);
     }
 }
