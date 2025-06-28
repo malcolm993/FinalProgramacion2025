@@ -88,4 +88,11 @@ public class PeliculaController {
         List<Pelicula> lista = peliculaService.peliculasEnCartelera();
         return new ResponseEntity<>(lista,HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/estreno")
+    @Operation (summary = "Listado de peliculas a estrenar")
+    public ResponseEntity <List<Pelicula>> peliculasPorEstrenar(){
+        List<Pelicula> lista = peliculaService.peliculasEstreno();
+        return new ResponseEntity<>(lista,HttpStatus.ACCEPTED);
+    }
 }

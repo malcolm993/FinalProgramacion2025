@@ -16,5 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InterfacePeliculaRepository extends JpaRepository<Pelicula, Integer>{
     
-    public List<Pelicula> findByIs_carteleraTrue();
+    public List<Pelicula> findByIsCarteleraTrue();
+    public List<Pelicula> findByIsCarteleraFalse();
 }

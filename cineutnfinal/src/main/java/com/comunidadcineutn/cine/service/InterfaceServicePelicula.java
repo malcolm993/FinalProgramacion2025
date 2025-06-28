@@ -27,4 +27,6 @@ public interface InterfaceServicePelicula  {
     public boolean existePeliculaById (Integer id);
     
     public List<Pelicula> peliculasEnCartelera();
+
+    public List<Pelicula> peliculasEstreno();
 }

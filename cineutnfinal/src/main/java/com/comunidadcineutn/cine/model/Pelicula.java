@@ -42,7 +42,7 @@ public class Pelicula implements Serializable {
     private String director;
     
    @Column(name = "is_cartelera")
-   private boolean is_cartelera;
+   private boolean isCartelera;
    
     public Pelicula() {
         this(0, 0, "", "", "APTA", LocalDate.now().toString(), "", false);
@@ -61,6 +61,7 @@ public class Pelicula implements Serializable {
         this.calif = cal;
         setFechaDeEstreno(fechaDeEstreno);
         this.director = director;
+        this.isCartelera = bol;
 
     }
     

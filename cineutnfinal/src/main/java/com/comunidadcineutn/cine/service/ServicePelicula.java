@@ -56,6 +56,11 @@ public class ServicePelicula implements InterfaceServicePelicula {
 
     @Override
     public List<Pelicula> peliculasEnCartelera() {
-     return repositorioPelicula.findByIs_carteleraTrue();
+     return repositorioPelicula.findByIsCarteleraTrue();
+    }  
+
+    @Override
+    public List<Pelicula> peliculasEstreno() {
+     return repositorioPelicula.findByIsCarteleraFalse();
     }  
 }
