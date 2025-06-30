@@ -1,6 +1,6 @@
 package com.comunidadcineutn.cine.model;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -30,7 +30,15 @@ public class Sala implements Serializable {
 
     private TipoDeSala tipoSala;
 
+    public Sala() {
+    }
 
+    public Sala(int id, int cantDeButacas, TipoDeSala tipoSala) {
+        this.id = id;
+        this.cantDeButacas = cantDeButacas;
+        this.tipoSala = tipoSala;
+    }
 
+    
 }
 

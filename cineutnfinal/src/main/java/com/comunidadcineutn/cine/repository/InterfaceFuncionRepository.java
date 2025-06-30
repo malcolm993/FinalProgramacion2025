@@ -5,6 +5,10 @@
 package com.comunidadcineutn.cine.repository;
 
 import com.comunidadcineutn.cine.model.Funcion;
+
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -12,5 +16,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author santi
  */
 public interface InterfaceFuncionRepository extends JpaRepository<Funcion, Integer>{
-    
+    public List<Funcion> findAllByIdSala(Integer idSala);
 }
