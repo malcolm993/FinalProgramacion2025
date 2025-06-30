@@ -26,22 +26,21 @@ public class Pelicula implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_pelicula")
+
     private int idPelicula;
-    @Column(name = "duracion_min")
-    private int duracion_min;
-    @Column(name = "nombre")
+
+    private int duracionMin;
+
     private String nombre;
-    @Column(name = "sinopsis")
+
     private String sinopsis;
-    @Column(name = "apto_publico")
+
     private String calif;
-    @Column(name = "fecha_estreno")
-    private LocalDate fecha_estreno;
-    @Column(name = "director")
+
+    private LocalDate fechaEstreno;
+
     private String director;
-    
-   @Column(name = "is_cartelera")
+
    private boolean isCartelera;
    
     public Pelicula() {
@@ -52,10 +51,10 @@ public class Pelicula implements Serializable {
         this.idPelicula = id;
     }
 
-    public Pelicula(int id, int duracion_min, String nombre_pelicula, String sinopsis, String cal,
+    public Pelicula(int id, int duracionMin, String nombre_pelicula, String sinopsis, String cal,
             String fechaDeEstreno, String director, boolean bol) {
         this.idPelicula = id;
-        this.duracion_min = duracion_min;
+        this.duracionMin = duracionMin;
         this.nombre = nombre_pelicula;
         this.sinopsis = sinopsis;
         this.calif = cal;
@@ -65,8 +64,8 @@ public class Pelicula implements Serializable {
 
     }
     
-    public void setFechaDeEstreno(String fechaDeEstreno) {
-        this.fecha_estreno = LocalDate.parse(fechaDeEstreno);
+    public void setFechaDeEstreno(String fechaDeEstreno){
+        fechaEstreno = LocalDate.parse(fechaDeEstreno);
     }
     
 }
