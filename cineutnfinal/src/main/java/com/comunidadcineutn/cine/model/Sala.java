@@ -20,10 +20,12 @@ public class Sala implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int idSala;
 
 // Opcional para nombre de columna
     private int cantDeButacas;
+
+    private int cantDeButacasReservadas;
 
     @Enumerated(EnumType.STRING) 
 // Mapea el Enum como String en la BD
@@ -34,7 +36,7 @@ public class Sala implements Serializable {
     }
 
     public Sala(int id, int cantDeButacas, TipoDeSala tipoSala) {
-        this.id = id;
+        this.idSala = id;
         this.cantDeButacas = cantDeButacas;
         this.tipoSala = tipoSala;
     }

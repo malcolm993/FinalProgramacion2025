@@ -7,15 +7,15 @@ package com.comunidadcineutn.cine.model;
 import java.io.Serializable;
 import java.time.LocalTime;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,36 +23,36 @@ import lombok.Setter;
  *
  * @author santi
  */
-
-@Getter @Setter
+@Getter
+@Setter
 @Entity
-@Table(name = "Funcion") 
-public class Funcion implements Serializable{
-  
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int idFuncion;
-  @OneToOne
-  @JoinColumn(name ="ID_SALA")
-  private Sala sala;
+@Table(name = "Funcion")
+public class Funcion   {
 
-  @OneToOne
-  @JoinColumn(name = "ID_PELICULA")
-  private Pelicula peliculaDeFuncion;
-  private LocalDate fechaDeFuncion;
-  private LocalTime horaDeFuncion;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idFuncion;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_sala", nullable = false)
+    private Sala sala;
+
+    @ManyToOne
+    @JoinColumn(name = "id_pelicula", nullable = false)
+    private Pelicula pelicula;
+
+    private LocalDateTime horaInicio;
+    private LocalDateTime horaFin;
 
     public Funcion() {
     }
 
-    public Funcion(int idFuncion, Sala sala, Pelicula peliculaDeFuncion, LocalDate fechaDeFuncion, LocalTime horaDeFuncion) {
+    public Funcion(int idFuncion, Sala sala, Pelicula peliculaFuncion, LocalDateTime horaInicio, LocalDateTime horaFin) {
         this.idFuncion = idFuncion;
         this.sala = sala;
-        this.peliculaDeFuncion = peliculaDeFuncion;
-        this.fechaDeFuncion = fechaDeFuncion;
-        this.horaDeFuncion = horaDeFuncion;
+        this.pelicula = peliculaFuncion;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
     }
-  
-    
-}
 
+}

@@ -14,9 +14,9 @@ import java.util.Optional;
  */
 public interface InterfaceServiceSala {
     
-    public List<Sala> getAllFuncion();
+    public List<Sala> getAllSalas();
     
-    public Sala addFuncion(Sala s);
+    public Sala addSala(Sala s);
     
     public void deleteSalaPorId(Integer id);
     
@@ -26,5 +26,5 @@ public interface InterfaceServiceSala {
     
     public boolean existSalaById (Integer id);
     
-    public boolean capacitySala (Integer id);
+    public boolean capacitySala (Integer id, int cantidadButacasReservadas);
 }

@@ -16,5 +16,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author santi
  */
 public interface InterfaceFuncionRepository extends JpaRepository<Funcion, Integer>{
-    public List<Funcion> findAllByIdSala(Integer idSala);
+    
+    public   List<Funcion> findBySalaIdSala(Integer idSala);
 }

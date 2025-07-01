@@ -44,7 +44,7 @@ public class PeliculaController {
     @GetMapping("/todas")
     @Operation(summary = "Obtener todas las peliculas")
     public ResponseEntity<List<Pelicula>> getPeliculas() {
-        List listaPeliculas = peliculaService.getAll();
+        List<Pelicula> listaPeliculas = peliculaService.getAll();
         return new ResponseEntity<>(listaPeliculas, HttpStatus.ACCEPTED);
     }
 

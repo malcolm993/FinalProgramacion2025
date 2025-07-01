@@ -59,7 +59,7 @@ public class ServiceFuncion implements InterfaceServiceFuncion{
 
     @Override
     public List<Funcion> funcionesSegunSala(Integer idSalaConsultada) {
-        return repositoriofuncion.findAllByIdSala(idSalaConsultada);
+        return repositoriofuncion.findBySalaIdSala(idSalaConsultada);
     }
 
 
