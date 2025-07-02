@@ -34,16 +34,16 @@ public class Funcion   {
     private int idFuncion;
     
     @ManyToOne
-    @JoinColumn(name = "id_sala", nullable = false)
+    @JoinColumn( nullable = false)
     private Sala sala;
 
     @ManyToOne
-    @JoinColumn(name = "id_pelicula", nullable = false)
+    @JoinColumn( nullable = false)
     private Pelicula pelicula;
 
     private LocalDateTime horaInicio;
     private LocalDateTime horaFin;
-
+    private boolean funcionHabilitada;
     public Funcion() {
     }
 
@@ -53,6 +53,7 @@ public class Funcion   {
         this.pelicula = peliculaFuncion;
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
+        this.funcionHabilitada = true;
     }
 
 }

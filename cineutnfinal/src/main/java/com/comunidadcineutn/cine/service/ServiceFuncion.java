@@ -5,9 +5,11 @@
 package com.comunidadcineutn.cine.service;
 
 import com.comunidadcineutn.cine.model.Funcion;
-import com.comunidadcineutn.cine.model.TipoDeSala;
 import com.comunidadcineutn.cine.repository.InterfaceFuncionRepository;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +33,8 @@ public class ServiceFuncion implements InterfaceServiceFuncion{
     }
 
     @Override
-    public Funcion addFuncion(Funcion f) {
+    public Funcion addFuncion(Funcion f) {  
+        f.setHoraFin(f.getHoraInicio().plusMinutes(f.getPelicula().getDuracionMin()+30));      
         repositoriofuncion.save(f);
         return findFuncionPorId(f.getIdFuncion()).get();
     }
@@ -61,6 +64,25 @@ public class ServiceFuncion implements InterfaceServiceFuncion{
     public List<Funcion> funcionesSegunSala(Integer idSalaConsultada) {
         return repositoriofuncion.findBySalaIdSala(idSalaConsultada);
     }
+
+    //son la fechas que se pueden dar de alta en la aplicacion 
+    //solamente esta habilitado la fecha de las semana siguiente
+    @Override
+    public List<LocalDate> fechasHabilitadas() {
+        List<LocalDate> fechas = new ArrayList<>();
+        LocalDate fechaActual = LocalDate.now();
+        LocalDate fechaProximoLunes = fechaActual.with(DayOfWeek.MONDAY).plusWeeks(1);
+        for (int i = 0; i < 7; i++) {
+            fechas.add(fechaProximoLunes.plusDays(i));
+        }
+        return fechas;
+    }
+
+    @Override
+    public List<Funcion> getFuncionHabilitada() {
+       return repositoriofuncion.findByFuncionHabilitadaTrue();
+    }
+
 
 
 

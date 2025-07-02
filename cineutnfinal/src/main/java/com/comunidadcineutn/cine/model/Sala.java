@@ -39,6 +39,7 @@ public class Sala implements Serializable {
         this.idSala = id;
         this.cantDeButacas = cantDeButacas;
         this.tipoSala = tipoSala;
+        this.cantDeButacasReservadas = 0;
     }
 
     

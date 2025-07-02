@@ -6,9 +6,8 @@ package com.comunidadcineutn.cine.service;
 
 
 import com.comunidadcineutn.cine.model.Funcion;
-import com.comunidadcineutn.cine.model.Sala;
-import com.comunidadcineutn.cine.model.TipoDeSala;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,5 +30,9 @@ public interface InterfaceServiceFuncion {
     public boolean existFuncionById (Integer id);
     
     public List<Funcion> funcionesSegunSala(Integer idSala);
+
+    public List<LocalDate> fechasHabilitadas();
+
+    public List<Funcion> getFuncionHabilitada();
 
 }

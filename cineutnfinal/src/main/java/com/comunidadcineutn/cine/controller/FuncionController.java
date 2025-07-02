@@ -45,7 +45,7 @@ public class FuncionController {
 
     @PostMapping("/agregar")
     @Operation(summary = "Agregar funcion")
-    public ResponseEntity<Funcion> agregarPelicula(@RequestBody Funcion f) {
+    public ResponseEntity<Funcion> agregarFuncion(@RequestBody Funcion f) {
         Funcion fNueva = funcionService.addFuncion(f);
         return new ResponseEntity<>(fNueva, HttpStatus.CREATED);
     }
