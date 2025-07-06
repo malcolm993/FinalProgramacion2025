@@ -9,9 +9,12 @@ import com.comunidadcineutn.cine.repository.InterfaceFuncionRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.management.RuntimeErrorException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +24,8 @@ import org.springframework.stereotype.Service;
  * @author santi
  */
 
- @Service
-public class ServiceFuncion implements InterfaceServiceFuncion{
+@Service
+public class ServiceFuncion implements InterfaceServiceFuncion {
 
     @Autowired
     private InterfaceFuncionRepository repositoriofuncion;
@@ -33,8 +36,11 @@ public class ServiceFuncion implements InterfaceServiceFuncion{
     }
 
     @Override
-    public Funcion addFuncion(Funcion f) {  
-        f.setHoraFin(f.getHoraInicio().plusMinutes(f.getPelicula().getDuracionMin()+30));      
+    public Funcion addFuncion(Funcion f) {
+        f.setHoraFin(f.getHoraInicio().plusMinutes(f.getPelicula().getDuracionMin() + 30));
+        if (isHorarioOcupadoFuncion(f)) {
+            throw new RuntimeException("horario ocupado");
+        }
         repositoriofuncion.save(f);
         return findFuncionPorId(f.getIdFuncion()).get();
     }
@@ -51,6 +57,7 @@ public class ServiceFuncion implements InterfaceServiceFuncion{
 
     @Override
     public Funcion editFuncion(Funcion f) {
+
         repositoriofuncion.save(f);
         return findFuncionPorId(f.getIdFuncion()).get();
     }
@@ -65,8 +72,8 @@ public class ServiceFuncion implements InterfaceServiceFuncion{
         return repositoriofuncion.findBySalaIdSala(idSalaConsultada);
     }
 
-    //son la fechas que se pueden dar de alta en la aplicacion 
-    //solamente esta habilitado la fecha de las semana siguiente
+    // son la fechas que se pueden dar de alta en la aplicacion
+    // solamente esta habilitado la fecha de las semana siguiente
     @Override
     public List<LocalDate> fechasHabilitadas() {
         List<LocalDate> fechas = new ArrayList<>();
@@ -80,11 +87,15 @@ public class ServiceFuncion implements InterfaceServiceFuncion{
 
     @Override
     public List<Funcion> getFuncionHabilitada() {
-       return repositoriofuncion.findByFuncionHabilitadaTrue();
+        return repositoriofuncion.findByFuncionHabilitadaTrue();
     }
 
-
-
-
+    @Override
+    public boolean isHorarioOcupadoFuncion(Funcion f) {
+        int salaId = f.getSala().getIdSala();
+        LocalDateTime inicio = f.getHoraInicio();
+        LocalDateTime fin = f.getHoraFin();
+        return repositoriofuncion.existsBySalaAndOverlappingTime(salaId, inicio, fin);
+    }
 
 }

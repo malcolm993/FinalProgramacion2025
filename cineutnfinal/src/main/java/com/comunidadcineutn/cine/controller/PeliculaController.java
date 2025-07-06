@@ -47,7 +47,7 @@ public class PeliculaController {
         List<Pelicula> listaPeliculas = peliculaService.getAll();
         return new ResponseEntity<>(listaPeliculas, HttpStatus.ACCEPTED);
     }
-
+   
     @PostMapping("/agregar")
     @Operation(summary = "Agregar pelicula")
     public ResponseEntity<Pelicula> agregarPelicula(@RequestBody Pelicula p) {
