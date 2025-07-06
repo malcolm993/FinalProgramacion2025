@@ -41,7 +41,7 @@ public class Pelicula implements Serializable {
 
     private String director;
 
-   private boolean isCartelera;
+   private boolean cartelera;
    
     public Pelicula() {
         this(0, 0, "", "", "APTA", LocalDate.now().toString(), "", false);
@@ -60,7 +60,7 @@ public class Pelicula implements Serializable {
         this.calif = cal;
         setFechaDeEstreno(fechaDeEstreno);
         this.director = director;
-        this.isCartelera = bol;
+        this.cartelera = bol;
 
     }
     

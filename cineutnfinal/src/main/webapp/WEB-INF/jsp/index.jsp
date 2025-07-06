@@ -46,17 +46,17 @@
       <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
           <c:forEach items="${listaPeliculas}" var="pelicula">
-            <c:if test="${pelicula.isCartelera}">
+            <c:if test="${pelicula.cartelera}">
               <div class="col mb-5">
                 <div class="card h-100">
                   <!-- Product image-->
-                  <img class="card-img-top" src="${pageContext.request.contextPath}/assets/img/${pelicula.foto}"
+                  <img class="card-img-top" src="${pageContext.request.contextPath}/assets/img/placeholder.jpg"
                     alt="imagen pelicula" />
                   <!-- Product details-->
                   <div class="card-body p-4">
                     <div class="text-center">
                       <!-- Product name-->
-                      <h5 class="fw-bolder"> ${pelicula.nombre_pelicula}</h5>
+                      <h5 class="fw-bolder"> ${pelicula.nombre}</h5>
                       <!-- Product price-->
                       $1000
                     </div>
@@ -92,17 +92,17 @@
       <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
           <c:forEach items="${listaPeliculas}" var="pelicula">
-            <c:if test="${!pelicula.is_Cartelera}">
+            <c:if test="${!pelicula.cartelera}">
               <div class="col mb-5">
                 <div class="card h-100">
                   <!-- Product image-->
-                  <img class="card-img-top" src="${pageContext.request.contextPath}/assets/img/${pelicula.foto}"
+                  <img class="card-img-top" src="${pageContext.request.contextPath}/assets/img/placeholder.jpg"
                     alt="imagen pelicula" />
                   <!-- Product details-->
                   <div class="card-body p-4">
                     <div class="text-center">
                       <!-- Product name-->
-                      <h5 class="fw-bolder"> ${pelicula.nombre_pelicula}</h5>
+                      <h5 class="fw-bolder"> ${pelicula.nombre}</h5>
                       <!-- Product price-->
                       
                     </div>
