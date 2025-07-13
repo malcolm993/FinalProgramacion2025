@@ -5,6 +5,7 @@
 package com.comunidadcineutn.cine.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,11 +33,11 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private Funcion funcionReservada;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @NotNull
     private Usuario usuarioComprador;
     private int costoReserva;

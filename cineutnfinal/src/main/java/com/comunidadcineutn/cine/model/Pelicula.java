@@ -10,13 +10,17 @@ package com.comunidadcineutn.cine.model;
  */
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 @Getter @Setter
@@ -28,20 +32,24 @@ public class Pelicula implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private int idPelicula;
-
+    @NotBlank
     private int duracionMin;
-
+    @NotBlank
     private String nombre;
 
     private String sinopsis;
 
     private String calif;
-
+    //el dato fechaEstreno no refiere a la fecha cunado se estrena en el cine, cino cuando se estreno 
+    //la pelicula ya que son peliculas ya estrenadas.
     private LocalDate fechaEstreno;
 
     private String director;
 
    private boolean cartelera;
+   
+   @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL)
+   private List<Funcion> funcionesAsociadas;
    
     public Pelicula() {
         this(0, 0, "", "", "APTA", LocalDate.now().toString(), "", false);

@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +25,7 @@ public class Sala implements Serializable {
     private int idSala;
 
 // Opcional para nombre de columna
+    @Min(value = 1, message = "La capacidad debe ser al menos 1")
     private int cantDeButacas;
 
     private int cantDeButacasReservadas;
