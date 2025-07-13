@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "reservas")
-public class Reservas {
+public class Reserva {
 
     private final int CANTIDAD_DIAS_LIMITE = 1;
 
@@ -42,10 +42,10 @@ public class Reservas {
     private int costoReserva;
     private int cantidadEntradas;
 
-    public Reservas() {
+    public Reserva() {
     }
 
-    public Reservas(Funcion funcionReservada, Usuario usuarioComprador, int costoReserva, int cantidadEntradas) {
+    public Reserva(Funcion funcionReservada, Usuario usuarioComprador, int costoReserva, int cantidadEntradas) {
 
         this.funcionReservada = funcionReservada;
         this.usuarioComprador = usuarioComprador;
