@@ -1,20 +1,22 @@
 package com.comunidadcineutn.cine.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 
 import java.io.Serializable;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter 
+@Getter
 @Setter
 @Entity
 @Table(name = "salas") // Opcional si quieres nombre personalizado para la tabla
@@ -24,16 +26,18 @@ public class Sala implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idSala;
 
-// Opcional para nombre de columna
+    // Opcional para nombre de columna
     @Min(value = 1, message = "La capacidad debe ser al menos 1")
     private int cantDeButacas;
 
     private int cantDeButacasReservadas;
 
-    @Enumerated(EnumType.STRING) 
-// Mapea el Enum como String en la BD
-
+    @Enumerated(EnumType.STRING)
+    // Mapea el Enum como String en la BD
     private TipoDeSala tipoSala;
+
+    @OneToMany(mappedBy = "sala")
+    private List<Funcion> funcionesRealizadasSala;
 
     public Sala() {
     }
@@ -45,6 +49,4 @@ public class Sala implements Serializable {
         this.cantDeButacasReservadas = 0;
     }
 
-    
 }
-

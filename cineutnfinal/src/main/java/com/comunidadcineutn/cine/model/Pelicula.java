@@ -48,20 +48,20 @@ public class Pelicula implements Serializable {
 
    private boolean cartelera;
    
-   @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL)
+   @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL , orphanRemoval = true)
    private List<Funcion> funcionesAsociadas;
    
     public Pelicula() {
-        this(0, 0, "", "", "APTA", LocalDate.now().toString(), "", false);
+        this( 0, "", "", "APTA", LocalDate.now().toString(), "", false);
     }
 
     public Pelicula(int id) {
         this.idPelicula = id;
     }
 
-    public Pelicula(int id, int duracionMin, String nombre_pelicula, String sinopsis, String cal,
+    public Pelicula( int duracionMin, String nombre_pelicula, String sinopsis, String cal,
             String fechaDeEstreno, String director, boolean bol) {
-        this.idPelicula = id;
+       
         this.duracionMin = duracionMin;
         this.nombre = nombre_pelicula;
         this.sinopsis = sinopsis;

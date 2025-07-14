@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -35,10 +36,12 @@ public class Funcion   {
     
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn( nullable = false)
+    @NotNull (message = "sala es obligatorio")
     private Sala sala;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn( nullable = false)
+    @NotNull(message = "dato Pelicula es obligaoria")
     private Pelicula pelicula;
 
     private LocalDateTime horaInicio;

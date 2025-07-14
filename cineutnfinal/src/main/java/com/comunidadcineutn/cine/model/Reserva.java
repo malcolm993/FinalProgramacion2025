@@ -13,6 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +43,8 @@ public class Reserva {
     @NotNull
     private Usuario usuarioComprador;
     private int costoReserva;
+
+    @Positive(message = "La cantidad debe ser mayor a 0")
     private int cantidadEntradas;
 
     public Reserva() {
