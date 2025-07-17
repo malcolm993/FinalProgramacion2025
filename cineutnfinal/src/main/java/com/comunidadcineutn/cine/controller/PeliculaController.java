@@ -4,6 +4,7 @@
  */
 package com.comunidadcineutn.cine.controller;
 
+import com.comunidadcineutn.cine.model.CalificacionPelicula;
 import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.service.InterfaceServicePelicula;
 
@@ -55,6 +56,7 @@ public class PeliculaController {
     @Operation(summary = "Obtengo el formulario")
     public String vistaAgregarPeliculas( Model m){
         m.addAttribute("pelicula", new Pelicula());
+        m.addAttribute("clasificaciones", CalificacionPelicula.values());
         return "peliculas/formulario";
     }
    
