@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Fragmento de navbar reusable -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" th:href="@{/inicio}">CINE UTN</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" th:href="@{/inicio#CarteleraCine}">Cartelera</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/inicio#ProximamenteCine}">Próximamente</a>
+                    </li>
+
+                    <!-- Menú para ADMIN -->
+                    <li class="nav-item" th:if="${userLogueado?.rolUsuario == 'ADMIN'}">
+                        <a class="nav-link" th:href="@{/ABMCine}">Edición CINE</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/acercaDeNosotros}">Acerca de nosotros</a>
+                    </li>
+
+                    <!-- Menú de usuario -->
+                    <li class="nav-item" th:unless="${userLogueado}">
+                        <a class="nav-link" th:href="@{/login}">Login</a>
+                    </li>
+                    <li class="nav-item" th:unless="${userLogueado}">
+                        <a class="nav-link" href="#">Invitado</a>
+                    </li>
+
+                    <!-- Dropdown para usuario logueado -->
+                    <li class="nav-item dropdown" th:if="${userLogueado}">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false" th:text="${userLogueado.nombre}">Usuario</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+                            <li><hr class="dropdown-divider"/></li>
+                            <li><a class="dropdown-item" th:href="@{/reserva/reservasUsuario}">Revisar Compras</a></li>
+                            <li><a class="dropdown-item" th:href="@{/usuariocine/checkusuario}">Revisar Usuario</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

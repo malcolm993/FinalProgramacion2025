@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @Tag(name = "Funciones", description = "API para gestión de funciones")
-@RequestMapping("/funcion")
+@RequestMapping("/cintutn/funcion")
 @RestController
 public class FuncionController {
   @Autowired

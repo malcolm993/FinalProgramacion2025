@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
   import io.swagger.v3.oas.annotations.tags.Tag;
 
   @Tag(name = "Inicio", description = "Inicio de la pagina")
-  @RequestMapping("/inicio")
+  @RequestMapping("/cineutn/inicio")
   @Controller
   public class InicioController {
 
@@ -23,7 +23,7 @@ import org.springframework.ui.Model;
       public String getPeliculas(Model modelo) {
           modelo.addAttribute("listaPeliculas", peliculaService.getAll());
           //return new ResponseEntity<>(listaPeliculas, HttpStatus.ACCEPTED);
-          return "index";
+          return "inicio/index";
       }
    
 

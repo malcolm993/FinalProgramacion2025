@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Footer Fragment -->
+    <footer class="py-5 bg-dark" th:fragment="footer">
+        <div class="container">
+            <p class="m-0 text-center text-white">
+                Copyright &copy; <span th:text="${#dates.year(#dates.createNow())}">2023</span> 
+                <span th:text="#{footer.company.name}">Your Website</span>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

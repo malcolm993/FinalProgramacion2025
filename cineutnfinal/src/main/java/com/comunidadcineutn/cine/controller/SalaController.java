@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @Tag(name = "Salas", description = "API para gestion de salas")
-@RequestMapping ("/sala")
+@RequestMapping ("/cineutn/sala")
 @RestController
 public class SalaController {
   

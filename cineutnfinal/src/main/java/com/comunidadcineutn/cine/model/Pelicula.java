@@ -21,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 @Getter @Setter
@@ -32,7 +33,7 @@ public class Pelicula implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private int idPelicula;
-    @NotBlank
+    @NotNull (message = "es obligatorio la duracion de la peliculas y en minutos")
     private int duracionMin;
     @NotBlank
     private String nombre;
