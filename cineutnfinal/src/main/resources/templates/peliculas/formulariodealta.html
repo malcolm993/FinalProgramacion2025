@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Alta de Película</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Estilos adicionales si es necesario -->
+  <link th:href="@{/css/styles.css}" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Alta de Película</h1>
+    <form th:action="@{/cineutn/pelicula/agregar}" method="POST" th:object="${pelicula}">
+      <!-- Nombre de película -->
+      <div class="input-group mb-3">
+        <span class="input-group-text">Nombre</span>
+        <input type="text" class="form-control" placeholder="Nombre de la película" th:field="*{nombre}" required />
+      </div>
+
+      <!-- Duración de película -->
+      <div class="input-group mb-3">
+        <span class="input-group-text">Duración (min)</span>
+        <input type="number" class="form-control" placeholder="Duración de la película" th:field="*{duracionMin}"
+          required />
+      </div>
+
+      <!-- Sinopsis -->
+      <div class="input-group mb-3">
+        <span class="input-group-text">Sinopsis</span>
+        <textarea class="form-control" th:field="*{sinopsis}" required></textarea>
+      </div>
+
+      <!-- Apto para qué público -->
+      <div class="input-group mb-3">
+        <label class="form-label">Clasificación</label>
+        <select class="form-select" th:field="*{calif}">
+          <option value="">Seleccione una clasificación</option>
+          <option th:each="clasif : ${clasificaciones}" th:value="${clasif}" th:text="${clasif}">
+          </option>
+        </select>
+      </div>
+
+      <!-- Director -->
+      <div class="input-group mb-3">
+        <span class="input-group-text">Director</span>
+        <input type="text" class="form-control" placeholder="Nombre del director" th:field="*{director}" required />
+      </div>
+
+      <!-- Campo Fecha de Estreno -->
+      <div class="mb-3 row">
+        <label for="fechaEstreno" class="col-sm-2 col-form-label">Fecha de estreno:</label>
+        <div class="col-sm-10">
+          <input type="date" class="form-control" th:field="*{fechaEstreno}" required />
+        </div>
+      </div>
+
+      <!-- Estado de la película -->
+      <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">En Cartelera:</label>
+        <div class="col-sm-10">
+          <select class="form-select" th:field="*{cartelera}" required>
+            <option value="true">Sí</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Botón para enviar -->
+      <div class="d-grid gap-2 mt-4">
+        <button class="btn btn-success" type="submit">Guardar Película</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <div th:replace="~{fragments/footer :: footer}"></div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Scripts personalizados -->
+  <script th:src="@{/js/scripts.js}"></script>
+</body>
+
+</html>

@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +45,8 @@ public class Pelicula implements Serializable {
     private String calif;
     //el dato fechaEstreno no refiere a la fecha cunado se estrena en el cine, cino cuando se estreno 
     //la pelicula ya que son peliculas ya estrenadas.
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaEstreno;
 
     private String director;

@@ -4,11 +4,14 @@
  */
 package com.comunidadcineutn.cine.controller;
 
+import com.comunidadcineutn.cine.exception.ExceptionPeliculas;
 import com.comunidadcineutn.cine.model.CalificacionPelicula;
 import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.service.InterfaceServicePelicula;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -19,13 +22,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -45,31 +49,57 @@ public class PeliculaController {
         return peliculaService.findPeliculaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/todas")
-    @Operation(summary = "Obtener todas las peliculas")
-    public ResponseEntity<List<Pelicula>> getPeliculas() {
-        List<Pelicula> listaPeliculas = peliculaService.getAll();
-        return new ResponseEntity<>(listaPeliculas, HttpStatus.ACCEPTED);
-    }
-
     @GetMapping("/agregar")
     @Operation(summary = "Obtengo el formulario")
-    public String vistaAgregarPeliculas( Model m){
+    public String vistaAgregarPeliculas(Model m) {
         m.addAttribute("pelicula", new Pelicula());
         m.addAttribute("clasificaciones", CalificacionPelicula.values());
-        return "peliculas/formulario";
+        return "peliculas/formulariodealta";
     }
-   
+
+    @GetMapping("/crudpeliculas")
+    public String mostrarCRUDPeliculas(Model model) {
+        // Asegúrate de agregar los datos necesarios al modelo
+        model.addAttribute("listaPeliculas", peliculaService.getAll());
+        // System.out.println("hola " + peliculaService.getAll());
+        return "peliculas/crudpelicula"; // Nombre de tu vista Thymeleaf
+    }
+
+    @GetMapping("/editar/{id}")
+    @Operation(summary = "obtengo formulario para la edicion de la pelicula")
+    public String obtenerFormularioEdicion(@PathVariable("id") int idPelicula, Model m) {
+        try {
+            Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula)
+                    .orElseThrow(() -> new ExceptionPeliculas("No existe pelicula con el Id ingresado"));
+            m.addAttribute("pelicula", peliculaEditada);
+            return "peliculas/formulariodeedicion";
+        } catch (ExceptionPeliculas ex) {
+            m.addAttribute("error", ex.getErrorMensaje());
+            return "peliculas/crudpelicula"; // Misma vista pero con error
+        }
+    }
+
     @PostMapping("/agregar")
     @Operation(summary = "Agregar pelicula")
-    public ResponseEntity<Pelicula> agregarPelicula(@RequestBody Pelicula p) {
-        Pelicula nueva = peliculaService.addPelicula(p);
-        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+    public String agregarPelicula(
+            @Valid @ModelAttribute("pelicula") Pelicula p,
+            BindingResult bindingResult,
+            RedirectAttributes ra) {
+
+        if (bindingResult.hasErrors()) {
+            // Mantiene los errores en el formulario
+            return "peliculas/formulariodealta";
+        }
+
+        Pelicula agregada = peliculaService.addPelicula(p);
+        ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito!");
+
+        return "redirect:/cineutn/pelicula/crudpeliculas";
     }
 
     @DeleteMapping("/eliminar")
     @Operation(summary = "Eliminar película por ID")
-    public ResponseEntity<?> eliminarPelicula(@RequestParam(required = true, name= "id") Integer id) {
+    public ResponseEntity<?> eliminarPelicula(@RequestParam(required = true, name = "id") Integer id) {
         return peliculaService.findPeliculaPorId(id)
                 .map(pelicula -> {
                     peliculaService.deletePeliculaPorId(id);
@@ -82,8 +112,7 @@ public class PeliculaController {
     @Operation(summary = "Editar película")
     public ResponseEntity<Pelicula> actualizarPelicula(
             @PathVariable Integer id,
-            @Valid
-            @RequestBody Pelicula pelicula) {
+            @Valid @RequestBody Pelicula pelicula) {
 
         if (!peliculaService.existePeliculaById(id)) {
             return ResponseEntity.notFound().build();
@@ -95,16 +124,16 @@ public class PeliculaController {
     }
 
     @GetMapping("/cartelera")
-    @Operation (summary = "Listado de peliculas en cartelera")
-    public ResponseEntity <List<Pelicula>> peliculasEnCartelera(){
+    @Operation(summary = "Listado de peliculas en cartelera")
+    public ResponseEntity<List<Pelicula>> peliculasEnCartelera() {
         List<Pelicula> lista = peliculaService.peliculasEnCartelera();
-        return new ResponseEntity<>(lista,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(lista, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/estreno")
-    @Operation (summary = "Listado de peliculas a estrenar")
-    public ResponseEntity <List<Pelicula>> peliculasPorEstrenar(){
+    @Operation(summary = "Listado de peliculas a estrenar")
+    public ResponseEntity<List<Pelicula>> peliculasPorEstrenar() {
         List<Pelicula> lista = peliculaService.peliculasEstreno();
-        return new ResponseEntity<>(lista,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(lista, HttpStatus.ACCEPTED);
     }
 }
