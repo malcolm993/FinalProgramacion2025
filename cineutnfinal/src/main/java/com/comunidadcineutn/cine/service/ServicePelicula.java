@@ -41,11 +41,11 @@ public class ServicePelicula implements InterfaceServicePelicula {
        return repositorioPelicula.findById(id);
     }
 
-    @Override
-    public Pelicula editPelicula(Pelicula peli) {
-        repositorioPelicula.save(peli);
-        return peli;
-    }
+        @Override
+        public Pelicula editPelicula(Pelicula peli) {
+            repositorioPelicula.save(peli);
+            return peli;
+        }
     
  
 

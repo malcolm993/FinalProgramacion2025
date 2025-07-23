@@ -20,6 +20,10 @@
             <span th:text="${error}"></span>
         </div>
 
+        <div th:if="${mensaje}" class="alert alert-success">
+            <span th:text="${mensaje}"></span>
+        </div>
+
         <!-- Accordion for Cartelera, Proximamente -->
         <div class="accordion accordion-flush" id="accordionExample">
 

@@ -40,100 +40,134 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class PeliculaController {
 
-    @Autowired
-    private InterfaceServicePelicula peliculaService;
+  @Autowired
+  private InterfaceServicePelicula peliculaService;
 
-    @GetMapping("/buscar/{id}")
-    @Operation(summary = "Obtener película por ID")
-    public ResponseEntity<Pelicula> buscarPeliculaPorId(@PathVariable Integer id) {
-        return peliculaService.findPeliculaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  @GetMapping("/buscar/{id}")
+  @Operation(summary = "Obtener película por ID")
+  public ResponseEntity<Pelicula> buscarPeliculaPorId(@PathVariable Integer id) {
+    return peliculaService.findPeliculaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping("/agregar")
+  @Operation(summary = "Obtengo el formulario")
+  public String vistaAgregarPeliculas(Model m) {
+    m.addAttribute("pelicula", new Pelicula());
+    m.addAttribute("clasificaciones", CalificacionPelicula.values());
+    return "peliculas/formulariodealta";
+  }
+
+  @GetMapping("/crudpeliculas")
+  public String mostrarCRUDPeliculas(Model model) {
+    // Asegúrate de agregar los datos necesarios al modelo
+    model.addAttribute("listaPeliculas", peliculaService.getAll());
+    // System.out.println("hola " + peliculaService.getAll());
+    return "peliculas/crudpelicula";
+  }
+
+  @GetMapping("/editar/{id}")
+  @Operation(summary = "obtengo formulario para la edicion de la pelicula")
+  public String obtenerFormularioEdicion(@PathVariable("id") int idPelicula, Model m) {
+    try {
+      Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula)
+          .orElseThrow(() -> new ExceptionPeliculas("No existe pelicula con el Id ingresado"));
+      m.addAttribute("pelicula", peliculaEditada);
+      return "peliculas/formulariodeedicion";
+    } catch (ExceptionPeliculas ex) {
+      m.addAttribute("error", ex.getErrorMensaje());
+      return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
+    }
+  }
+
+  @GetMapping("/eliminar/{id}")
+  @Operation(summary = "obtengo vista de eliminacion de pelicula")
+  public String eliminarPelicula(@PathVariable("id") int idPelicula, Model m) {
+
+    try {
+      Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula)
+          .orElseThrow(() -> new ExceptionPeliculas("No existe pelicula con el Id ingresado"));
+      m.addAttribute("pelicula", peliculaEditada);
+      return "peliculas/eliminarpelicula";
+    } catch (ExceptionPeliculas ex) {
+      m.addAttribute("error", ex.getErrorMensaje());
+      return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
+    }
+  }
+
+  @PostMapping("/agregar")
+  @Operation(summary = "Agregar pelicula")
+  public String agregarPelicula(
+      @Valid @ModelAttribute("pelicula") Pelicula p,
+      BindingResult bindingResult,
+      RedirectAttributes ra) {
+
+    if (bindingResult.hasErrors()) {
+      // Mantiene los errores en el formulario
+      return "peliculas/formulariodealta";
     }
 
-    @GetMapping("/agregar")
-    @Operation(summary = "Obtengo el formulario")
-    public String vistaAgregarPeliculas(Model m) {
-        m.addAttribute("pelicula", new Pelicula());
-        m.addAttribute("clasificaciones", CalificacionPelicula.values());
-        return "peliculas/formulariodealta";
+    Pelicula agregada = peliculaService.addPelicula(p);
+    ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito!");
+
+    return "redirect:/cineutn/pelicula/crudpeliculas";
+  }
+
+  @DeleteMapping("/eliminar")
+  @Operation(summary = "Eliminar película por ID")
+  public ResponseEntity<?> eliminarPelicula(@RequestParam(required = true, name = "id") Integer id) {
+    return peliculaService.findPeliculaPorId(id)
+        .map(pelicula -> {
+          peliculaService.deletePeliculaPorId(id);
+          return ResponseEntity.ok().body("Película '" + pelicula.getNombre() + "' eliminada correctamente");
+        })
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  /*
+   * @PutMapping("/editar/{id}")
+   * 
+   * @Operation(summary = "Editar película")
+   * public ResponseEntity<Pelicula> actualizarPelicula(
+   * 
+   * @PathVariable Integer id,
+   * 
+   * @Valid @RequestBody Pelicula pelicula) {
+   * 
+   * if (!peliculaService.existePeliculaById(id)) {
+   * return ResponseEntity.notFound().build();
+   * }
+   * 
+   * pelicula.setIdPelicula(id); // Asegurar que se actualice la película correcta
+   * Pelicula peliculaActualizada = peliculaService.editPelicula(pelicula);
+   * return ResponseEntity.ok(peliculaActualizada);
+   * }
+   */
+  @PutMapping("/editar")
+  @Operation(summary = "Editar película")
+  public String edicionPeliculaPost(@Valid @ModelAttribute("pelicula") Pelicula p,
+      BindingResult bindingResult,
+      RedirectAttributes ra) {
+    if (bindingResult.hasErrors()) {
+      // Mantiene los errores en el formulario
+      return "peliculas/formulariodealta";
     }
+    Pelicula editada = peliculaService.editPelicula(p);
+     ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");
 
-    @GetMapping("/crudpeliculas")
-    public String mostrarCRUDPeliculas(Model model) {
-        // Asegúrate de agregar los datos necesarios al modelo
-        model.addAttribute("listaPeliculas", peliculaService.getAll());
-        // System.out.println("hola " + peliculaService.getAll());
-        return "peliculas/crudpelicula"; // Nombre de tu vista Thymeleaf
-    }
+    return "redirect:/cineutn/pelicula/crudpeliculas";
+  }
 
-    @GetMapping("/editar/{id}")
-    @Operation(summary = "obtengo formulario para la edicion de la pelicula")
-    public String obtenerFormularioEdicion(@PathVariable("id") int idPelicula, Model m) {
-        try {
-            Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula)
-                    .orElseThrow(() -> new ExceptionPeliculas("No existe pelicula con el Id ingresado"));
-            m.addAttribute("pelicula", peliculaEditada);
-            return "peliculas/formulariodeedicion";
-        } catch (ExceptionPeliculas ex) {
-            m.addAttribute("error", ex.getErrorMensaje());
-            return "peliculas/crudpelicula"; // Misma vista pero con error
-        }
-    }
+  @GetMapping("/cartelera")
+  @Operation(summary = "Listado de peliculas en cartelera")
+  public ResponseEntity<List<Pelicula>> peliculasEnCartelera() {
+    List<Pelicula> lista = peliculaService.peliculasEnCartelera();
+    return new ResponseEntity<>(lista, HttpStatus.ACCEPTED);
+  }
 
-    @PostMapping("/agregar")
-    @Operation(summary = "Agregar pelicula")
-    public String agregarPelicula(
-            @Valid @ModelAttribute("pelicula") Pelicula p,
-            BindingResult bindingResult,
-            RedirectAttributes ra) {
-
-        if (bindingResult.hasErrors()) {
-            // Mantiene los errores en el formulario
-            return "peliculas/formulariodealta";
-        }
-
-        Pelicula agregada = peliculaService.addPelicula(p);
-        ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito!");
-
-        return "redirect:/cineutn/pelicula/crudpeliculas";
-    }
-
-    @DeleteMapping("/eliminar")
-    @Operation(summary = "Eliminar película por ID")
-    public ResponseEntity<?> eliminarPelicula(@RequestParam(required = true, name = "id") Integer id) {
-        return peliculaService.findPeliculaPorId(id)
-                .map(pelicula -> {
-                    peliculaService.deletePeliculaPorId(id);
-                    return ResponseEntity.ok().body("Película '" + pelicula.getNombre() + "' eliminada correctamente");
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/editar/{id}")
-    @Operation(summary = "Editar película")
-    public ResponseEntity<Pelicula> actualizarPelicula(
-            @PathVariable Integer id,
-            @Valid @RequestBody Pelicula pelicula) {
-
-        if (!peliculaService.existePeliculaById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        pelicula.setIdPelicula(id); // Asegurar que se actualice la película correcta
-        Pelicula peliculaActualizada = peliculaService.editPelicula(pelicula);
-        return ResponseEntity.ok(peliculaActualizada);
-    }
-
-    @GetMapping("/cartelera")
-    @Operation(summary = "Listado de peliculas en cartelera")
-    public ResponseEntity<List<Pelicula>> peliculasEnCartelera() {
-        List<Pelicula> lista = peliculaService.peliculasEnCartelera();
-        return new ResponseEntity<>(lista, HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/estreno")
-    @Operation(summary = "Listado de peliculas a estrenar")
-    public ResponseEntity<List<Pelicula>> peliculasPorEstrenar() {
-        List<Pelicula> lista = peliculaService.peliculasEstreno();
-        return new ResponseEntity<>(lista, HttpStatus.ACCEPTED);
-    }
+  @GetMapping("/estreno")
+  @Operation(summary = "Listado de peliculas a estrenar")
+  public ResponseEntity<List<Pelicula>> peliculasPorEstrenar() {
+    List<Pelicula> lista = peliculaService.peliculasEstreno();
+    return new ResponseEntity<>(lista, HttpStatus.ACCEPTED);
+  }
 }
