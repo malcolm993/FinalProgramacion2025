@@ -39,19 +39,19 @@ public class Pelicula implements Serializable {
     private int duracionMin;
     @NotBlank
     private String nombre;
-
+    @NotBlank
     private String sinopsis;
-
+    @NotBlank
     private String calif;
     //el dato fechaEstreno no refiere a la fecha cunado se estrena en el cine, cino cuando se estreno 
     //la pelicula ya que son peliculas ya estrenadas.
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaEstreno;
-
+    @NotBlank
     private String director;
-
-   private boolean cartelera;
+    @NotNull
+    private boolean cartelera;
    
    @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL , orphanRemoval = true)
    private List<Funcion> funcionesAsociadas;

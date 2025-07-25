@@ -4,6 +4,7 @@
  */
 package com.comunidadcineutn.cine.controller;
 
+import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.exception.ExceptionPeliculas;
 import com.comunidadcineutn.cine.model.CalificacionPelicula;
 import com.comunidadcineutn.cine.model.Pelicula;
@@ -45,8 +46,18 @@ public class PeliculaController {
 
   @GetMapping("/buscar/{id}")
   @Operation(summary = "Obtener película por ID")
-  public ResponseEntity<Pelicula> buscarPeliculaPorId(@PathVariable Integer id) {
-    return peliculaService.findPeliculaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  public String buscarPeliculaPorId(@PathVariable Integer id, Model m) {
+    // return
+    // peliculaService.findPeliculaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    try {
+      PeliculaEdicionDTO p = peliculaService.getPeliculaEdicion(id);
+      m.addAttribute("pelicula", p);
+
+    } catch (ExceptionPeliculas ex) {
+      m.addAttribute("error", ex.getErrorMensaje());
+      return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
+    }
+    return "peliculas/revision-pelicula";
   }
 
   @GetMapping("/agregar")
@@ -69,9 +80,14 @@ public class PeliculaController {
   @Operation(summary = "obtengo formulario para la edicion de la pelicula")
   public String obtenerFormularioEdicion(@PathVariable("id") int idPelicula, Model m) {
     try {
-      Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula)
-          .orElseThrow(() -> new ExceptionPeliculas("No existe pelicula con el Id ingresado"));
+      PeliculaEdicionDTO peliculaEditada = peliculaService.getPeliculaEdicion(idPelicula);
       m.addAttribute("pelicula", peliculaEditada);
+      /*
+       * Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula)
+       * .orElseThrow(() -> new
+       * ExceptionPeliculas("No existe pelicula con el Id ingresado"));
+       * m.addAttribute("pelicula", peliculaEditada);
+       */
       return "peliculas/formulariodeedicion";
     } catch (ExceptionPeliculas ex) {
       m.addAttribute("error", ex.getErrorMensaje());
@@ -152,7 +168,7 @@ public class PeliculaController {
       return "peliculas/formulariodealta";
     }
     Pelicula editada = peliculaService.editPelicula(p);
-     ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");
+    ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");
 
     return "redirect:/cineutn/pelicula/crudpeliculas";
   }

@@ -2,7 +2,7 @@ package com.comunidadcineutn.cine.dto;
 
 import java.time.LocalDate;
 
-import org.springframework.cglib.core.Local;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Getter @Setter
 
-public class DTOpeliculaedicion {
+public class PeliculaEdicionDTO {
 
   private Integer id;
   @NotNull(message = "es obligatorio la duracion de la peliculas y en minutos")
@@ -33,15 +33,16 @@ public class DTOpeliculaedicion {
   @NotBlank
   private String director;
 
+  @NotNull
   private boolean cartelera;
 
-  public DTOpeliculaedicion() {
+  public PeliculaEdicionDTO() {
     
   }
 
 
 
-  public DTOpeliculaedicion(int duracionMin, String nombre_pelicula, String sinopsis, String cal,
+  public PeliculaEdicionDTO(int duracionMin, String nombre_pelicula, String sinopsis, String cal,
       LocalDate fechaDeEstreno, String director, boolean bol) {
 
     this.duracionMin = duracionMin;

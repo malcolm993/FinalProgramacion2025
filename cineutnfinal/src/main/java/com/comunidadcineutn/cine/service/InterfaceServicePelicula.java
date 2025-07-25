@@ -4,6 +4,7 @@
  */
 package com.comunidadcineutn.cine.service;
 
+import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.model.Pelicula;
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +30,6 @@ public interface InterfaceServicePelicula  {
     public List<Pelicula> peliculasEnCartelera();
 
     public List<Pelicula> peliculasEstreno();
+
+    public PeliculaEdicionDTO getPeliculaEdicion(Integer id);
 }
