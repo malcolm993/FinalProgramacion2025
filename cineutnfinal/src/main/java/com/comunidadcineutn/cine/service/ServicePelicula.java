@@ -75,11 +75,13 @@ public class ServicePelicula implements InterfaceServicePelicula {
     private PeliculaEdicionDTO conversionPeliculaDTO (Pelicula p){
         PeliculaEdicionDTO pdto = new PeliculaEdicionDTO();
         pdto.setId(p.getIdPelicula());
+        pdto.setNombre(p.getNombre());
         pdto.setDuracionMin(p.getDuracionMin());
         pdto.setDirector(p.getDirector());
         pdto.setCalif(p.getCalif());
         pdto.setFechaEstreno(p.getFechaEstreno());
         pdto.setCartelera(p.isCartelera());
+        pdto.setSinopsis(p.getSinopsis());
         return pdto;
 
     }

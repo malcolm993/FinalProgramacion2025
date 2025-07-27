@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -47,11 +47,10 @@ public class PeliculaController {
   @GetMapping("/buscar/{id}")
   @Operation(summary = "Obtener película por ID")
   public String buscarPeliculaPorId(@PathVariable Integer id, Model m) {
-    // return
-    // peliculaService.findPeliculaPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     try {
       PeliculaEdicionDTO p = peliculaService.getPeliculaEdicion(id);
       m.addAttribute("pelicula", p);
+      System.out.println("nombre :" + p.getNombre());
 
     } catch (ExceptionPeliculas ex) {
       m.addAttribute("error", ex.getErrorMensaje());
@@ -82,12 +81,6 @@ public class PeliculaController {
     try {
       PeliculaEdicionDTO peliculaEditada = peliculaService.getPeliculaEdicion(idPelicula);
       m.addAttribute("pelicula", peliculaEditada);
-      /*
-       * Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula)
-       * .orElseThrow(() -> new
-       * ExceptionPeliculas("No existe pelicula con el Id ingresado"));
-       * m.addAttribute("pelicula", peliculaEditada);
-       */
       return "peliculas/formulariodeedicion";
     } catch (ExceptionPeliculas ex) {
       m.addAttribute("error", ex.getErrorMensaje());
@@ -100,9 +93,8 @@ public class PeliculaController {
   public String eliminarPelicula(@PathVariable("id") int idPelicula, Model m) {
 
     try {
-      Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula)
-          .orElseThrow(() -> new ExceptionPeliculas("No existe pelicula con el Id ingresado"));
-      m.addAttribute("pelicula", peliculaEditada);
+      PeliculaEdicionDTO peliculaEliminada = peliculaService.getPeliculaEdicion(idPelicula);
+      m.addAttribute("pelicula", peliculaEliminada);
       return "peliculas/eliminarpelicula";
     } catch (ExceptionPeliculas ex) {
       m.addAttribute("error", ex.getErrorMensaje());
@@ -130,34 +122,15 @@ public class PeliculaController {
 
   @DeleteMapping("/eliminar")
   @Operation(summary = "Eliminar película por ID")
-  public ResponseEntity<?> eliminarPelicula(@RequestParam(required = true, name = "id") Integer id) {
-    return peliculaService.findPeliculaPorId(id)
-        .map(pelicula -> {
-          peliculaService.deletePeliculaPorId(id);
-          return ResponseEntity.ok().body("Película '" + pelicula.getNombre() + "' eliminada correctamente");
-        })
-        .orElse(ResponseEntity.notFound().build());
+  public String eliminarPelicula(@RequestParam(required = true, name = "id") Integer id,
+      RedirectAttributes ra) {
+    Pelicula p = peliculaService.findPeliculaPorId(id).get();    
+    peliculaService.deletePeliculaPorId(id);
+    ra.addFlashAttribute("mensaje", "Película " + p.getNombre() + " eliminada con éxito!");
+
+    return "redirect:/cineutn/pelicula/crudpeliculas";
   }
 
-  /*
-   * @PutMapping("/editar/{id}")
-   * 
-   * @Operation(summary = "Editar película")
-   * public ResponseEntity<Pelicula> actualizarPelicula(
-   * 
-   * @PathVariable Integer id,
-   * 
-   * @Valid @RequestBody Pelicula pelicula) {
-   * 
-   * if (!peliculaService.existePeliculaById(id)) {
-   * return ResponseEntity.notFound().build();
-   * }
-   * 
-   * pelicula.setIdPelicula(id); // Asegurar que se actualice la película correcta
-   * Pelicula peliculaActualizada = peliculaService.editPelicula(pelicula);
-   * return ResponseEntity.ok(peliculaActualizada);
-   * }
-   */
   @PutMapping("/editar")
   @Operation(summary = "Editar película")
   public String edicionPeliculaPost(@Valid @ModelAttribute("pelicula") Pelicula p,

@@ -39,7 +39,8 @@
 
         <!-- Botón de confirmación -->
         <div class="d-flex justify-content-center mt-4">
-            <form id="formBorrarPelicula" th:action="@{/peliculas/delete}" method="post">
+            <form id="formBorrarPelicula" th:action="@{/cineutn/pelicula/eliminar}" method="post">
+                <input type="hidden" name="_method" value="delete">
                 <input type="hidden" name="id" th:value="*{id}" />
                 <button type="submit" class="btn btn-danger me-2">Confirmar Borrado</button>
                 <a th:href="@{/peliculas/crud}" class="btn btn-secondary">Cancelar</a>
