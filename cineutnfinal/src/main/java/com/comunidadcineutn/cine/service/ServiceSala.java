@@ -5,11 +5,12 @@
 package com.comunidadcineutn.cine.service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Sala;
 import com.comunidadcineutn.cine.repository.InterfaceSalaRepository;
 
@@ -44,16 +45,17 @@ public class ServiceSala implements InterfaceServiceSala{
   }
 
   @Override
-  public Optional<Sala> findSalaPorId(Integer id) {
+  public Sala findSalaPorId(Integer id) {
     // TODO Auto-generated method stub
-    return repositoriosala.findById(id);
+    return repositoriosala.findById(id).orElseThrow(
+      () -> new ExceptionNotFound("No existe sala con el Id ingresado"));
   }
 
   @Override
   public Sala editSala(Sala s) {
     // TODO Auto-generated method stub
     repositoriosala.save(s);
-    return findSalaPorId(s.getIdSala()).get();
+    return findSalaPorId(s.getIdSala());
   }
 
   @Override
@@ -64,7 +66,7 @@ public class ServiceSala implements InterfaceServiceSala{
 
   @Override
   public boolean capacitySala(Integer id , int cantidadButacasReservar) {
-    Sala salaAux = findSalaPorId(id).get();
+    Sala salaAux = findSalaPorId(id);
     int disponibles =  salaAux.getCantDeButacas() - salaAux.getCantDeButacasReservadas();
     return cantidadButacasReservar < disponibles;
     

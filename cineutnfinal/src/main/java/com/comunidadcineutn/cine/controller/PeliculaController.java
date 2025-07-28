@@ -5,7 +5,7 @@
 package com.comunidadcineutn.cine.controller;
 
 import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
-import com.comunidadcineutn.cine.exception.ExceptionPeliculas;
+import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.CalificacionPelicula;
 import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.service.InterfaceServicePelicula;
@@ -52,7 +52,7 @@ public class PeliculaController {
       m.addAttribute("pelicula", p);
       System.out.println("nombre :" + p.getNombre());
 
-    } catch (ExceptionPeliculas ex) {
+    } catch (ExceptionNotFound ex) {
       m.addAttribute("error", ex.getErrorMensaje());
       return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
     }
@@ -68,6 +68,7 @@ public class PeliculaController {
   }
 
   @GetMapping("/crudpeliculas")
+  @Operation(summary = "obtener crud de las peliculas")
   public String mostrarCRUDPeliculas(Model model) {
     // Asegúrate de agregar los datos necesarios al modelo
     model.addAttribute("listaPeliculas", peliculaService.getAll());
@@ -82,7 +83,7 @@ public class PeliculaController {
       PeliculaEdicionDTO peliculaEditada = peliculaService.getPeliculaEdicion(idPelicula);
       m.addAttribute("pelicula", peliculaEditada);
       return "peliculas/formulariodeedicion";
-    } catch (ExceptionPeliculas ex) {
+    } catch (ExceptionNotFound ex) {
       m.addAttribute("error", ex.getErrorMensaje());
       return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
     }
@@ -96,7 +97,7 @@ public class PeliculaController {
       PeliculaEdicionDTO peliculaEliminada = peliculaService.getPeliculaEdicion(idPelicula);
       m.addAttribute("pelicula", peliculaEliminada);
       return "peliculas/eliminarpelicula";
-    } catch (ExceptionPeliculas ex) {
+    } catch (ExceptionNotFound ex) {
       m.addAttribute("error", ex.getErrorMensaje());
       return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
     }
@@ -124,7 +125,7 @@ public class PeliculaController {
   @Operation(summary = "Eliminar película por ID")
   public String eliminarPelicula(@RequestParam(required = true, name = "id") Integer id,
       RedirectAttributes ra) {
-    Pelicula p = peliculaService.findPeliculaPorId(id).get();    
+    Pelicula p = peliculaService.findPeliculaPorId(id);    
     peliculaService.deletePeliculaPorId(id);
     ra.addFlashAttribute("mensaje", "Película " + p.getNombre() + " eliminada con éxito!");
 

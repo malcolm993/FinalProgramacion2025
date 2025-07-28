@@ -3,11 +3,11 @@ package com.comunidadcineutn.cine.exception;
 import lombok.Getter;
 
 @Getter
-public class ExceptionPeliculas extends RuntimeException {
+public class ExceptionNotFound extends RuntimeException {
   
   private final String errorMensaje;
 
-  public ExceptionPeliculas (final String error){
+  public ExceptionNotFound (final String error){
     this.errorMensaje=error;
   }
 }

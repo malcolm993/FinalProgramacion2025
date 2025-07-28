@@ -4,12 +4,15 @@
  */
 package com.comunidadcineutn.cine.service;
 
+import com.comunidadcineutn.cine.dto.PeliculaAltaFuncionDTO;
 import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
-import com.comunidadcineutn.cine.exception.ExceptionPeliculas;
+import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.repository.InterfacePeliculaRepository;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +33,7 @@ public class ServicePelicula implements InterfaceServicePelicula {
     @Override
     public Pelicula addPelicula(Pelicula p) {
         repositorioPelicula.save(p);
-        return findPeliculaPorId(p.getIdPelicula()).get();
+        return findPeliculaPorId(p.getIdPelicula());
     }
 
     @Override
@@ -39,8 +42,9 @@ public class ServicePelicula implements InterfaceServicePelicula {
     }
 
     @Override
-    public Optional<Pelicula> findPeliculaPorId(Integer id) {
-        return repositorioPelicula.findById(id);
+    public Pelicula findPeliculaPorId(Integer id) {
+        return repositorioPelicula.findById(id).orElseThrow( 
+            () -> new ExceptionNotFound("No existe pelicula con el Id ingresado"));
     }
 
     @Override
@@ -66,7 +70,7 @@ public class ServicePelicula implements InterfaceServicePelicula {
 
     @Override
     public PeliculaEdicionDTO getPeliculaEdicion(Integer id) {
-        Pelicula p = findPeliculaPorId(id).orElseThrow(() -> new ExceptionPeliculas("No existe pelicula con el Id ingresado"));
+        Pelicula p = findPeliculaPorId(id);
         return conversionPeliculaDTO(p);
 
     }
@@ -85,4 +89,25 @@ public class ServicePelicula implements InterfaceServicePelicula {
         return pdto;
 
     }
+
+    @Override
+    public List<PeliculaAltaFuncionDTO> getListadoPeliculasAltaFuncion() {
+        List<Pelicula> todas = getAll();
+        List<PeliculaAltaFuncionDTO> listaDTO = new ArrayList<>();
+        for (Pelicula p : todas) {
+            listaDTO.add(conversionPeliculaFuncionDTO(p));
+        }
+
+        return listaDTO;
+    }   
+
+    private PeliculaAltaFuncionDTO conversionPeliculaFuncionDTO(Pelicula p){
+        PeliculaAltaFuncionDTO pdto = new PeliculaAltaFuncionDTO();
+        pdto.setId(p.getIdPelicula());
+        pdto.setNombre(p.getNombre());
+
+        return pdto;
+    }
+
+
 }

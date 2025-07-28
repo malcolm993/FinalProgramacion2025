@@ -6,7 +6,6 @@ package com.comunidadcineutn.cine.service;
 
 import com.comunidadcineutn.cine.model.Sala;
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -20,7 +19,7 @@ public interface InterfaceServiceSala {
     
     public void deleteSalaPorId(Integer id);
     
-    public Optional<Sala> findSalaPorId(Integer id);
+    public Sala findSalaPorId(Integer id);
     
     public Sala editSala(Sala s);
     

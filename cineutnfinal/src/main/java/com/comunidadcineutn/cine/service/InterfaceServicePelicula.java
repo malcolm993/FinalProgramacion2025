@@ -4,10 +4,10 @@
  */
 package com.comunidadcineutn.cine.service;
 
+import com.comunidadcineutn.cine.dto.PeliculaAltaFuncionDTO;
 import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.model.Pelicula;
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -21,7 +21,7 @@ public interface InterfaceServicePelicula  {
     
     public void deletePeliculaPorId(Integer id);
     
-    public Optional<Pelicula> findPeliculaPorId(Integer id);
+    public Pelicula findPeliculaPorId(Integer id);
     
     public Pelicula editPelicula(Pelicula peli);
     
@@ -32,4 +32,6 @@ public interface InterfaceServicePelicula  {
     public List<Pelicula> peliculasEstreno();
 
     public PeliculaEdicionDTO getPeliculaEdicion(Integer id);
+
+    public List<PeliculaAltaFuncionDTO> getListadoPeliculasAltaFuncion();
 }

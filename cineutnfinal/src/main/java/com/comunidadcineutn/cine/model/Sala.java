@@ -24,7 +24,7 @@ public class Sala implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idSala;
+    private Integer idSala;
 
     // Opcional para nombre de columna
     @Min(value = 1, message = "La capacidad debe ser al menos 1")
