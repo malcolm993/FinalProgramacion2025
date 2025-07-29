@@ -139,7 +139,7 @@ public class PeliculaController {
       RedirectAttributes ra) {
     if (bindingResult.hasErrors()) {
       // Mantiene los errores en el formulario
-      return "peliculas/formulariodealta";
+      return "peliculas/agregar";
     }
     Pelicula editada = peliculaService.editPelicula(p);
     ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");

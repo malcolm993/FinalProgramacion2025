@@ -1,25 +1,28 @@
 package com.comunidadcineutn.cine.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.comunidadcineutn.cine.dto.PeliculaAltaFuncionDTO;
 
 import com.comunidadcineutn.cine.model.Funcion;
-import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.model.Sala;
 import com.comunidadcineutn.cine.service.InterfaceServiceFuncion;
 import com.comunidadcineutn.cine.service.InterfaceServicePelicula;
@@ -48,11 +51,12 @@ public class FuncionController {
         return funcionService.findFuncionPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/todas")
-    @Operation(summary = "Obtener todas las funciones")
-    public ResponseEntity<List<Funcion>> getAllFunciones() {
+    @GetMapping("/crudfunciones")
+    @Operation(summary = "Obtener crud de las funciones")
+    public String getAllFunciones(Model m) {
         List<Funcion> listaFunciones = funcionService.getAllFuncion();
-        return new ResponseEntity<>(listaFunciones, HttpStatus.ACCEPTED);
+        m.addAttribute("listaFunciones",  listaFunciones);
+        return "funciones/crud-funciones";
     }
     /* 
     @PostMapping("/agregar")
@@ -71,9 +75,30 @@ public class FuncionController {
         m.addAttribute("listaPeliculas", lista );
         List<Sala> listaSalas = salaService.getAllSalas();
         m.addAttribute("listaSalas", listaSalas);
+        List <LocalDate> fechas = funcionService.fechasHabilitadas(); 
+        m.addAttribute("fechas", fechas);
+        
 
         return "funciones/alta-funcion";
     }
+
+
+    @PostMapping("/agregar")
+    @Operation(summary = "Creo una funcion")
+    public String agregarFuncion(@Valid @ModelAttribute
+        ("funcion") Funcion f,
+        BindingResult br,
+        RedirectAttributes ra){
+            if(br.hasErrors()){
+                System.out.println(br.getAllErrors()); 
+                return "funciones/alta-funcion";
+            }
+            Funcion creada = funcionService.addFuncion(f);
+            ra.addFlashAttribute("mensaje", "Funcion con id "+creada.getIdFuncion()+
+            " " +creada.getPelicula().getNombre() + " ha sido creada");
+            return "redirect:/cineutn/funcion/crudfunciones";
+        }
+
 
     @DeleteMapping("/eliminar")
     @Operation(summary = "Eliminar funcion por ID")
