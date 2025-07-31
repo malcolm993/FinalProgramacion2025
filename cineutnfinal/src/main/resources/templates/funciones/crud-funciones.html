@@ -36,25 +36,26 @@
           <div class="accordion-body">
             <h3>Funciones de películas en 2D</h3>
             <ol class="list-group list-group-numbered">
-              <li th:each="funcion : ${listaFunciones}" th:if="${funcion.sala.tipoDeSala == '_2D'}"
+              <li th:each="funcion : ${listaFunciones}" th:if="${funcion.sala.tipoSala.descripcion =='Sala 2D' }"
                 class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
                   <div class="fw-bold">
                     <p
-                      th:text="'ID Funcion: ' + ${funcion.id_funcion} + ' | Sala: ' + ${funcion.sala.id} + ' | Tipo Sala: ' + ${funcion.sala.tipoDeSala}">
+                      th:text="'ID Funcion: ' + ${funcion.idFuncion} + ' | Sala: ' + ${funcion.sala.idSala} + ' | Tipo Sala: ' + ${funcion.sala.tipoSala}">
                     </p>
                   </div>
-                  <span th:text="${funcion.pelicula.nombre_pelicula}"></span> |
-                  duración: <span th:text="${funcion.pelicula.duracion_min}"></span> min |
-                  Horario de función: <span th:text="${funcion.horarioFuncion}"></span> |
-                  Fecha proyección: <span th:text="${funcion.fechaDeFuncion}"></span>
+                  <span th:text="${funcion.pelicula.nombre}"></span> |
+                  duración: <span th:text="${funcion.pelicula.duracionMin}"></span> min |
+                  Horario de función: <span th:text="${funcion.horaInicio}"></span> |
+                  Horario de finalizacion :<span th:text="${funcion.horaFin}"></span> 
+                  <!--Fecha proyección: <span th:text="${funcion.fechaDeFuncion}"></span>-->
                 </div>
                 <div class="btn-group" role="group">
-                  <a th:href="@{/edicionfunciones/updateFuncion(idfuncion=${funcion.id_funcion})}"
+                  <a th:href="@{/cineutn/funcion/editar/{idFuncion}(idFuncion=${funcion.idFuncion})}"
                     class="btn btn-warning btn-sm">Modificar</a>
-                  <a th:href="@{/edicionfunciones/deleteFuncion(idfuncion=${funcion.id_funcion})}"
+                  <a th:href="@{/cineutn/funcion/eliminar/{idFuncion}(idFuncion=${funcion.idFuncion})}"
                     class="btn btn-danger btn-sm">Eliminar</a>
-                  <a th:href="@{/edicionfunciones/checkFuncion(idfuncion=${funcion.id_funcion})}"
+                  <a th:href="@{/cineutn/funcion/revisar/{idFuncion}(idFuncion=${funcion.idFuncion})}"
                     class="btn btn-info btn-sm">Revisar</a>
                 </div>
               </li>
@@ -79,25 +80,25 @@
           <div class="accordion-body">
             <h3>Funciones de películas en 3D</h3>
             <ol class="list-group list-group-numbered">
-              <li th:each="funcion : ${listaFunciones}" th:if="${funcion.sala.tipoDeSala == '_3D'}"
+              <li th:each="funcion : ${listaFunciones}" th:if="${funcion.sala.tipoSala.descripcion == 'Sala 3D'}"
                 class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
                   <div class="fw-bold">
                     <p
-                      th:text="'ID Funcion: ' + ${funcion.id_funcion} + ' | Sala: ' + ${funcion.sala.id} + ' | Tipo Sala: ' + ${funcion.sala.tipoDeSala}">
+                      th:text="'ID Funcion: ' + ${funcion.idFuncion} + ' | Sala: ' + ${funcion.sala.idSala} + ' | Tipo Sala: ' + ${funcion.sala.tipoSala}">
                     </p>
                   </div>
-                  <span th:text="${funcion.pelicula.nombre_pelicula}"></span> |
-                  duración: <span th:text="${funcion.pelicula.duracion_min}"></span> min |
-                  Horario de función: <span th:text="${funcion.horarioFuncion}"></span> |
-                  Fecha proyección: <span th:text="${funcion.fechaDeFuncion}"></span>
+                  <span th:text="${funcion.pelicula.nombre}"></span> |
+                  duración: <span th:text="${funcion.pelicula.duracionMin}"></span> min |
+                  Horario de función: <span th:text="${funcion.horaInicio}"></span> |
+                  <!--Fecha proyección: <span th:text="${funcion.fechaDeFuncion}"></span>-->
                 </div>
                 <div class="btn-group" role="group">
-                  <a th:href="@{/edicionfunciones/updateFuncion(idfuncion=${funcion.id_funcion})}"
+                  <a th:href="@{/edicionfunciones/updateFuncion(idfuncion=${funcion.idFuncion})}"
                     class="btn btn-warning btn-sm">Modificar</a>
-                  <a th:href="@{/edicionfunciones/deleteFuncion(idfuncion=${funcion.id_funcion})}"
+                  <a th:href="@{/edicionfunciones/deleteFuncion(idfuncion=${funcion.idFuncion})}"
                     class="btn btn-danger btn-sm">Eliminar</a>
-                  <a th:href="@{/edicionfunciones/checkFuncion(idfuncion=${funcion.id_funcion})}"
+                  <a th:href="@{/edicionfunciones/checkFuncion(idfuncion=${funcion.idFuncion})}"
                     class="btn btn-info btn-sm">Revisar</a>
                 </div>
               </li>

@@ -1,6 +1,7 @@
 package com.comunidadcineutn.cine.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.comunidadcineutn.cine.dto.FuncionAltaDTO;
 import com.comunidadcineutn.cine.dto.PeliculaAltaFuncionDTO;
-
+import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
+import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Funcion;
 import com.comunidadcineutn.cine.model.Sala;
 import com.comunidadcineutn.cine.service.InterfaceServiceFuncion;
@@ -45,86 +48,128 @@ public class FuncionController {
     @Autowired
     private InterfaceServiceSala salaService;
 
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/revisar/{id}")
     @Operation(summary = "Obtener funcion por ID")
-    public ResponseEntity<Funcion> buscarPeliculaPorId(@PathVariable Integer id) {
-        return funcionService.findFuncionPorId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public String buscarPeliculaPorId(@PathVariable Integer id, Model m) {
+        try {
+            Funcion f = funcionService.findFuncionPorId(id);
+            m.addAttribute("funcion", f);
+        } catch (ExceptionNotFound ex) {
+            m.addAttribute("error", ex.getErrorMensaje());
+            return "funciones/crud-funciones";
+        }
+
+        return "funciones/revisar-funcion";
     }
 
     @GetMapping("/crudfunciones")
     @Operation(summary = "Obtener crud de las funciones")
     public String getAllFunciones(Model m) {
         List<Funcion> listaFunciones = funcionService.getAllFuncion();
-        m.addAttribute("listaFunciones",  listaFunciones);
+        System.out.println("paso la lista" + listaFunciones.toString());
+        m.addAttribute("listaFunciones", listaFunciones);
         return "funciones/crud-funciones";
     }
-    /* 
-    @PostMapping("/agregar")
-    @Operation(summary = "Agregar funcion")
-    public ResponseEntity<Funcion> agregarFuncion(@RequestBody Funcion f) {
-        Funcion fNueva = funcionService.addFuncion(f);
-        return new ResponseEntity<>(fNueva, HttpStatus.CREATED);
-    }
-    */
+    /*
+     * @PostMapping("/agregar")
+     * 
+     * @Operation(summary = "Agregar funcion")
+     * public ResponseEntity<Funcion> agregarFuncion(@RequestBody Funcion f) {
+     * Funcion fNueva = funcionService.addFuncion(f);
+     * return new ResponseEntity<>(fNueva, HttpStatus.CREATED);
+     * }
+     */
 
     @GetMapping("/agregar")
     @Operation(summary = "Obtengo el formulario para crear funcion")
     public String vistaAgregarFuncion(Model m) {
-        m.addAttribute("funcion", new Funcion());
-        List <PeliculaAltaFuncionDTO> lista = peliculaService.getListadoPeliculasAltaFuncion();
-        m.addAttribute("listaPeliculas", lista );
+        m.addAttribute("funcion", new FuncionAltaDTO());
+        List<PeliculaAltaFuncionDTO> lista = peliculaService.getListadoPeliculasAltaFuncion();
+        m.addAttribute("listaPeliculas", lista);
         List<Sala> listaSalas = salaService.getAllSalas();
         m.addAttribute("listaSalas", listaSalas);
-        List <LocalDate> fechas = funcionService.fechasHabilitadas(); 
+        List<LocalDate> fechas = funcionService.fechasHabilitadas();
         m.addAttribute("fechas", fechas);
-        
 
         return "funciones/alta-funcion";
     }
 
-
     @PostMapping("/agregar")
     @Operation(summary = "Creo una funcion")
-    public String agregarFuncion(@Valid @ModelAttribute
-        ("funcion") Funcion f,
-        BindingResult br,
-        RedirectAttributes ra){
-            if(br.hasErrors()){
-                System.out.println(br.getAllErrors()); 
-                return "funciones/alta-funcion";
-            }
-            Funcion creada = funcionService.addFuncion(f);
-            ra.addFlashAttribute("mensaje", "Funcion con id "+creada.getIdFuncion()+
-            " " +creada.getPelicula().getNombre() + " ha sido creada");
-            return "redirect:/cineutn/funcion/crudfunciones";
+    public String agregarFuncion(@Valid @ModelAttribute("funcion") FuncionAltaDTO f,
+            BindingResult br,
+            RedirectAttributes ra) {
+        if (br.hasErrors()) {
+            System.out.println(br.getAllErrors());
+            return "funciones/alta-funcion";
         }
+        LocalDateTime fechaHora = LocalDateTime.of(f.getFechaFuncion(), f.getHoraFuncion());
+        Funcion auxFuncion = new Funcion(0,f.getSala(), f.getPelicula(), fechaHora);
 
-
-    @DeleteMapping("/eliminar")
-    @Operation(summary = "Eliminar funcion por ID")
-    public ResponseEntity<?> eliminarPelicula(@RequestParam(required = true, name = "id") Integer id) {
-        return funcionService.findFuncionPorId(id)
-                .map(funcion -> {
-                    funcionService.deleteFuncionPorId(id);
-                    return ResponseEntity.ok().body("Funcion '" + funcion.getIdFuncion() + " pelicula "
-                            + funcion.getPelicula() + "' eliminada correctamente");
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Funcion creada = funcionService.addFuncion(auxFuncion);
+        ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
+                " " + creada.getPelicula().getNombre() + " ha sido creada");
+        return "redirect:/cineutn/funcion/crudfunciones";
     }
 
-    @PutMapping("/editar/{id}")
-    @Operation(summary = "Editar funcion")
-    public ResponseEntity<Funcion> actualizarFuncion(
-            @PathVariable Integer id,
-            @Valid @RequestBody Funcion funcion) {
-
-        if (!funcionService.existFuncionById(id)) {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/eliminar/{id}")
+    @Operation(summary = "Obtener vista Eliminar funcion ")
+    public String eliminarFuncion(@PathVariable("id") Integer id,
+        Model m){
+            try {
+                Funcion f = funcionService.findFuncionPorId(id);
+                m.addAttribute("funcion", f);
+                return "funciones/eliminar-funcion";
+            } catch (ExceptionNotFound ex) {
+                m.addAttribute("error", ex.getErrorMensaje());
+                return "funciones/eliminar-funcion";
+            }
+            
         }
+    @DeleteMapping("/eliminar")
+    @Operation(summary = "Eliminar funcion por ID")
+    public String eliminarPelicula(@RequestParam(required = true, name = "idFuncion") Integer id,
+        RedirectAttributes ra) {
+        Funcion f = funcionService.findFuncionPorId(id);
+        funcionService.deleteFuncionPorId(id);    
+        ra.addAttribute("mensaje", "Funcion de Id: "+ f.getIdFuncion() + "ha sido eliminada");
+        return "redirect:/cineutn/funcion/crudfunciones";
+    }
 
-        funcion.setIdFuncion(id); // Asegurar que se actualice la película correcta
-        Funcion funcionActualizada = funcionService.editFuncion(funcion);
-        return ResponseEntity.ok(funcionActualizada);
+    @GetMapping("/editar/{id}")
+    @Operation(summary = "obtengo formulario para la edicion de la funcion")
+    public String obtenerFormularioEdicion(@PathVariable Integer id, Model m) {
+        try {
+            FuncionAltaDTO funcionEditada = funcionService.getFuncionEdicion(id);
+            m.addAttribute("listaPeliculas", peliculaService.getAll());
+            m.addAttribute("listaSalas", salaService.getAllSalas());
+            m.addAttribute("fechas", funcionService.fechasHabilitadas());
+            m.addAttribute("funcion", funcionEditada);
+            return "funciones/editar-funcion";
+        } catch (ExceptionNotFound ex) {
+            m.addAttribute("error", ex.getErrorMensaje());
+            return "funciones/crud-funciones"; // reenvio a la pagina crud de peliculas
+        }
+    }
+
+    @PutMapping("/editar")
+    @Operation(summary = "Editar funcion")
+    public String actualizarFuncion(
+            @Valid @ModelAttribute("funcion") FuncionAltaDTO f,
+            BindingResult br,
+            RedirectAttributes ra) {
+        if(br.hasErrors()){
+            return "funciones/editar-funcion";
+        }
+        LocalDateTime fechaHora = LocalDateTime.of(f.getFechaFuncion(), f.getHoraFuncion());
+        Funcion auxFuncion = new Funcion(f.getId(),f.getSala(), f.getPelicula(), fechaHora);
+
+        Funcion creada = funcionService.editFuncion(auxFuncion);
+        System.out.println("los horarios inicio " + creada.getHoraInicio());
+        System.out.println("horario termina "+ creada.getHoraFin());
+        ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
+                " " + creada.getPelicula().getNombre() + " ha sido editada");
+        return "redirect:/cineutn/funcion/crudfunciones";
     }
 
 }

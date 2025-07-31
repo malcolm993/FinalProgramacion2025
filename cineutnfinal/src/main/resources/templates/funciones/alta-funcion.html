@@ -19,7 +19,7 @@
           <div class="col-sm-10">
             <select id="pelicula" class="form-control" th:field="*{pelicula.idPelicula}" required>
               <option th:each="pelicula : ${listaPeliculas}" th:value="${pelicula.id}" th:text="${pelicula.nombre}">
-              </option> 
+              </option>
             </select>
           </div>
         </div>
@@ -31,8 +31,7 @@
             <select id="sala" class="form-control" th:field="*{sala.idSala}" required>
               <option value="">-- Seleccione una sala --</option>
               <option th:each="sala : ${listaSalas}" th:value="${sala.idSala}"
-                th:text="'Sala ' + ${sala.idSala} + ' (' + ${sala.tipoSala.descripcion} + ')'">
-              </option>
+                th:text="'Sala ' + ${sala.idSala} + ' (' + ${sala.tipoSala.descripcion} + ')'"></option>
             </select>
           </div>
         </div>
@@ -41,21 +40,30 @@
         <div class="mb-3 row">
           <label for="fechaFuncion" class="col-sm-2 col-form-label">Fecha de Función:</label>
           <div class="col-sm-10">
-            <select id="fechaFuncion" name="fechaFuncion" class="form-control" required>
-              <option th:each="fecha : ${fechas}" th:value="${fecha}" th:field="*{fechaFuncion}" th:text="${fecha}"></option>
+            <select id="fechaFuncion" class="form-control" th:field="*{fechaFuncion}" required>
+              <option th:each="fecha : ${fechas}" th:value="${fecha}" th:text="${fecha}"></option>
             </select>
           </div>
         </div>
 
         <!-- Campo Horario -->
         <div class="mb-3 row">
-          <label for="horario" class="col-sm-2 col-form-label">Horario:</label>
+          <label for="horaFuncion" class="col-sm-2 col-form-label">Horario:</label>
           <div class="col-sm-10">
-            <input type="time" id="horario" class="form-control" th:text="*{horaFuncion}" step="300" min="09:00"
-              max="23:00" required>
+            <input type="time" id="horaFuncion" class="form-control" th:field="*{horaFuncion}" step="300" min="09:00"
+              max="23:00" required />
             <small class="form-text text-muted">Formato: HH:MM (Ej: 14:30)</small>
           </div>
         </div>
+
+        <!-- Campo Función Habilitada 
+            <div class="mb-3 row">
+                <label for="funcionHabilitada" class="col-sm-2 col-form-label">Función Habilitada:</label>
+                <div class="col-sm-10">
+                    <input type="checkbox" id="funcionHabilitada" class="form-check-input" th:field="*{funcionHabilitada}" />
+                </div>
+            </div>
+            -->
 
         <!-- Botones -->
         <div class="mb-3 row">

@@ -5,6 +5,7 @@
 package com.comunidadcineutn.cine.service;
 
 
+import com.comunidadcineutn.cine.dto.FuncionAltaDTO;
 import com.comunidadcineutn.cine.model.Funcion;
 
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public interface InterfaceServiceFuncion {
     
     public void deleteFuncionPorId(Integer id);
     
-    public Optional<Funcion> findFuncionPorId(Integer id);
+    public Funcion findFuncionPorId(Integer id);
     
     public Funcion editFuncion(Funcion f);
     
@@ -37,4 +38,6 @@ public interface InterfaceServiceFuncion {
     public List<Funcion> getFuncionHabilitada();
 
     public boolean isHorarioOcupadoFuncion(Funcion funcionNueva);
+
+    public FuncionAltaDTO getFuncionEdicion(Integer id);
 }

@@ -11,15 +11,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +31,7 @@ public class Funcion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idFuncion;
+    private Integer idFuncion;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -45,38 +40,28 @@ public class Funcion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    @NotNull(message = "dato Pelicula es obligaoria")
+    @NotNull(message = "dato Pelicula es obligatoria")
     private Pelicula pelicula;
-
-    @Transient // Indica que no se persiste en BD
-    private LocalDate fechaFuncion;
-
-    @Transient
-    private LocalTime horaFuncion;
-
+    @NotNull
     private LocalDateTime horaInicio;
+    @NotNull
     private LocalDateTime horaFin;
     private boolean funcionHabilitada;
 
     public Funcion() {
     }
 
-    public Funcion(int idFuncion, Sala sala, Pelicula peliculaFuncion, LocalDateTime horaInicio,
-            LocalDateTime horaFin) {
-        this.idFuncion = idFuncion;
+    public Funcion( Integer id ,Sala sala, Pelicula peliculaFuncion
+           ,LocalDateTime inicioFuncion ) {
+        this.idFuncion =id;
         this.sala = sala;
         this.pelicula = peliculaFuncion;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
+        this.horaInicio = inicioFuncion;
+        this.horaFin = getHoraInicio().plusMinutes(peliculaFuncion.getDuracionMin()+30);
         this.funcionHabilitada = true;
+        
     }
 
-    @PrePersist
-    @PreUpdate
-    private void combinarFechaHora(){
-        if(fechaFuncion != null && horaFuncion != null){
-            this.horaInicio = LocalDateTime.of(fechaFuncion, horaFuncion);
-        }
-    }
+
 
 }

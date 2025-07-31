@@ -2,121 +2,118 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Detalles y Edición de Película</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Detalles y Edición de Película</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 
 <body>
-    <!-- Navbar -->
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
+  <!-- Navbar -->
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Detalles de la Película ID: <span th:text="${pelicula.idPelicula}"></span></h1>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Detalles de la Película ID: <span th:text="${pelicula.idPelicula}"></span></h1>
 
-        <!-- Información de la película -->
-        <div class="card p-4">
-            <h2 class="text-center mb-4">Editar datos Película: <span th:text="${pelicula.nombre}"></span></h2>
-            <form id="formEditarPelicula" th:action="@{/cineutn/pelicula/editar}" method="post"
-                th:object="${pelicula}">
+    <!-- Información de la película -->
+    <div class="card p-4">
+      <h2 class="text-center mb-4">Editar datos Película: <span th:text="${pelicula.nombre}"></span></h2>
+      <form id="formEditarPelicula" th:action="@{/cineutn/pelicula/editar}" method="post" th:object="${pelicula}">
 
-                <input type="hidden" name="_method" value="put" />
+        <input type="hidden" name="_method" value="put" />
 
-                <!-- Campo Nombre -->
-                <div class="mb-3 row">
-                    <label for="nombre" class="col-sm-2 col-form-label">Nombre:</label>
-                    <div class="col-sm-10">
-                        <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required>
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Campo Duración -->
-                <div class="mb-3 row">
-                    <label for="duracion" class="col-sm-2 col-form-label">Duración (min):</label>
-                    <div class="col-sm-10">
-                        <input type="number" id="duracion" th:field="*{duracionMin}" class="form-control" required>
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('duracionMin')}"
-                            th:errors="*{duracionMin}"></div>
-                    </div>
-                </div>
-
-                <!-- Campo Apto para -->
-                <div class="mb-3 row">
-                    <label for="aptopara" class="col-sm-2 col-form-label">Apto para:</label>
-                    <div class="col-sm-10">
-                        <input type="text" id="aptopara" th:field="*{calif}" class="form-control" required>
-                    </div>
-                </div>
-
-                <!-- Campo Fecha de Estreno -->
-                <div class="mb-3 row">
-                    <label for="fechaEstreno" class="col-sm-2 col-form-label">Fecha de estreno:</label>
-                    <div class="col-sm-10">
-                        <input type="date" id="fechaEstreno" th:field="*{fechaEstreno}" class="form-control" required>
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaEstreno')}"
-                            th:errors="*{fechaEstreno}"></div>
-                    </div>
-                </div>
-
-                <!-- Campo Director -->
-                <div class="mb-3 row">
-                    <label for="director" class="col-sm-2 col-form-label">Director:</label>
-                    <div class="col-sm-10">
-                        <input type="text" id="director" th:field="*{director}" class="form-control" required>
-                    </div>
-                </div>
-
-                <!-- Imagen de la película -->
-
-
-                <!-- Campo Sinopsis -->
-                <div class="mb-3 row">
-                    <label for="sinopsis" class="col-sm-2 col-form-label">Sinopsis:</label>
-                    <div class="col-sm-10">
-                        <textarea id="sinopsis" th:field="*{sinopsis}" class="form-control" rows="5"
-                            required></textarea>
-                    </div>
-                </div>
-
-                <!-- Campo de estado de película -->
-                <div class="mb-3 row">
-                    <label for="cartelera" class="col-sm-2 col-form-label">En Cartelera:</label>
-                    <div class="col-sm-10">
-                        <div th:if="${pelicula.cartelera}">
-                            <input type="text" class="form-control" value="Sí" readonly>
-                            <input type="hidden" th:field="*{cartelera}" />
-                        </div>
-                        <div th:unless="${pelicula.cartelera}">
-                            <select id="cartelera" th:field="*{cartelera}" class="form-select" required>
-                                <option value="false" selected>No</option>
-                                <option value="true">Sí</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Botones de acción -->
-                <input type="hidden" th:field="*{idPelicula}" />
-                <div class="mb-3 row">
-                    <div class="col-sm-12 text-center">
-                        <button type="submit" class="btn btn-success me-2">Confirmar cambios</button>
-                        <button type="reset" class="btn btn-secondary">Reiniciar</button>
-                    </div>
-                </div>
-            </form>
+        <!-- Campo Nombre -->
+        <div class="mb-3 row">
+          <label for="nombre" class="col-sm-2 col-form-label">Nombre:</label>
+          <div class="col-sm-10">
+            <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
+            </div>
+          </div>
         </div>
 
-        <!-- Botón de regresar -->
-        <div class="d-flex justify-content-center mt-4">
-            <a href="#" th:onclick="'javascript:history.back()'" class="btn btn-primary">Regresar</a>
+        <!-- Campo Duración -->
+        <div class="mb-3 row">
+          <label for="duracion" class="col-sm-2 col-form-label">Duración (min):</label>
+          <div class="col-sm-10">
+            <input type="number" id="duracion" th:field="*{duracionMin}" class="form-control" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('duracionMin')}" th:errors="*{duracionMin}"></div>
+          </div>
         </div>
+
+        <!-- Campo Apto para -->
+        <div class="mb-3 row">
+          <label for="aptopara" class="col-sm-2 col-form-label">Apto para:</label>
+          <div class="col-sm-10">
+            <input type="text" id="aptopara" th:field="*{calif}" class="form-control" required>
+          </div>
+        </div>
+
+        <!-- Campo Fecha de Estreno -->
+        <div class="mb-3 row">
+          <label for="fechaEstreno" class="col-sm-2 col-form-label">Fecha de estreno:</label>
+          <div class="col-sm-10">
+            <input type="date" id="fechaEstreno" th:field="*{fechaEstreno}" class="form-control" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaEstreno')}" th:errors="*{fechaEstreno}">
+            </div>
+          </div>
+        </div>
+
+        <!-- Campo Director -->
+        <div class="mb-3 row">
+          <label for="director" class="col-sm-2 col-form-label">Director:</label>
+          <div class="col-sm-10">
+            <input type="text" id="director" th:field="*{director}" class="form-control" required>
+          </div>
+        </div>
+
+        <!-- Imagen de la película -->
+
+
+        <!-- Campo Sinopsis -->
+        <div class="mb-3 row">
+          <label for="sinopsis" class="col-sm-2 col-form-label">Sinopsis:</label>
+          <div class="col-sm-10">
+            <textarea id="sinopsis" th:field="*{sinopsis}" class="form-control" rows="5" required></textarea>
+          </div>
+        </div>
+
+        <!-- Campo de estado de película -->
+        <div class="mb-3 row">
+          <label for="cartelera" class="col-sm-2 col-form-label">En Cartelera:</label>
+          <div class="col-sm-10">
+            <div th:if="${pelicula.cartelera}">
+              <input type="text" class="form-control" value="Sí" readonly>
+              <input type="hidden" th:field="*{cartelera}" />
+            </div>
+            <div th:unless="${pelicula.cartelera}">
+              <select id="cartelera" th:field="*{cartelera}" class="form-select" required>
+                <option value="false" selected>No</option>
+                <option value="true">Sí</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <input type="hidden" th:field="*{idPelicula}" />
+        <div class="mb-3 row">
+          <div class="col-sm-12 text-center">
+            <button type="submit" class="btn btn-success me-2">Confirmar cambios</button>
+            <button type="reset" class="btn btn-secondary">Reiniciar</button>
+          </div>
+        </div>
+      </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Botón de regresar -->
+    <div class="d-flex justify-content-center mt-4">
+      <a href="#" th:onclick="'javascript:history.back()'" class="btn btn-primary">Regresar</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
