@@ -34,8 +34,8 @@ public class ServiceSala implements InterfaceServiceSala{
   @Override
   public Sala addSala(Sala s) {
     // TODO Auto-generated method stub
-    repositoriosala.save(s);
-    return repositoriosala.findById(s.getIdSala()).get();
+    
+    return repositoriosala.save(s);
   }
 
   @Override

@@ -62,6 +62,11 @@ public class Funcion {
         
     }
 
+    @Override
+    public String toString() {
+        return "Funcion{" + "idFuncion=" + idFuncion + ", sala=" + sala + ", pelicula=" + pelicula + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", funcionHabilitada=" + funcionHabilitada + '}';
+    }
+
 
 
 }

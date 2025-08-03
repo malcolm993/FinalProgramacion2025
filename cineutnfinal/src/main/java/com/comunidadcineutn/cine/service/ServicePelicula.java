@@ -32,8 +32,8 @@ public class ServicePelicula implements InterfaceServicePelicula {
 
     @Override
     public Pelicula addPelicula(Pelicula p) {
-        repositorioPelicula.save(p);
-        return findPeliculaPorId(p.getIdPelicula());
+       
+        return  repositorioPelicula.save(p);
     }
 
     @Override

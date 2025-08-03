@@ -49,4 +49,9 @@ public class Sala implements Serializable {
         this.cantDeButacasReservadas = 0;
     }
 
+    @Override
+    public String toString() {
+        return "Sala{" + "idSala=" + idSala + ", cantDeButacas=" + cantDeButacas + ", cantDeButacasReservadas=" + cantDeButacasReservadas + ", tipoSala=" + tipoSala + '}';
+    }
+
 }

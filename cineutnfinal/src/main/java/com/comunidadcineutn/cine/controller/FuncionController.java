@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,16 +16,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.comunidadcineutn.cine.dto.FuncionAltaDTO;
 import com.comunidadcineutn.cine.dto.PeliculaAltaFuncionDTO;
-import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
+
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Funcion;
+import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.model.Sala;
 import com.comunidadcineutn.cine.service.InterfaceServiceFuncion;
 import com.comunidadcineutn.cine.service.InterfaceServicePelicula;
@@ -68,6 +69,7 @@ public class FuncionController {
         List<Funcion> listaFunciones = funcionService.getAllFuncion();
         System.out.println("paso la lista" + listaFunciones.toString());
         m.addAttribute("listaFunciones", listaFunciones);
+        System.out.println("HOLA ACA LLEGA O NO ]???");
         return "funciones/crud-funciones";
     }
     /*
@@ -104,8 +106,9 @@ public class FuncionController {
             return "funciones/alta-funcion";
         }
         LocalDateTime fechaHora = LocalDateTime.of(f.getFechaFuncion(), f.getHoraFuncion());
-        Funcion auxFuncion = new Funcion(0,f.getSala(), f.getPelicula(), fechaHora);
-
+        Sala s = salaService.findSalaPorId(f.getSala().getIdSala());
+        Pelicula p = peliculaService.findPeliculaPorId(f.getPelicula().getIdPelicula());
+        Funcion auxFuncion = new Funcion(0,s, p, fechaHora);
         Funcion creada = funcionService.addFuncion(auxFuncion);
         ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
                 " " + creada.getPelicula().getNombre() + " ha sido creada");

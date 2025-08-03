@@ -47,7 +47,7 @@
                   <span th:text="${funcion.pelicula.nombre}"></span> |
                   duración: <span th:text="${funcion.pelicula.duracionMin}"></span> min |
                   Horario de función: <span th:text="${funcion.horaInicio}"></span> |
-                  Horario de finalizacion :<span th:text="${funcion.horaFin}"></span> 
+                  Horario de finalizacion :<span th:text="${funcion.horaFin}"></span>
                   <!--Fecha proyección: <span th:text="${funcion.fechaDeFuncion}"></span>-->
                 </div>
                 <div class="btn-group" role="group">
@@ -90,15 +90,16 @@
                   </div>
                   <span th:text="${funcion.pelicula.nombre}"></span> |
                   duración: <span th:text="${funcion.pelicula.duracionMin}"></span> min |
-                  Horario de función: <span th:text="${funcion.horaInicio}"></span> |
+                  Horario de función: <span th:text="${funcion.horaInicio}"></span>
+                  Horario de finalizacion: <span th:text="${funcion.horaFin}"></span> |
                   <!--Fecha proyección: <span th:text="${funcion.fechaDeFuncion}"></span>-->
                 </div>
                 <div class="btn-group" role="group">
-                  <a th:href="@{/edicionfunciones/updateFuncion(idfuncion=${funcion.idFuncion})}"
+                  <a th:href="@{/cineutn/funcion/editar/{idFuncion}(idFuncion=${funcion.idFuncion})}"
                     class="btn btn-warning btn-sm">Modificar</a>
-                  <a th:href="@{/edicionfunciones/deleteFuncion(idfuncion=${funcion.idFuncion})}"
+                  <a th:href="@{/cineutn/funcion/eliminar/{idFuncion}(idFuncion=${funcion.idFuncion})}"
                     class="btn btn-danger btn-sm">Eliminar</a>
-                  <a th:href="@{/edicionfunciones/checkFuncion(idfuncion=${funcion.idFuncion})}"
+                  <a th:href="@{/cineutn/funcion/revisar/{idFuncion}(idFuncion=${funcion.idFuncion})}"
                     class="btn btn-info btn-sm">Revisar</a>
                 </div>
               </li>

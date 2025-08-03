@@ -80,5 +80,10 @@ public class Pelicula implements Serializable {
     public void setFechaDeEstreno(String fechaDeEstreno){
         fechaEstreno = LocalDate.parse(fechaDeEstreno);
     }
+
+    @Override
+    public String toString() {
+        return "Pelicula{" + "idPelicula=" + idPelicula + ", duracionMin=" + duracionMin + ", nombre=" + nombre + ", sinopsis=" + sinopsis + ", calif=" + calif + ", fechaEstreno=" + fechaEstreno + ", director=" + director + ", cartelera=" + cartelera + '}';
+    }
     
 }

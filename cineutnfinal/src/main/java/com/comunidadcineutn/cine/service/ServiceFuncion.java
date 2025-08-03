@@ -38,12 +38,14 @@ public class ServiceFuncion implements InterfaceServiceFuncion {
 
     @Override
     public Funcion addFuncion(Funcion f) {
-        f.setHoraFin(f.getHoraInicio().plusMinutes(f.getPelicula().getDuracionMin() + 30));
+       // f.setHoraFin(f.getHoraInicio().plusMinutes(f.getPelicula().getDuracionMin() + 30));
+
+       System.out.println("booleano si hay horario disponibles "+isHorarioOcupadoFuncion(f));
         if (isHorarioOcupadoFuncion(f)) {
             throw new RuntimeException("horario ocupado");
         }
-        repositoriofuncion.save(f);
-        return findFuncionPorId(f.getIdFuncion());
+        
+        return repositoriofuncion.save(f);
     }
 
     @Override
@@ -53,13 +55,14 @@ public class ServiceFuncion implements InterfaceServiceFuncion {
 
     @Override
     public Funcion findFuncionPorId(Integer id) {
+        
         return repositoriofuncion.findById(id).orElseThrow(
             ()-> new ExceptionNotFound("No existe la funcion el Id ingresado") );
     }
 
     @Override
     public Funcion editFuncion(Funcion f) {
-
+        
         repositoriofuncion.save(f);
         return findFuncionPorId(f.getIdFuncion());
     }
