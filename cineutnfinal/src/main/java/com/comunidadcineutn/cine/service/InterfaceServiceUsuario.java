@@ -4,9 +4,9 @@
  */
 package com.comunidadcineutn.cine.service;
 
+import com.comunidadcineutn.cine.dto.UsuarioEdicionDTO;
 import com.comunidadcineutn.cine.model.Usuario;
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -16,11 +16,14 @@ public interface InterfaceServiceUsuario {
     
      public List<Usuario> getAll();
     
-    public Usuario addUsuario(Usuario u);
+    public Usuario addUsuario(Usuario u) throws Exception;
     
     public void deleteUserPorId(Integer id);
     
-    public Optional<Usuario> findUsuarioPorId(Integer id);
+    public Usuario findUsuarioPorId(Integer id);
     
-    public Usuario editUsuario(Usuario u);
+    public Usuario editUsuario(Usuario u) throws Exception;
+
+    public UsuarioEdicionDTO getUsuarioEdicionDTOById(Integer id);
+
 }
