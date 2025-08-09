@@ -33,7 +33,6 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
 
   @Override
   public Usuario addUsuario(Usuario u) throws Exception {
-    System.out.println("aca tiene que llegar si o si para validar el mail y la contraseña");
     System.out.println(u.toString());
     if (checkEmailDisponible(u) && checkPasswordSimilares(u)) {
       u = repositorioUsuario.save(u);
@@ -54,31 +53,38 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
   }
 
   @Override
-  public Usuario editUsuario(Usuario usuarioActualizado) throws Exception {
-    Usuario usuarioExistente = repositorioUsuario.getReferenceById(usuarioActualizado.getId());
-    if(!usuarioExistente.getEmail().equals(usuarioActualizado.getEmail())){
-      String email = usuarioActualizado.getEmail();
-      Integer id = usuarioActualizado.getId();
-      if(repositorioUsuario.existsByEmailAndIdNot(email,id)){
+  public Usuario editUsuario(UsuarioEdicionDTO usuarioActualizadoDTO) throws Exception {
+    Usuario usuarioExistente = findUsuarioPorId(usuarioActualizadoDTO.getId());
+
+    if (!usuarioExistente.getEmail().equals(usuarioActualizadoDTO.getEmail())) {
+
+      String email = usuarioActualizadoDTO.getEmail();
+      Integer id = usuarioActualizadoDTO.getId();
+      if (repositorioUsuario.existsByEmailAndIdNot(email, id)) {
         throw new Exception("email ya esta registrado");
       }
     }
-    return repositorioUsuario.save(usuarioActualizado);
+
+    usuarioExistente.setId(usuarioActualizadoDTO.getId());
+    usuarioExistente.setApellido(usuarioActualizadoDTO.getApellido());
+    usuarioExistente.setNombre(usuarioActualizadoDTO.getNombre());
+    usuarioExistente.setEmail(usuarioActualizadoDTO.getEmail());
+    return repositorioUsuario.save(usuarioExistente);
   }
 
   private boolean checkEmailDisponible(Usuario u) throws Exception {
     Optional<Usuario> encontrado = repositorioUsuario.findByEmail(u.getEmail());
     if (encontrado.isPresent()) {
-        System.out.println("mail invalido :" + u.getEmail());
-        throw new Exception("email ya esta registrado");
+      System.out.println("mail invalido :" + u.getEmail());
+      throw new Exception("email ya esta registrado");
     }
     return true;
   }
 
-  private boolean checkPasswordSimilares(Usuario u) throws Exception{
-    String password1= u.getPassword();
+  private boolean checkPasswordSimilares(Usuario u) throws Exception {
+    String password1 = u.getPassword();
     String password2 = u.getConfirmarPassword();
-    if(!password1.equals(password2)){
+    if (!password1.equals(password2)) {
       throw new Exception("Las contraseñas no coinciden");
     }
     return true;
@@ -88,6 +94,6 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
   public UsuarioEdicionDTO getUsuarioEdicionDTOById(Integer id) {
     Usuario u = findUsuarioPorId(id);
     return new UsuarioEdicionDTO(u.getId(), u.getNombre(), u.getApellido(), u.getEmail(), u.getRolUsuario());
-  } 
+  }
 
 }

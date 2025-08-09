@@ -22,7 +22,7 @@ public interface InterfaceServiceUsuario {
     
     public Usuario findUsuarioPorId(Integer id);
     
-    public Usuario editUsuario(Usuario u) throws Exception;
+    public Usuario editUsuario(UsuarioEdicionDTO u) throws Exception;
 
     public UsuarioEdicionDTO getUsuarioEdicionDTOById(Integer id);
 

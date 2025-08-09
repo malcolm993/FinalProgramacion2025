@@ -20,7 +20,7 @@ public class UsuarioEdicionDTO {
     private String apellido;
 
     @NotBlank
-    @Email(message = "No tienen formate de email")
+    @Email(message = "No tienen formato de email")
     private String email;
 
     private Rol rolUsuario;

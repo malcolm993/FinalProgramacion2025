@@ -46,16 +46,20 @@
                   <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Registro</p>
 
                   <form class="mx-1 mx-md-4"
-                    th:action="${modoEdicion} ? @{/cineutn/usuario/editar} : @{/cineutn/usuario/signup}"
+                    th:action="${modoEdicion} ? @{/cineutn/usuario/editar-perfil} : @{/cineutn/usuario/signup}"
                     th:object="${usuario}" method="post">
                     <!-- Genero el input para del tipo de metodo para usar-->
                     <input type="hidden" name="_method" value="put" th:if="${modoEdicion == true}" />
-                    <input type="hidden" class="form-control" th:fiel = "${usuario.id}" th:if="${modoEdicion}">
+                    <input type="hidden" class="form-control" th:field="*{id}" th:if="${modoEdicion}">
                     <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> -->
                     <div th:if="${error}" class="alert alert-danger alert-dismissible fade show text-center"
                       role="alert">
                       <span th:text="${error}">Mensaje de error</span>
                       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <div th:if="${mensaje}" class="alert alert-success">
+                      <span th:text="${mensaje}"></span>
                     </div>
 
                     <!--Dato oculto Rol-->
@@ -138,6 +142,9 @@
                       <a th:href="@{/cineutn/usuario/perfil}" class="btn btn-outline-secondary btn-lg">
                         Cancelar
                       </a>
+
+                      <button type="button" class="btn btn-secondary" data-toggle="modal" th:if="${modoEdicion}" data-target="#changePasswordModal">Cambio Password</button>
+
                     </div>
                   </form>
 
@@ -149,6 +156,7 @@
       </div>
     </div>
   </section>
+  <div th:replace="usuarios/cambio-password :: passwordModal"></div>
 
   <!-- Footer-->
   <div th:replace="fragments/footer :: footer"></div>

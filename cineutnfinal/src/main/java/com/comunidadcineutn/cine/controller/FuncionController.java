@@ -109,9 +109,9 @@ public class FuncionController {
         Sala s = salaService.findSalaPorId(f.getSala().getIdSala());
         Pelicula p = peliculaService.findPeliculaPorId(f.getPelicula().getIdPelicula());
         Funcion auxFuncion = new Funcion(0,s, p, fechaHora);
-        Funcion creada = funcionService.addFuncion(auxFuncion);
-        ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
-                " " + creada.getPelicula().getNombre() + " ha sido creada");
+        Funcion editada = funcionService.addFuncion(auxFuncion);
+        ra.addFlashAttribute("mensaje", "Funcion con id " + editada.getIdFuncion() +
+                " " + editada.getPelicula().getNombre() + " ha sido editada");
         return "redirect:/cineutn/funcion/crudfunciones";
     }
 
@@ -167,11 +167,11 @@ public class FuncionController {
         LocalDateTime fechaHora = LocalDateTime.of(f.getFechaFuncion(), f.getHoraFuncion());
         Funcion auxFuncion = new Funcion(f.getId(),f.getSala(), f.getPelicula(), fechaHora);
 
-        Funcion creada = funcionService.editFuncion(auxFuncion);
-        System.out.println("los horarios inicio " + creada.getHoraInicio());
-        System.out.println("horario termina "+ creada.getHoraFin());
-        ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
-                " " + creada.getPelicula().getNombre() + " ha sido editada");
+        Funcion editada = funcionService.editFuncion(auxFuncion);
+        System.out.println("los horarios inicio " +editada.getHoraInicio());
+        System.out.println("horario termina "+ editada.getHoraFin());
+        ra.addFlashAttribute("mensaje", "Funcion con id " + editada.getIdFuncion() +
+                " " + editada.getPelicula().getNombre() + " ha sido editada");
         return "redirect:/cineutn/funcion/crudfunciones";
     }
 

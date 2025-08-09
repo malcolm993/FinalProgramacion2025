@@ -72,7 +72,7 @@
 
                     </div>
 
-                    <!-- Sección para cambio de contraseña (oculta por defecto) -->
+                    <!-- Sección para cambio de contraseña (oculta por defecto) 
                     <div class="mb-3">
                       <button type="button" class="btn btn-outline-secondary" onclick="togglePasswordSection()">
                         <i class="bi bi-lock-fill"></i> Cambiar Contraseña
@@ -93,7 +93,7 @@
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
                       </div>
                     </div>
-
+                    -->
                     <!-- Mensajes de error -->
                     <div th:if="${not empty error}">
                       <div class="alert alert-danger">*{error}</div>
@@ -125,23 +125,7 @@
       <script src="@{/}/assets/js/scripts.js"></script>
 
       <!-- Script para manejar la sección de contraseña -->
-      <script>
-        function togglePasswordSection() {
-          const section = document.getElementById('passwordSection');
-          section.style.display = section.style.display === 'none' ? 'block' : 'none';
-        }
-
-        // Validación del formulario
-        document.getElementById('formEditarPerfil').addEventListener('submit', function (e) {
-          const newPassword = document.getElementById('newPassword').value;
-          const confirmPassword = document.getElementById('confirmPassword').value;
-
-          if (newPassword && newPassword !== confirmPassword) {
-            e.preventDefault();
-            alert('Las contraseñas nuevas no coinciden');
-          }
-        });
-      </script>
+      
     </body>
 
     </html>
