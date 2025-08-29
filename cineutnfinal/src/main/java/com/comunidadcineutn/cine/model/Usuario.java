@@ -16,64 +16,94 @@ import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
+import java.util.Collection;
 
 import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario implements UserDetails {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-  @NotBlank
-  private String nombre;
-  @NotBlank
-  private String apellido;
+    @NotBlank
+    private String nombre;
+    @NotBlank
+    private String apellido;
 
-  @NotBlank
-  @Email(message = "No tienen formate de email")
-  private String email;
+    @NotBlank
+    @Email(message = "No tienen formate de email")
+    private String email;
 
-  @NotBlank(message = "ingresar una contraseña")
-  @Size(min = 4, message = "no cumple con la cantidad minima de carateres (4)")
-  private String password;
+    @NotBlank(message = "ingresar una contraseña")
+    @Size(min = 4, message = "no cumple con la cantidad minima de carateres (4)")
+    private String password;
 
-  @Transient
-  private String confirmarPassword;
+    @Transient
+    private String confirmarPassword;
 
-  @NotNull
-  @ManyToOne // Relación muchos-a-uno en lugar de campo simple
-  @JoinColumn(name = "rol_id") // Nombre de la columna en la tabla usuarios
-  private Rol rolUsuario;
+    @NotNull
+    @ManyToOne // Relación muchos-a-uno en lugar de campo simple
+    @JoinColumn(name = "rol_id") // Nombre de la columna en la tabla usuarios
+    private Rol rolUsuario;
 
-  @OneToMany(mappedBy = "usuarioComprador", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Reserva> funcionesReservadasUser;
+    @OneToMany(mappedBy = "usuarioComprador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reserva> funcionesReservadasUser;
 
-  public Usuario() {
-  }
+    public Usuario() {
+    }
 
-
-  public Usuario(Integer id, String nombre, String apellido, String email, String password) {
-    this.id = id;
-    this.nombre = nombre;
-    this.apellido = apellido;
-    this.email = email;
-    this.password = password;
-  }
+    public Usuario(Integer id, String nombre, String apellido, String email, String password) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.email = email;
+        this.password = password;
+    }
 
     @Override
     public String toString() {
         return "Usuario{" + "id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", email=" + email + ", password=" + password + ", confirmarPassword=" + confirmarPassword + ", rolUsuario=" + rolUsuario + '}';
     }
-  
-  
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(rolUsuario.getNombreRol()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }

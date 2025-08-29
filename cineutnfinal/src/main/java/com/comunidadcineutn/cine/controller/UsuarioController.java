@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.comunidadcineutn.cine.dto.PasswordUser;
 import com.comunidadcineutn.cine.dto.UsuarioEdicionDTO;
-import com.comunidadcineutn.cine.model.Pelicula;
+
 import com.comunidadcineutn.cine.model.Rol;
 import com.comunidadcineutn.cine.model.Usuario;
 
@@ -167,5 +167,11 @@ public class UsuarioController {
     ra.addFlashAttribute("mensaje", "Usuario " + u.getId() + " eliminada con éxito!");
 
     return "redirect:/cineutn/usuario/signup";
+  }
+  
+  @GetMapping("/login")
+  @Operation (summary = "Formulario de ingreso")
+  public String ingresoUsuario(){
+      return "usuarios/login";
   }
 }

@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author santi
  */
-public interface InterfaceUsarioRepository extends JpaRepository<Usuario, Integer> {
+public interface InterfaceUsuarioRepository extends JpaRepository<Usuario, Integer> {
     public Optional<Usuario> findByEmail(String email);
 
     public boolean existsByEmailAndIdNot(String email, Integer id);

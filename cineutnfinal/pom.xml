@@ -73,12 +73,20 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!--dependecias de Sprng security-->
+        <!--dependecias de Spring security-->
         <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-security</artifactId>
-         </dependency>
-
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!--dependecias de thymeleaf para Spring security-->
+        <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6 -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+            <version>3.1.2.RELEASE</version>
+        </dependency>
+        
+         
         
     </dependencies>
 
