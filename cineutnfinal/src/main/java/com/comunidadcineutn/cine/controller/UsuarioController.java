@@ -59,24 +59,26 @@ public class UsuarioController {
       RedirectAttributes ra) {
     String casoError = "usuarios/sign-up";
     String casoExito = "redirect:/cineutn/usuario/perfil";
-
+    String destino = casoExito;
+    
+    
     if (br.hasErrors()) {
       System.out.println("error en validacion de atributos");
       System.out.println(br);
       m.addAttribute("usuario", u);
-      return casoError;
+      destino = casoError;
     } else {
       try {
         usuarioService.addUsuario(u);
       } catch (Exception e) {
         m.addAttribute("error", e.getMessage());
         m.addAttribute("usuario", u);
-        return casoError;
+        destino = casoError;
       }
 
     }
     ra.addAttribute("idUsuario", u.getId());
-
+    
     return casoExito;
   }
 

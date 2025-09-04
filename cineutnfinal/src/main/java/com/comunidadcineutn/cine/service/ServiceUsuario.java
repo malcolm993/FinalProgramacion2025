@@ -27,13 +27,13 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
     private InterfaceUsuarioRepository repositorioUsuario;
     
     @Autowired
-    private SecurityConfiguration configuradorSeguridad;
+    private static SecurityConfiguration configuradorSeguridad;
 
     @Override
     public List<Usuario> getAll() {
         return repositorioUsuario.findAll();
     }
-
+    
     @Override
     public Usuario addUsuario(Usuario u) throws Exception {
         System.out.println(u.toString());
