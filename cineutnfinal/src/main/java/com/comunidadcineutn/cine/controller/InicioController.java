@@ -11,14 +11,14 @@ import org.springframework.ui.Model;
   import io.swagger.v3.oas.annotations.tags.Tag;
 
   @Tag(name = "Inicio", description = "Inicio de la pagina")
-  @RequestMapping("/cineutn/inicio")
+  @RequestMapping({"/cineutn/inicio" , "/"})
   @Controller
   public class InicioController {
 
       @Autowired
       private InterfaceServicePelicula peliculaService;
 
-      @GetMapping("/todas")
+      @GetMapping
       @Operation(summary = "Obtener todas las peliculas")
       public String getPeliculas(Model modelo) {
           modelo.addAttribute("listaPeliculas", peliculaService.getAll());

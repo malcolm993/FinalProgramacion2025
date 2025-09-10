@@ -28,11 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String usermail) throws UsernameNotFoundException {
         Usuario u = repostorioUsuario.findByEmail(usermail).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
-        User autU = null;
-        autU = new User(u.getEmail(),
-                u.getPassword(),
-                List.of(new SimpleGrantedAuthority(u.getRolUsuario().getNombreRol())));
-
-        return autU;
+        return u;
     }
 }

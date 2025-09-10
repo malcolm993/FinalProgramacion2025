@@ -4,6 +4,7 @@
  */
 package com.comunidadcineutn.cine.service;
 
+import com.comunidadcineutn.cine.dto.PasswordUser;
 import com.comunidadcineutn.cine.dto.UsuarioEdicionDTO;
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Usuario;
@@ -12,9 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.comunidadcineutn.cine.repository.InterfaceUsuarioRepository;
-import com.comunidadcineutn.cine.securityconfiguration.SecurityConfiguration;
 
 /**
  *
@@ -25,9 +26,10 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
 
     @Autowired
     private InterfaceUsuarioRepository repositorioUsuario;
-    
+
     @Autowired
-    private static SecurityConfiguration configuradorSeguridad;
+    private PasswordEncoder pe;
+
 
     @Override
     public List<Usuario> getAll() {
@@ -38,7 +40,7 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
     public Usuario addUsuario(Usuario u) throws Exception {
         System.out.println(u.toString());
         if (checkEmailDisponible(u) && checkPasswordSimilares(u)) {
-            String passworsEncrip = configuradorSeguridad.encriptadorPassword().encode(u.getPassword());
+            String passworsEncrip = pe.encode(u.getPassword());
             u.setPassword(passworsEncrip);
             u = repositorioUsuario.save(u);
         }
@@ -100,5 +102,20 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
         Usuario u = findUsuarioPorId(id);
         return new UsuarioEdicionDTO(u.getId(), u.getNombre(), u.getApellido(), u.getEmail(), u.getRolUsuario());
     }
+
+    @Override
+    public void changePasswordUser(PasswordUser pu) throws Exception {
+        Usuario user = findUsuarioPorId(pu.getId());
+        if(!pe.matches(pu.getCurrentPassword(), user.getPassword())){
+            throw new Exception("Contraseña Actual incorrecta");          
+        }
+        if(!pe.matches(pu.getNewPassword(), pu.getConfirmPassword())){
+            throw new Exception("La constraseñas nueva no coinciden");
+        }
+        String nuevaPasswordString = pe.encode(pu.getNewPassword());
+        user.setPassword(nuevaPasswordString);
+        repositorioUsuario.save(user);
+    }
+
 
 }

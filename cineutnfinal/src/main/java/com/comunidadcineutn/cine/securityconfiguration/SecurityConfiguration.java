@@ -40,7 +40,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/css/**").permitAll()
                 .requestMatchers("/icon/**").permitAll()
                 .requestMatchers("/js/**").permitAll()
-                .requestMatchers("/cineutn/inicio/todas").permitAll()
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/cineutn/inicio/**").permitAll()
                 .requestMatchers("/cineutn/usuario/signup").permitAll()
                 .requestMatchers("/cineutn/usuario/login").permitAll() // ✅ AÑADIR
                 .requestMatchers("/fragments/**").permitAll()
@@ -51,7 +52,7 @@ public class SecurityConfiguration {
             .formLogin(form -> form
                 .loginPage("/cineutn/usuario/login")
                 .loginProcessingUrl("/loginprocess")
-                .defaultSuccessUrl("/cineutn/inicio/todas")
+                .defaultSuccessUrl("/cineutn/inicio")
                 .failureUrl("/cineutn/usuario/login?error=true")
                 .permitAll()
             )

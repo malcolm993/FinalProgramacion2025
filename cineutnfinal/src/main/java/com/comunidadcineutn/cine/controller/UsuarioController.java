@@ -1,6 +1,7 @@
 package com.comunidadcineutn.cine.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -79,41 +80,43 @@ public class UsuarioController {
     }
     ra.addAttribute("idUsuario", u.getId());
     
-    return casoExito;
+    return destino;
   }
 
   @GetMapping("/perfil")
   @Operation(summary = "Revisar el perfil")
-  public String revisarPerfil(@RequestParam("idUsuario") Integer idUsuario, Model model, RedirectAttributes ra) {
+  public String revisarPerfil(@AuthenticationPrincipal Usuario user, Model model, RedirectAttributes ra) {
+      System.out.println(" datos de usuario cargardo desde authentication" + user.toString());
+      String destino = "redirect:/cineutn/usuario/login";
     try {
-      Usuario u = usuarioService.findUsuarioPorId(idUsuario);
-      model.addAttribute("usuario", u);
-      return "usuarios/revisar-usuario";
+      UsuarioEdicionDTO userDTO = usuarioService.getUsuarioEdicionDTOById(user.getId());
+      model.addAttribute("usuario", userDTO);
+      destino = "usuarios/revisar-usuario";
     } catch (Exception e) {
       ra.addAttribute("error", e.getMessage());
-      return "redirect:/cineutn/usuario/signup";
     }
-
+    return destino;
   }
 
-  @GetMapping("/editar-perfil/{id}")
+  @GetMapping("/edicion")
   @Operation(summary = "formulario para la edicion de perfil usuario")
-  public String edicionPerfil(Model mod, @PathVariable(name = "id") Integer id, RedirectAttributes ra) {
-    try {
-      UsuarioEdicionDTO u = usuarioService.getUsuarioEdicionDTOById(id);
+  public String edicionPerfil(@AuthenticationPrincipal Usuario user,Model mod, RedirectAttributes ra) {
+      String destino="redirect:/cineutn/usuarios/sign-up";
+      try {
+      UsuarioEdicionDTO u = usuarioService.getUsuarioEdicionDTOById(user.getId());
       System.out.println("usuario DTo creado : " + u.toString());
       mod.addAttribute("usuario", u);
       mod.addAttribute("modoEdicion", true);
-      mod.addAttribute("edicionPassword", new PasswordUser(id));
-      return "usuarios/sign-up";
+      //mod.addAttribute("edicionPassword", new PasswordUser(user.getId()));
+      destino = "usuarios/sign-up";
     } catch (Exception e) {
       ra.addAttribute("error", e.getMessage());
-      return "redirect:/cineutn/usuarios/sign-up";
+      
     }
-    
+    return destino;
   }
 
-  @PutMapping("/editar-perfil")
+  @PutMapping("/edicion")
   @Operation(summary = "realizo la edicion de usuario")
   public String edicionPerfil(@Valid @ModelAttribute("usuario") UsuarioEdicionDTO u,
       BindingResult br,
@@ -127,7 +130,7 @@ public class UsuarioController {
       System.out.println(br);
       m.addAttribute("usuario", u);
       m.addAttribute("modoEdicion", true);
-      m.addAttribute("edicionPassword", new PasswordUser(u.getId()));
+      //m.addAttribute("edicionPassword", new PasswordUser(u.getId()));
       return casoError;
     } else {
       try {
@@ -137,7 +140,7 @@ public class UsuarioController {
         m.addAttribute("error", e.getMessage());
         m.addAttribute("usuario", u);
         m.addAttribute("modoEdicion", true);
-         m.addAttribute("edicionPassword", new PasswordUser(u.getId()));
+        //m.addAttribute("edicionPassword", new PasswordUser(u.getId()));
         return casoError;
       }
 
@@ -176,4 +179,48 @@ public class UsuarioController {
   public String ingresoUsuario(){
       return "usuarios/login";
   }
+
+  @GetMapping("/cambiarPassword")
+  @Operation(summary = "obtengo formulario para cambio de contraseña")
+  public String cambioPasswordUsuario(@AuthenticationPrincipal Usuario user, Model mod, RedirectAttributes ra){
+     String destino="redirect:/cineutn/usuarios/cambioPassword";
+      try {
+      PasswordUser nuevaPassword = new PasswordUser(user.getId());
+      System.out.println(" DTo creado para cambio password: " + nuevaPassword.toString());
+      mod.addAttribute("passwordUser", nuevaPassword);
+      destino = "usuarios/cambio-password";
+    } catch (Exception e) {
+      ra.addAttribute("error", e.getMessage());
+    }
+    return destino;
+  }
+
+   @PostMapping("/cambiarPassword")
+   @Operation(summary = "POST - envio el formulario con la password nueva")
+    public String procesarCambioPassword(
+            @Valid @ModelAttribute PasswordUser passwordUser,
+            BindingResult bindingResult,
+            @AuthenticationPrincipal Usuario usuarioActual,
+            RedirectAttributes ra) {
+        
+        if (!passwordUser.getId().equals(usuarioActual.getId())) {
+            ra.addFlashAttribute("error", "No autorizado");
+            return "redirect:/cineutn/usuario/cambiarPassword";
+        }
+        
+        if (bindingResult.hasErrors()) {
+            return "usuarios/cambio-password";
+        }
+        
+        try {
+            // ✅ Llamar al servicio con el DTO
+            usuarioService.changePasswordUser(passwordUser);
+            ra.addFlashAttribute("exito", "Contraseña cambiada exitosamente");
+            return "redirect:/cineutn/usuario/perfil";
+            
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", e.getMessage());
+            return "usuarios/cambio-password";
+        }
+    }
 }

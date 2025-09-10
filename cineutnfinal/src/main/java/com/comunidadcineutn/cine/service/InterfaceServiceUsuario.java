@@ -4,6 +4,7 @@
  */
 package com.comunidadcineutn.cine.service;
 
+import com.comunidadcineutn.cine.dto.PasswordUser;
 import com.comunidadcineutn.cine.dto.UsuarioEdicionDTO;
 import com.comunidadcineutn.cine.model.Usuario;
 import java.util.List;
@@ -25,5 +26,7 @@ public interface InterfaceServiceUsuario {
     public Usuario editUsuario(UsuarioEdicionDTO u) throws Exception;
 
     public UsuarioEdicionDTO getUsuarioEdicionDTOById(Integer id);
+
+    public void changePasswordUser(PasswordUser pu) throws Exception;
 
 }
