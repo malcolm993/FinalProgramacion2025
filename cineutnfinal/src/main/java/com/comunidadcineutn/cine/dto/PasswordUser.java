@@ -37,4 +37,9 @@ public class PasswordUser {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "PasswordUser{" + "id=" + id + ", currentPassword=" + currentPassword + ", newPassword=" + newPassword + ", confirmPassword=" + confirmPassword + '}';
+    }
+    
 }

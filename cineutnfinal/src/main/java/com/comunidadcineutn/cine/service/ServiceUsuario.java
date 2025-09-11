@@ -30,12 +30,11 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
     @Autowired
     private PasswordEncoder pe;
 
-
     @Override
     public List<Usuario> getAll() {
         return repositorioUsuario.findAll();
     }
-    
+
     @Override
     public Usuario addUsuario(Usuario u) throws Exception {
         System.out.println(u.toString());
@@ -106,16 +105,19 @@ public class ServiceUsuario implements InterfaceServiceUsuario {
     @Override
     public void changePasswordUser(PasswordUser pu) throws Exception {
         Usuario user = findUsuarioPorId(pu.getId());
-        if(!pe.matches(pu.getCurrentPassword(), user.getPassword())){
-            throw new Exception("Contraseña Actual incorrecta");          
+        if (!pe.matches(pu.getCurrentPassword(), user.getPassword())) {
+            throw new Exception("Contraseña actual ingresada es erronea");
         }
-        if(!pe.matches(pu.getNewPassword(), pu.getConfirmPassword())){
+        if (!pu.getNewPassword().equals(pu.getConfirmPassword())) {
             throw new Exception("La constraseñas nueva no coinciden");
         }
+        if (pe.matches(pu.getNewPassword(), user.getPassword())) {
+            throw new Exception("La nueva contraseña debe ser diferente a la actual");
+        }
+
         String nuevaPasswordString = pe.encode(pu.getNewPassword());
         user.setPassword(nuevaPasswordString);
         repositorioUsuario.save(user);
     }
-
 
 }

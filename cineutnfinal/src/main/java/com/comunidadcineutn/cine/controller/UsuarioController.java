@@ -61,8 +61,7 @@ public class UsuarioController {
     String casoError = "usuarios/sign-up";
     String casoExito = "redirect:/cineutn/usuario/perfil";
     String destino = casoExito;
-    
-    
+
     if (br.hasErrors()) {
       System.out.println("error en validacion de atributos");
       System.out.println(br);
@@ -79,15 +78,15 @@ public class UsuarioController {
 
     }
     ra.addAttribute("idUsuario", u.getId());
-    
+
     return destino;
   }
 
   @GetMapping("/perfil")
   @Operation(summary = "Revisar el perfil")
   public String revisarPerfil(@AuthenticationPrincipal Usuario user, Model model, RedirectAttributes ra) {
-      System.out.println(" datos de usuario cargardo desde authentication" + user.toString());
-      String destino = "redirect:/cineutn/usuario/login";
+    System.out.println(" datos de usuario cargardo desde authentication" + user.toString());
+    String destino = "redirect:/cineutn/usuario/login";
     try {
       UsuarioEdicionDTO userDTO = usuarioService.getUsuarioEdicionDTOById(user.getId());
       model.addAttribute("usuario", userDTO);
@@ -100,18 +99,18 @@ public class UsuarioController {
 
   @GetMapping("/edicion")
   @Operation(summary = "formulario para la edicion de perfil usuario")
-  public String edicionPerfil(@AuthenticationPrincipal Usuario user,Model mod, RedirectAttributes ra) {
-      String destino="redirect:/cineutn/usuarios/sign-up";
-      try {
+  public String edicionPerfil(@AuthenticationPrincipal Usuario user, Model mod, RedirectAttributes ra) {
+    String destino = "redirect:/cineutn/usuarios/sign-up";
+    try {
       UsuarioEdicionDTO u = usuarioService.getUsuarioEdicionDTOById(user.getId());
       System.out.println("usuario DTo creado : " + u.toString());
       mod.addAttribute("usuario", u);
       mod.addAttribute("modoEdicion", true);
-      //mod.addAttribute("edicionPassword", new PasswordUser(user.getId()));
+      // mod.addAttribute("edicionPassword", new PasswordUser(user.getId()));
       destino = "usuarios/sign-up";
     } catch (Exception e) {
       ra.addAttribute("error", e.getMessage());
-      
+
     }
     return destino;
   }
@@ -130,7 +129,7 @@ public class UsuarioController {
       System.out.println(br);
       m.addAttribute("usuario", u);
       m.addAttribute("modoEdicion", true);
-      //m.addAttribute("edicionPassword", new PasswordUser(u.getId()));
+      // m.addAttribute("edicionPassword", new PasswordUser(u.getId()));
       return casoError;
     } else {
       try {
@@ -140,7 +139,7 @@ public class UsuarioController {
         m.addAttribute("error", e.getMessage());
         m.addAttribute("usuario", u);
         m.addAttribute("modoEdicion", true);
-        //m.addAttribute("edicionPassword", new PasswordUser(u.getId()));
+        // m.addAttribute("edicionPassword", new PasswordUser(u.getId()));
         return casoError;
       }
 
@@ -173,18 +172,18 @@ public class UsuarioController {
 
     return "redirect:/cineutn/usuario/signup";
   }
-  
+
   @GetMapping("/login")
-  @Operation (summary = "Formulario de ingreso")
-  public String ingresoUsuario(){
-      return "usuarios/login";
+  @Operation(summary = "Formulario de ingreso")
+  public String ingresoUsuario() {
+    return "usuarios/login";
   }
 
   @GetMapping("/cambiarPassword")
   @Operation(summary = "obtengo formulario para cambio de contraseña")
-  public String cambioPasswordUsuario(@AuthenticationPrincipal Usuario user, Model mod, RedirectAttributes ra){
-     String destino="redirect:/cineutn/usuarios/cambioPassword";
-      try {
+  public String cambioPasswordUsuario(@AuthenticationPrincipal Usuario user, Model mod, RedirectAttributes ra) {
+    String destino = "redirect:/cineutn/usuarios/perfil";
+    try {
       PasswordUser nuevaPassword = new PasswordUser(user.getId());
       System.out.println(" DTo creado para cambio password: " + nuevaPassword.toString());
       mod.addAttribute("passwordUser", nuevaPassword);
@@ -195,32 +194,39 @@ public class UsuarioController {
     return destino;
   }
 
-   @PostMapping("/cambiarPassword")
-   @Operation(summary = "POST - envio el formulario con la password nueva")
-    public String procesarCambioPassword(
-            @Valid @ModelAttribute PasswordUser passwordUser,
-            BindingResult bindingResult,
-            @AuthenticationPrincipal Usuario usuarioActual,
-            RedirectAttributes ra) {
-        
-        if (!passwordUser.getId().equals(usuarioActual.getId())) {
-            ra.addFlashAttribute("error", "No autorizado");
-            return "redirect:/cineutn/usuario/cambiarPassword";
-        }
-        
-        if (bindingResult.hasErrors()) {
-            return "usuarios/cambio-password";
-        }
-        
-        try {
-            // ✅ Llamar al servicio con el DTO
-            usuarioService.changePasswordUser(passwordUser);
-            ra.addFlashAttribute("exito", "Contraseña cambiada exitosamente");
-            return "redirect:/cineutn/usuario/perfil";
-            
-        } catch (Exception e) {
-            ra.addFlashAttribute("error", e.getMessage());
-            return "usuarios/cambio-password";
-        }
+  @PostMapping("/cambiarPassword")
+  @Operation(summary = "POST - envio el formulario con la password nueva")
+  public String procesarCambioPassword(
+      @Valid @ModelAttribute PasswordUser passwordUser,
+      BindingResult bindingResult,
+      @AuthenticationPrincipal Usuario usuarioActual,
+      RedirectAttributes ra) {
+
+    //String destino = "redirect:/cineutn/usuario/cambiarPassword";
+    System.out.println("passworduser string : " + passwordUser.toString());
+
+    if (!passwordUser.getId().equals(usuarioActual.getId())) {
+      ra.addFlashAttribute("error", "No autorizado");
+      return "redirect:/cineutn/usuario/perfil";
     }
+
+    if (bindingResult.hasErrors()) {
+      bindingResult.getAllErrors()
+          .forEach(error -> System.out.println("Error de validación: " + error.getDefaultMessage()));
+
+      return "usuarios/cambio-password"; // ← Mantiene el formulario con errores
+    }
+
+    try {
+      usuarioService.changePasswordUser(passwordUser);
+      ra.addFlashAttribute("exito", "Contraseña cambiada exitosamente");
+      return "redirect:/cineutn/usuario/perfil";
+
+    } catch (Exception e) {
+      // Log real para developers
+      System.err.println("Error al cambiar password: " + e.getMessage());
+      ra.addFlashAttribute("error", "Error al cambiar la contraseña");
+      return "redirect:/cineutn/usuario/cambiarPassword";
+    }
+  }
 }
