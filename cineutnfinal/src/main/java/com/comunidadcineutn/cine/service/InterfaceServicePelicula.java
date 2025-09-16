@@ -34,4 +34,6 @@ public interface InterfaceServicePelicula  {
     public PeliculaEdicionDTO getPeliculaEdicion(Integer id);
 
     public List<PeliculaAltaFuncionDTO> getListadoPeliculasAltaFuncion();
+
+    public Pelicula actualizarPelicula (Integer id, PeliculaEdicionDTO p);
 }

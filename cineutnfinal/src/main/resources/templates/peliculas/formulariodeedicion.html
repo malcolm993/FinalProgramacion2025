@@ -14,22 +14,25 @@
   <div th:replace="~{fragments/navbar :: navbar}"></div>
 
   <div class="container mt-5">
-    <h1 class="text-center mb-4">Detalles de la Película ID: <span th:text="${pelicula.idPelicula}"></span></h1>
+    <h1 class="text-center mb-4">Detalles de la Película ID: <span th:text="${pelicula.id}"></span></h1>
 
     <!-- Información de la película -->
     <div class="card p-4">
       <h2 class="text-center mb-4">Editar datos Película: <span th:text="${pelicula.nombre}"></span></h2>
+      
       <form id="formEditarPelicula" th:action="@{/cineutn/pelicula/editar}" method="post" th:object="${pelicula}">
 
         <input type="hidden" name="_method" value="put" />
+        
+        <!-- ✅ CAMPO ID OCULTO DENTRO DEL FORMULARIO -->
+        <input type="hidden" th:field="*{id}" />
 
         <!-- Campo Nombre -->
         <div class="mb-3 row">
           <label for="nombre" class="col-sm-2 col-form-label">Nombre:</label>
           <div class="col-sm-10">
             <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
-            </div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
           </div>
         </div>
 
@@ -42,21 +45,12 @@
           </div>
         </div>
 
-        <!-- Campo Apto para -->
-        <div class="mb-3 row">
-          <label for="aptopara" class="col-sm-2 col-form-label">Apto para:</label>
-          <div class="col-sm-10">
-            <input type="text" id="aptopara" th:field="*{calif}" class="form-control" required>
-          </div>
-        </div>
-
         <!-- Campo Fecha de Estreno -->
         <div class="mb-3 row">
           <label for="fechaEstreno" class="col-sm-2 col-form-label">Fecha de estreno:</label>
           <div class="col-sm-10">
             <input type="date" id="fechaEstreno" th:field="*{fechaEstreno}" class="form-control" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaEstreno')}" th:errors="*{fechaEstreno}">
-            </div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaEstreno')}" th:errors="*{fechaEstreno}"></div>
           </div>
         </div>
 
@@ -68,9 +62,6 @@
           </div>
         </div>
 
-        <!-- Imagen de la película -->
-
-
         <!-- Campo Sinopsis -->
         <div class="mb-3 row">
           <label for="sinopsis" class="col-sm-2 col-form-label">Sinopsis:</label>
@@ -79,32 +70,27 @@
           </div>
         </div>
 
-        <!-- Campo de estado de película -->
-        <div class="mb-3 row">
-          <label for="cartelera" class="col-sm-2 col-form-label">En Cartelera:</label>
-          <div class="col-sm-10">
-            <div th:if="${pelicula.cartelera}">
-              <input type="text" class="form-control" value="Sí" readonly>
-              <input type="hidden" th:field="*{cartelera}" />
-            </div>
-            <div th:unless="${pelicula.cartelera}">
-              <select id="cartelera" th:field="*{cartelera}" class="form-select" required>
-                <option value="false" selected>No</option>
-                <option value="true">Sí</option>
-              </select>
-            </div>
+        <!-- Clasificación -->
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="calif">Clasificación</label>
+          <select th:field="*{calif}" class="form-select">
+            <option value="">Seleccione...</option>
+            <option th:each="clasif : ${clasificaciones}" th:value="${clasif}" th:text="${clasif}"></option>
+          </select>
+          <div class="invalid-feedback" th:if="${#fields.hasErrors('calif')}">
+            <span th:errors="*{calif}"></span>
           </div>
         </div>
 
-        <!-- Botones de acción -->
-        <input type="hidden" th:field="*{idPelicula}" />
+        <!-- ✅ BOTONES DENTRO DEL FORMULARIO -->
         <div class="mb-3 row">
           <div class="col-sm-12 text-center">
             <button type="submit" class="btn btn-success me-2">Confirmar cambios</button>
             <button type="reset" class="btn btn-secondary">Reiniciar</button>
           </div>
         </div>
-      </form>
+
+      </form> <!-- ✅ CIERRE CORRECTO DEL FORMULARIO -->
     </div>
 
     <!-- Botón de regresar -->

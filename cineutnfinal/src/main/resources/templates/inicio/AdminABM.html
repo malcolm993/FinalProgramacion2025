@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="Panel de gestión administrativa del cine" />
+  <meta name="author" content="" />
+  <title>Gestión de Cine UTN</title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" th:href="@{/icon/favicon.ico}" />
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link th:href="@{/css/styles.css}" rel="stylesheet" />
+  <style>
+    .management-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: none;
+      border-radius: 15px;
+    }
+
+    .management-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+  <!-- Header-->
+  <header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+      <div class="text-center text-white">
+        <h1 class="display-4 fw-bolder">Gestión de Cine UTN</h1>
+        <p class="lead fw-normal text-white-50 mb-0">Panel administrativo completo</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sección de Gestión -->
+  <section class="py-5">
+    <div class="container px-4 px-lg-5">
+      <div class="row g-4">
+
+        <!-- Gestión de Películas -->
+        <div class="col-md-4">
+          <div class="card management-card h-100 text-center bg-light">
+            <div class="card-body">
+              <i class="bi bi-film card-icon text-primary"></i>
+              <h3 class="card-title">Gestión de Películas</h3>
+              <p class="card-text">Administra el catálogo completo de películas: agregar, editar y eliminar.</p>
+              <a th:href="@{/cineutn/pelicula/crudpeliculas}" class="btn btn-primary btn-lg">
+                <i class="bi bi-gear-fill me-2"></i>Gestionar Películas
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gestión de Funciones -->
+        <div class="col-md-4">
+          <div class="card management-card h-100 text-center bg-light">
+            <div class="card-body">
+              <i class="bi bi-calendar-event card-icon text-success"></i>
+              <h3 class="card-title">Gestión de Funciones</h3>
+              <p class="card-text">Gestiona horarios, salas y programación de funciones.</p>
+              <a th:href="@{/cineutn/funcion/crudfunciones}" class="btn btn-success btn-lg">
+                <i class="bi bi-clock-history me-2"></i>Gestionar Funciones
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gestión de Salas -->
+        <div class="col-md-4">
+          <div class="card management-card h-100 text-center bg-light">
+            <div class="card-body">
+              <i class="bi bi-building card-icon text-warning"></i>
+              <h3 class="card-title">Gestión de Salas</h3>
+              <p class="card-text">Administra las salas de cine, butacas y configuración.</p>
+              <a th:href="@{/cineutn/sala/crudsalas}" class="btn btn-warning btn-lg">
+                <i class="bi bi-door-open me-2"></i>Gestionar Salas
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gestión de Usuarios -->
+        <div class="col-md-4 mt-4">
+          <div class="card management-card h-100 text-center bg-light">
+            <div class="card-body">
+              <i class="bi bi-people card-icon text-info"></i>
+              <h3 class="card-title">Gestión de Usuarios</h3>
+              <p class="card-text">Administra usuarios, roles y permisos del sistema.</p>
+              <a th:href="@{/cineutn/usuarios}" class="btn btn-info btn-lg">
+                <i class="bi bi-person-gear me-2"></i>Gestionar Usuarios
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visualización de Reservas -->
+        <div class="col-md-4 mt-4">
+          <div class="card management-card h-100 text-center bg-light">
+            <div class="card-body">
+              <i class="bi bi-ticket-perforated card-icon text-danger"></i>
+              <h3 class="card-title">Visualizar Reservas</h3>
+              <p class="card-text">Consulta y gestiona todas las reservas del sistema.</p>
+              <a th:href="@{/cineutn/reserva/reservasall}" class="btn btn-danger btn-lg">
+                <i class="bi bi-list-check me-2"></i>Ver Reservas
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reportes y Estadísticas -->
+        <div class="col-md-4 mt-4">
+          <div class="card management-card h-100 text-center bg-light">
+            <div class="card-body">
+              <i class="bi bi-graph-up card-icon text-purple"></i>
+              <h3 class="card-title">Reportes y Estadísticas</h3>
+              <p class="card-text">Genera reportes y visualiza métricas del cine.</p>
+              <a th:href="@{/cineutn/reportes}" class="btn btn-purple btn-lg">
+                <i class="bi bi-bar-chart me-2"></i>Ver Reportes
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Acciones Rápidas -->
+  <section class="py-5 bg-light">
+    <div class="container px-4 px-lg-5">
+      <div class="text-center">
+        <h2 class="fw-bolder mb-4">Acciones Rápidas</h2>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a th:href="@{/cineutn/edicionpeliculas/nueva}" class="btn btn-outline-primary">
+            <i class="bi bi-plus-circle me-2"></i>Nueva Película
+          </a>
+          <a th:href="@{/cineutn/edicionfunciones/nueva}" class="btn btn-outline-success">
+            <i class="bi bi-plus-circle me-2"></i>Nueva Función
+          </a>
+          <a th:href="@{/cineutn/salas/nueva}" class="btn btn-outline-warning">
+            <i class="bi bi-plus-circle me-2"></i>Nueva Sala
+          </a>
+          <a th:href="@{/cineutn/usuarios/nuevo}" class="btn btn-outline-info">
+            <i class="bi bi-person-plus me-2"></i>Nuevo Usuario
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div th:replace="~{fragments/footer :: footer}"></div>
+
+  <!-- Bootstrap core JS-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Core theme JS-->
+  <script th:src="@{/js/scripts.js}"></script>
+</body>
+
+</html>

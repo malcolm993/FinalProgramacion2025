@@ -109,5 +109,21 @@ public class ServicePelicula implements InterfaceServicePelicula {
         return pdto;
     }
 
+    @Override
+    public Pelicula actualizarPelicula(Integer id, PeliculaEdicionDTO p) {
+        Pelicula sinActualizar = findPeliculaPorId(id);
+        mapeoPeliculaDtoToPelicula(sinActualizar,p);
+        return repositorioPelicula.save(sinActualizar);
+    }
+
+    private void mapeoPeliculaDtoToPelicula(Pelicula sinActualizar, PeliculaEdicionDTO dtoP){
+        sinActualizar.setIdPelicula(dtoP.getId());
+        sinActualizar.setDuracionMin(dtoP.getDuracionMin());
+        sinActualizar.setNombre(dtoP.getNombre());
+        sinActualizar.setSinopsis(dtoP.getSinopsis());
+        sinActualizar.setFechaEstreno(dtoP.getFechaEstreno());
+        sinActualizar.setDirector(dtoP.getDirector());
+    }
+
 
 }

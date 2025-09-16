@@ -55,5 +55,10 @@ public class PeliculaEdicionDTO {
 
   }
 
+    @Override
+    public String toString() {
+        return "PeliculaEdicionDTO{" + "id=" + id + ", duracionMin=" + duracionMin + ", nombre=" + nombre + ", sinopsis=" + sinopsis + ", calif=" + calif + ", fechaEstreno=" + fechaEstreno + ", director=" + director + ", cartelera=" + cartelera + '}';
+    }
+
 
 }

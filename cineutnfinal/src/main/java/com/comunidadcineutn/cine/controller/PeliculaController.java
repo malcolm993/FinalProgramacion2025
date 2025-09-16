@@ -44,6 +44,8 @@ public class PeliculaController {
   @Autowired
   private InterfaceServicePelicula peliculaService;
 
+
+
   @GetMapping("/buscar/{id}")
   @Operation(summary = "Obtener película por ID")
   public String buscarPeliculaPorId(@PathVariable Integer id, Model m) {
@@ -82,6 +84,7 @@ public class PeliculaController {
     try {
       PeliculaEdicionDTO peliculaEditada = peliculaService.getPeliculaEdicion(idPelicula);
       m.addAttribute("pelicula", peliculaEditada);
+      m.addAttribute("clasificaciones", CalificacionPelicula.values());
       return "peliculas/formulariodeedicion";
     } catch (ExceptionNotFound ex) {
       m.addAttribute("error", ex.getErrorMensaje());
@@ -134,14 +137,15 @@ public class PeliculaController {
 
   @PutMapping("/editar")
   @Operation(summary = "Editar película")
-  public String edicionPeliculaPost(@Valid @ModelAttribute("pelicula") Pelicula p,
+  public String edicionPeliculaPost(@Valid @ModelAttribute("pelicula") PeliculaEdicionDTO p,
       BindingResult bindingResult,
       RedirectAttributes ra) {
     if (bindingResult.hasErrors()) {
       // Mantiene los errores en el formulario
       return "peliculas/agregar";
     }
-    Pelicula editada = peliculaService.editPelicula(p);
+    System.out.println("nueva edicion de pelicula " + p.toString());
+    Pelicula editada = peliculaService.actualizarPelicula(p.getId(), p);
     ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");
 
     return "redirect:/cineutn/pelicula/crudpeliculas";

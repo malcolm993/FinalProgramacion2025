@@ -50,11 +50,11 @@
                   </div>
                 </div>
                 <div class="btn-group" role="group">
-                  <a th:href="@{/edicionpeliculas/updatePelicula(id=${pelicula.idPelicula})}"
+                  <a th:href="@{/cineutn/pelicula/editar/{id}(id=${pelicula.idPelicula})}"
                     class="btn btn-warning btn-sm">Modificar</a>
-                  <a th:href="@{/edicionpeliculas/deletePelicula(id=${pelicula.idPelicula})}"
+                  <a th:href="@{/cineutn/pelicula/eliminar/{id}(id=${pelicula.idPelicula})}"
                     class="btn btn-danger btn-sm">Eliminar</a>
-                  <a th:href="@{/edicionpeliculas/checkPelicula(id=${pelicula.idPelicula})}"
+                  <a th:href="@{/cineutn/pelicula/buscar/{id}(id=${pelicula.idPelicula})}"
                     class="btn btn-info btn-sm">Revisar</a>
                 </div>
               </li>
@@ -90,11 +90,11 @@
                   </div>
                 </div>
                 <div class="btn-group" role="group">
-                  <a th:href="@{/cineutn/funcion/editar/{id}(id=${pelicula.id})}"
+                  <a th:href="@{/cineutn/pelicula/editar/{id}(id=${pelicula.idPelicula})}"
                     class="btn btn-warning btn-sm">Modificar</a>
-                  <a th:href="@{/edicionpeliculas/deletePelicula(id=${pelicula.id})}"
+                  <a th:href="@{/cineutn/pelicula/eliminar/{id}(id=${pelicula.idPelicula})}"
                     class="btn btn-danger btn-sm">Eliminar</a>
-                  <a th:href="@{/edicionpeliculas/checkPelicula(id=${pelicula.id})}"
+                  <a th:href="@{/cineutn/pelicula/buscar/{id}(id=${pelicula.idPelicula})}"
                     class="btn btn-info btn-sm">Revisar</a>
                 </div>
               </li>
