@@ -140,7 +140,7 @@ public class SalaController {
       @Valid @ModelAttribute("sala") Sala s,
       BindingResult br,
       RedirectAttributes ra) {
-    if (br.hasErrors() && s.getCantDeButacas() > s.getCantDeButacasReservadas()) {
+    if (br.hasErrors()) {
       return "peliculas/formulario-alta";
     }
     Sala salaEditada = salaService.editSala(s);

@@ -30,8 +30,6 @@ public class Sala implements Serializable {
     @Min(value = 1, message = "La capacidad debe ser al menos 1")
     private int cantDeButacas;
 
-    private int cantDeButacasReservadas;
-
     @Enumerated(EnumType.STRING)
     // Mapea el Enum como String en la BD
     private TipoDeSala tipoSala;
@@ -46,12 +44,11 @@ public class Sala implements Serializable {
         this.idSala = id;
         this.cantDeButacas = cantDeButacas;
         this.tipoSala = tipoSala;
-        this.cantDeButacasReservadas = 0;
     }
 
     @Override
     public String toString() {
-        return "Sala{" + "idSala=" + idSala + ", cantDeButacas=" + cantDeButacas + ", cantDeButacasReservadas=" + cantDeButacasReservadas + ", tipoSala=" + tipoSala + '}';
+        return "Sala{" + "idSala=" + idSala + ", cantDeButacas=" + cantDeButacas + ", tipoSala=" + tipoSala + '}';
     }
 
 }

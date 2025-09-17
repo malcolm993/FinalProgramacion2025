@@ -47,7 +47,7 @@
                   th:classappend="${#fields.hasErrors('tipoSala')} ? 'is-invalid'">
             <option value="">Seleccione un tipo...</option>
             <option th:each="tipo : ${tiposDeSala}" 
-                    th:value="${tipo}" th:text="${tipo}">
+                    th:value="${tipo}" th:text="${tipo.descripcion}">
             </option>
           </select>
           <div th:if="${#fields.hasErrors('tipoSala')}" 

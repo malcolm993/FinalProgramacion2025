@@ -112,7 +112,7 @@ public class PeliculaController {
       @Valid @ModelAttribute("pelicula") Pelicula p,
       BindingResult bindingResult,
       RedirectAttributes ra) {
-
+    
     if (bindingResult.hasErrors()) {
       // Mantiene los errores en el formulario
       return "peliculas/formulariodealta";

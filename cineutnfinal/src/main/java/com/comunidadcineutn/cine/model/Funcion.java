@@ -47,6 +47,7 @@ public class Funcion {
     @NotNull
     private LocalDateTime horaFin;
     private boolean funcionHabilitada;
+    private int cantButacasReservadas =0;
 
     public Funcion() {
     }

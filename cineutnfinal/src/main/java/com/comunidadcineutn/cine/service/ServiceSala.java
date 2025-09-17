@@ -67,7 +67,7 @@ public class ServiceSala implements InterfaceServiceSala{
   @Override
   public boolean capacitySala(Integer id , int cantidadButacasReservar) {
     Sala salaAux = findSalaPorId(id);
-    int disponibles =  salaAux.getCantDeButacas() - salaAux.getCantDeButacasReservadas();
+    int disponibles =  salaAux.getCantDeButacas();
     return cantidadButacasReservar < disponibles;
     
   }
