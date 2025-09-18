@@ -48,6 +48,7 @@ public class Funcion {
     private LocalDateTime horaFin;
     private boolean funcionHabilitada;
     private int cantButacasReservadas =0;
+    private int precio;
 
     public Funcion() {
     }
@@ -65,9 +66,7 @@ public class Funcion {
 
     @Override
     public String toString() {
-        return "Funcion{" + "idFuncion=" + idFuncion + ", sala=" + sala + ", pelicula=" + pelicula + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", funcionHabilitada=" + funcionHabilitada + '}';
+        return "Funcion{" + "idFuncion=" + idFuncion + ", sala=" + sala + ", pelicula=" + pelicula + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", funcionHabilitada=" + funcionHabilitada + " ,precio:"+ precio+'}';
     }
-
-
 
 }

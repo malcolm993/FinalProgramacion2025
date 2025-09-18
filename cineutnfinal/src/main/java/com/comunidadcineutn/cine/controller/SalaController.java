@@ -48,6 +48,7 @@ public class SalaController {
     try {
       Sala salaEditada = salaService.findSalaPorId(id);
       m.addAttribute("sala", salaEditada);
+      m.addAttribute("tiposDeSala", TipoDeSala.values());
       return "salas/formulario-edicion";
     } catch (ExceptionNotFound ex) {
       m.addAttribute("error", ex.getErrorMensaje());
@@ -122,7 +123,7 @@ public class SalaController {
    * }
    */
 
-  @DeleteMapping("/eliminar")
+  @DeleteMapping("/eliminar/{id}")
   @Operation(summary = "Eliminar sala por ID")
   public String eliminarSala(@RequestParam(required = true, name = "idSala") Integer id,
       RedirectAttributes ra) {
@@ -131,7 +132,7 @@ public class SalaController {
     salaService.deleteSalaPorId(id);
     ra.addFlashAttribute("mensaje", "Sala con Id : " + s.getIdSala() + " eliminada con éxito!");
 
-    return "redirect:/cineutn/pelicula/crudsalas";
+    return "redirect:/cineutn/sala/crudsalas";
   }
 
   @PutMapping("/editar")

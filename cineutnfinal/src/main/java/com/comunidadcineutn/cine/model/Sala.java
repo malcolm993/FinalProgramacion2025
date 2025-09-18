@@ -46,6 +46,10 @@ public class Sala implements Serializable {
         this.tipoSala = tipoSala;
     }
 
+    public String getTipoSalaDescripcion(){
+        return tipoSala.getDescripcion();
+    }
+
     @Override
     public String toString() {
         return "Sala{" + "idSala=" + idSala + ", cantDeButacas=" + cantDeButacas + ", tipoSala=" + tipoSala + '}';

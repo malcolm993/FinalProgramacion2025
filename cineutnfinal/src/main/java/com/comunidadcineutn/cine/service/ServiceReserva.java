@@ -4,39 +4,48 @@
  */
 package com.comunidadcineutn.cine.service;
 
+import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Reserva;
+import com.comunidadcineutn.cine.repository.InterfaceReservaRepository;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author santi
  */
-public class ServiceReserva implements InterfaceServiceReserva{
+
+@Service
+public class ServiceReserva implements InterfaceServiceReserva {
+    @Autowired
+    private InterfaceReservaRepository repositorioReservas;
 
     @Override
     public List<Reserva> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return repositorioReservas.findAll();
     }
 
     @Override
     public Reserva addPelicula(Reserva r) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return repositorioReservas.save(r);
     }
 
     @Override
     public void deleteReservaPorId(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        repositorioReservas.deleteById(id);
     }
 
     @Override
-    public Optional<Reserva> findReservaPorId(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Reserva findReservaPorId(Integer id) {
+        return repositorioReservas.findById(id).orElseThrow(
+            () -> new ExceptionNotFound("No existe reserva que tengan el Id ingresado"));
     }
 
     @Override
     public Reserva editPelicula(Reserva res) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return repositorioReservas.save(res);
+
     }
-    
+
 }

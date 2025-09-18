@@ -7,6 +7,7 @@ package com.comunidadcineutn.cine.service;
 import com.comunidadcineutn.cine.dto.FuncionAltaDTO;
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Funcion;
+import com.comunidadcineutn.cine.model.TipoDeSala;
 import com.comunidadcineutn.cine.repository.InterfaceFuncionRepository;
 
 import java.time.DayOfWeek;
@@ -28,6 +29,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceFuncion implements InterfaceServiceFuncion {
 
+    private static final int PRECIO_SALA2D = 1000;
+    private static final int PRECIO_SALA3D = 2000;
     @Autowired
     private InterfaceFuncionRepository repositoriofuncion;
 
@@ -44,7 +47,11 @@ public class ServiceFuncion implements InterfaceServiceFuncion {
         if (isHorarioOcupadoFuncion(f)) {
             throw new RuntimeException("horario ocupado");
         }
-        
+        if(f.getSala().getTipoSala().equals(TipoDeSala._2D)){
+            f.setPrecio(PRECIO_SALA2D);
+        }else{
+            f.setPrecio(PRECIO_SALA3D);
+        }
         return repositoriofuncion.save(f);
     }
 

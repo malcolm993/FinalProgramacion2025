@@ -7,7 +7,6 @@ package com.comunidadcineutn.cine.service;
 
 import com.comunidadcineutn.cine.model.Reserva;
 import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -21,7 +20,7 @@ public interface InterfaceServiceReserva {
     
     public void deleteReservaPorId(Integer id);
     
-    public Optional<Reserva> findReservaPorId(Integer id);
+    public Reserva findReservaPorId(Integer id);
     
     public Reserva editPelicula(Reserva res);
 }
