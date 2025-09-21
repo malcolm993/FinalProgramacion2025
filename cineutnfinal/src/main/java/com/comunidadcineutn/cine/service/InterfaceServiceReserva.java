@@ -5,7 +5,10 @@
 package com.comunidadcineutn.cine.service;
 
 
+import com.comunidadcineutn.cine.dto.ReservaFormDTO;
 import com.comunidadcineutn.cine.model.Reserva;
+import com.comunidadcineutn.cine.model.Usuario;
+
 import java.util.List;
 
 /**
@@ -16,11 +19,15 @@ public interface InterfaceServiceReserva {
     
     public List<Reserva> getAll();
     
-    public Reserva addPelicula(Reserva r);
+    public Reserva addReserva(Reserva r);
     
     public void deleteReservaPorId(Integer id);
     
     public Reserva findReservaPorId(Integer id);
     
-    public Reserva editPelicula(Reserva res);
+    public Reserva editReserva(Reserva res);
+
+    public Reserva crearReservaFromDTO(Usuario u, ReservaFormDTO r);
+
+    public List<Reserva> getRerservasPorIdUsario(Integer id);
 }

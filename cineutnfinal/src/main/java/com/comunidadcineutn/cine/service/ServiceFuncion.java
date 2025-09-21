@@ -123,6 +123,11 @@ public class ServiceFuncion implements InterfaceServiceFuncion {
         return funcionE;
     }
 
+    @Override
+    public List<Funcion> getListaFuncionesPorIdPelicula(Integer id) {
+        return repositoriofuncion.findByPeliculaIdPelicula(id);
+    }
+
     
 
 }

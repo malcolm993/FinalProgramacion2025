@@ -10,12 +10,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,17 +38,19 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     private Funcion funcionReservada;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.EAGER)
     @NotNull
     private Usuario usuarioComprador;
     private int costoReserva;
 
     @Positive(message = "La cantidad debe ser mayor a 0")
     private int cantidadEntradas;
+
+    private LocalDateTime fechaHoraCreacion;
 
     public Reserva() {
     }
@@ -56,6 +61,12 @@ public class Reserva {
         this.usuarioComprador = usuarioComprador;
         this.costoReserva = costoReserva;
         this.cantidadEntradas = cantidadEntradas;
+    }
+    @PrePersist
+    protected void onCreate() {
+        if (fechaHoraCreacion == null) {
+            fechaHoraCreacion = LocalDateTime.now();
+        }
     }
     
     @Transient

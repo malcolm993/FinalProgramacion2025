@@ -38,7 +38,7 @@ public class Funcion {
     @NotNull(message = "sala es obligatorio")
     private Sala sala;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     @NotNull(message = "dato Pelicula es obligatoria")
     private Pelicula pelicula;
@@ -62,6 +62,10 @@ public class Funcion {
         this.horaFin = getHoraInicio().plusMinutes(peliculaFuncion.getDuracionMin()+30);
         this.funcionHabilitada = true;
         
+    }
+
+    public int getButacasDisponibles(){
+        return sala.getCantDeButacas()-cantButacasReservadas;
     }
 
     @Override

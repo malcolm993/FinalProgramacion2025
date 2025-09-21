@@ -5,6 +5,9 @@
 package com.comunidadcineutn.cine.repository;
 
 import com.comunidadcineutn.cine.model.Reserva;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -12,5 +15,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author santi
  */
 public interface InterfaceReservaRepository extends JpaRepository<Reserva, Integer>{
-    
+    public List<Reserva> findByUsuarioCompradorId (Integer id);
 }

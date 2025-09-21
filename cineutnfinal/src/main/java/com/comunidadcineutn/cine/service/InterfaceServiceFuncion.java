@@ -40,4 +40,6 @@ public interface InterfaceServiceFuncion {
     public boolean isHorarioOcupadoFuncion(Funcion funcionNueva);
 
     public FuncionAltaDTO getFuncionEdicion(Integer id);
+
+    public List<Funcion> getListaFuncionesPorIdPelicula(Integer id);
 }

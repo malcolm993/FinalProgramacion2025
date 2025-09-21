@@ -1,60 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
 </head>
+
 <body>
-    <!-- Fragmento de navbar reusable -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
-        <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" th:href="@{/}">CINE UTN</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" th:href="@{/inicio#CarteleraCine}">Cartelera</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/inicio#ProximamenteCine}">Próximamente</a>
-                    </li>
+  <!-- Fragmento de navbar reusable -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
+    <div class="container px-4 px-lg-5">
+      <a class="navbar-brand" th:href="@{/}">CINE UTN</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+          class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" th:href="@{/inicio#CarteleraCine}">Cartelera</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/inicio#ProximamenteCine}">Próximamente</a>
+          </li>
 
-                    <!-- Menú para ADMIN -->
-                    <li class="nav-item" th:if="${userLogueado?.rolUsuario == 'ADMIN'}">
-                        <a class="nav-link" th:href="@{/ABMCine}">Edición CINE</a>
-                    </li>
+          <!-- Menú para ADMIN -->
+          <li class="nav-item" th:if="${userLogueado?.rolUsuario == 'ADMIN'}">
+            <a class="nav-link" th:href="@{/ABMCine}">Edición CINE</a>
+          </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/acercaDeNosotros}">Acerca de nosotros</a>
-                    </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/acercaDeNosotros}">Acerca de nosotros</a>
+          </li>
 
-                    <!-- Menú de usuario -->
-                    <li class="nav-item"sec:authorize ="!isAuthenticated()">
-                        <a class="nav-link" th:href="@{/cineutn/usuario/login}">Login</a>
-                    </li>
-                    <li class="nav-item" sec:authorize ="!isAuthenticated()">
-                        <a class="nav-link" href="#">Invitado</a>
-                    </li>
+          <!-- Menú de usuario -->
+          <li class="nav-item" sec:authorize="!isAuthenticated()">
+            <a class="nav-link" th:href="@{/cineutn/usuario/login}">Login</a>
+          </li>
+          <li class="nav-item" sec:authorize="!isAuthenticated()">
+            <a class="nav-link" href="#">Invitado</a>
+          </li>
 
-                    <!-- Dropdown para usuario logueado -->
-                    <li sec:authorize ="isAuthenticated()" class="nav-item dropdown" >
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">Bienvenido</a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
-                            <li><hr class="dropdown-divider"/></li>
-                            <li><a class="dropdown-item" th:href="@{/reserva/reservasUsuario}">Revisar Compras</a></li>
-                            <li><a class="dropdown-item" th:href="@{/cineutn/usuario/perfil}">Revisar Usuario</a></li>
-                            <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                                <li><a class="dropdown-item" th:href="@{/cineutn/gestionCine}">Gestion de Cine</a></li>
-                            </div>
+          <!-- Dropdown para usuario logueado -->
+          <li sec:authorize="isAuthenticated()" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">Bienvenido</a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li><a class="dropdown-item" th:href="@{/cineutn/reserva/misReservas}">Revisar Compras</a></li>
+              <li><a class="dropdown-item" th:href="@{/cineutn/usuario/perfil}">Revisar Usuario</a></li>
+              <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                <li><a class="dropdown-item" th:href="@{/cineutn/gestionCine}">Gestion de Cine</a></li>
+              </div>
 
-                        </ul>
-                    </li>
-                </ul>
-            </div>  
-        </div>
-    </nav>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </body>
+
 </html>

@@ -32,7 +32,7 @@
 
         <!-- Información de la función -->
         <div class="card p-4 mb-4">
-          <form id="formConfirmarReserva" th:action="@{/reserva/confirmar}" method="post" th:object="${reserva}">
+          <form id="formConfirmarReserva" th:action="@{/cineutn/reserva/confirmacionCompra}" method="post" th:object="${reservaForm}">
 
             <!-- Campo Película -->
             <div class="mb-3 row">
@@ -50,7 +50,7 @@
                 <i class="fas fa-door-open me-2"></i>Tipo de Sala:
               </label>
               <div class="col-sm-9">
-                <input type="text" id="salaTipo" class="form-control" th:value="${funcion.sala.tipoDeSala}" readonly>
+                <input type="text" id="salaTipo" class="form-control" th:value="${funcion.sala.getTipoSalaDescripcion}" readonly>
               </div>
             </div>
 
@@ -82,10 +82,7 @@
             </div>
 
             <!-- Campos ocultos -->
-            <input type="hidden" name="idFuncion" th:value="${funcion.idFuncion}" />
-            <input type="hidden" name="idSala" th:value="${funcion.sala.id}" />
-            <input type="hidden" name="idUsuario" th:value="${usuario.id}" />
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" name="idFuncion" th:field="*{idFuncion}" />
 
             <!-- Botones de acción -->
             <div class="d-flex justify-content-center gap-3 mt-4">
