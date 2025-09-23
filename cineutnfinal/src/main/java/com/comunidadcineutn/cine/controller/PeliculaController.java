@@ -111,7 +111,7 @@ public class PeliculaController {
   public String agregarPelicula(
       @Valid @ModelAttribute("pelicula") Pelicula p,
       BindingResult bindingResult,
-      RedirectAttributes ra) {
+      RedirectAttributes ra){
     
     if (bindingResult.hasErrors()) {
       // Mantiene los errores en el formulario
@@ -119,9 +119,8 @@ public class PeliculaController {
     }
 
     Pelicula agregada = peliculaService.addPelicula(p);
-    ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito!");
-
-    return "redirect:/cineutn/pelicula/crudpeliculas";
+    ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito proximo a estrenarse");
+    return "redirect:/cineutn/funcion/crudpeliculas";
   }
 
   @DeleteMapping("/eliminar")

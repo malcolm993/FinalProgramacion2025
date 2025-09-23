@@ -21,7 +21,6 @@ import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.dto.ReservaFormDTO;
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Funcion;
-import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.model.Reserva;
 import com.comunidadcineutn.cine.model.Usuario;
 import com.comunidadcineutn.cine.service.InterfaceServiceFuncion;
@@ -110,7 +109,7 @@ public class ReservasController {
     return "reservas/exito-reserva";
   }
 
-  // DE ACA EN ADELANTE FALTA TERMINAR LAS RUTAS DEL CONTROLADOR
+  
   @GetMapping("/misReservas")
   @Operation(summary = "Obtener las reservas del usuario")
   public String buscarPeliculaPorId(Model m,@AuthenticationPrincipal Usuario actual) {
@@ -120,7 +119,7 @@ public class ReservasController {
       return "reservas/lista-reservas-hechas";
  
   }
-
+  // DE ACA EN ADELANTE FALTA TERMINAR LAS RUTAS DEL CONTROLADOR
   @GetMapping("/crud")
   @Operation(summary = "obtener crud de las peliculas")
   public String mostrarCRUDPeliculas(Model model) {

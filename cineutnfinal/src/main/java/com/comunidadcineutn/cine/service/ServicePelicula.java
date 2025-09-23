@@ -3,10 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.comunidadcineutn.cine.service;
-
 import com.comunidadcineutn.cine.dto.PeliculaAltaFuncionDTO;
 import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
+
 import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.repository.InterfacePeliculaRepository;
 
@@ -25,6 +25,7 @@ public class ServicePelicula implements InterfaceServicePelicula {
     @Autowired
     private InterfacePeliculaRepository repositorioPelicula;
 
+
     @Override
     public List<Pelicula> getAll() {
         return repositorioPelicula.findAll();
@@ -32,8 +33,7 @@ public class ServicePelicula implements InterfaceServicePelicula {
 
     @Override
     public Pelicula addPelicula(Pelicula p) {
-       
-        return  repositorioPelicula.save(p);
+        return repositorioPelicula.save(p);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class ServicePelicula implements InterfaceServicePelicula {
 
     @Override
     public Pelicula findPeliculaPorId(Integer id) {
-        return repositorioPelicula.findById(id).orElseThrow( 
-            () -> new ExceptionNotFound("No existe pelicula con el Id ingresado"));
+        return repositorioPelicula.findById(id).orElseThrow(
+                () -> new ExceptionNotFound("No existe pelicula con el Id ingresado"));
     }
 
     @Override
@@ -75,8 +75,7 @@ public class ServicePelicula implements InterfaceServicePelicula {
 
     }
 
-    
-    private PeliculaEdicionDTO conversionPeliculaDTO (Pelicula p){
+    private PeliculaEdicionDTO conversionPeliculaDTO(Pelicula p) {
         PeliculaEdicionDTO pdto = new PeliculaEdicionDTO();
         pdto.setId(p.getIdPelicula());
         pdto.setNombre(p.getNombre());
@@ -99,9 +98,9 @@ public class ServicePelicula implements InterfaceServicePelicula {
         }
 
         return listaDTO;
-    }   
+    }
 
-    private PeliculaAltaFuncionDTO conversionPeliculaFuncionDTO(Pelicula p){
+    private PeliculaAltaFuncionDTO conversionPeliculaFuncionDTO(Pelicula p) {
         PeliculaAltaFuncionDTO pdto = new PeliculaAltaFuncionDTO();
         pdto.setId(p.getIdPelicula());
         pdto.setNombre(p.getNombre());
@@ -112,11 +111,11 @@ public class ServicePelicula implements InterfaceServicePelicula {
     @Override
     public Pelicula actualizarPelicula(Integer id, PeliculaEdicionDTO p) {
         Pelicula sinActualizar = findPeliculaPorId(id);
-        mapeoPeliculaDtoToPelicula(sinActualizar,p);
+        mapeoPeliculaDtoToPelicula(sinActualizar, p);
         return repositorioPelicula.save(sinActualizar);
     }
 
-    private void mapeoPeliculaDtoToPelicula(Pelicula sinActualizar, PeliculaEdicionDTO dtoP){
+    private void mapeoPeliculaDtoToPelicula(Pelicula sinActualizar, PeliculaEdicionDTO dtoP) {
         sinActualizar.setIdPelicula(dtoP.getId());
         sinActualizar.setDuracionMin(dtoP.getDuracionMin());
         sinActualizar.setNombre(dtoP.getNombre());
@@ -125,5 +124,11 @@ public class ServicePelicula implements InterfaceServicePelicula {
         sinActualizar.setDirector(dtoP.getDirector());
     }
 
+    @Override
+    public void cambioPeliculaToCartelera(Integer id) {
+        Pelicula p = findPeliculaPorId(id);
+        p.setCartelera(true);
+        repositorioPelicula.save(p);
+    }
 
 }

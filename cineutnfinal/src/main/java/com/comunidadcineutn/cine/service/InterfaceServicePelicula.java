@@ -3,9 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.comunidadcineutn.cine.service;
-
 import com.comunidadcineutn.cine.dto.PeliculaAltaFuncionDTO;
 import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
+
 import com.comunidadcineutn.cine.model.Pelicula;
 import java.util.List;
 
@@ -36,4 +36,7 @@ public interface InterfaceServicePelicula  {
     public List<PeliculaAltaFuncionDTO> getListadoPeliculasAltaFuncion();
 
     public Pelicula actualizarPelicula (Integer id, PeliculaEdicionDTO p);
+
+    public void cambioPeliculaToCartelera (Integer id);
+
 }

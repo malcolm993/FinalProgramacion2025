@@ -42,4 +42,6 @@ public interface InterfaceServiceFuncion {
     public FuncionAltaDTO getFuncionEdicion(Integer id);
 
     public List<Funcion> getListaFuncionesPorIdPelicula(Integer id);
+
+    public Funcion toFuncionFromFuncionDTO (FuncionAltaDTO f);
 }
