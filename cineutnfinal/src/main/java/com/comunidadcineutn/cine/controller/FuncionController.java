@@ -99,7 +99,7 @@ public class FuncionController {
     Funcion funcion = funcionService.toFuncionFromFuncionDTO(f);
     Funcion creada = funcionService.addFuncion(funcion);
     ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
-        " " + creada.getPelicula().getNombre() + " ha sido editada");
+        " " + creada.getPelicula().getNombre() + " ha sido creada");
     return "redirect:/cineutn/funcion/crudfunciones";
   }
 
@@ -124,7 +124,7 @@ public class FuncionController {
       RedirectAttributes ra) {
     Funcion f = funcionService.findFuncionPorId(id);
     funcionService.deleteFuncionPorId(id);
-    ra.addAttribute("mensaje", "Funcion de Id: " + f.getIdFuncion() + "ha sido eliminada");
+    ra.addFlashAttribute("mensaje", "Funcion de Id: " + f.getIdFuncion() + "ha sido eliminada");
     return "redirect:/cineutn/funcion/crudfunciones";
   }
 

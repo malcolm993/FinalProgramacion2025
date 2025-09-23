@@ -120,7 +120,7 @@ public class PeliculaController {
 
     Pelicula agregada = peliculaService.addPelicula(p);
     ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito proximo a estrenarse");
-    return "redirect:/cineutn/funcion/crudpeliculas";
+    return "redirect:/cineutn/pelicula/crudpeliculas";
   }
 
   @DeleteMapping("/eliminar")
