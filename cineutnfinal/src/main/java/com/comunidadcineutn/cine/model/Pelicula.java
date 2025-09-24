@@ -26,64 +26,69 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-@Getter @Setter
+
+@Getter
+@Setter
 @Entity
 @Table(name = "Pelicula")
 public class Pelicula implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private int idPelicula;
-    @NotNull (message = "es obligatorio la duracion de la peliculas y en minutos")
-    private int duracionMin;
-    @NotBlank
-    private String nombre;
-    @NotBlank
-    private String sinopsis;
-    @NotBlank
-    private String calif;
-    //el dato fechaEstreno no refiere a la fecha cunado se estrena en el cine, cino cuando se estreno 
-    //la pelicula ya que son peliculas ya estrenadas.
+  private int idPelicula;
+  @NotNull(message = "es obligatorio la duracion de la peliculas y en minutos")
+  private int duracionMin;
+  @NotBlank
+  private String nombre;
+  @NotBlank
+  private String sinopsis;
+  @NotBlank
+  private String calif;
+  // el dato fechaEstreno no refiere a la fecha cunado se estrena en el cine, cino
+  // cuando se estreno
+  // la pelicula ya que son peliculas ya estrenadas.
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate fechaEstreno;
-    @NotBlank
-    private String director;
-    @NotNull
-    private boolean cartelera;
-   
-   @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL , orphanRemoval = true)
-   private List<Funcion> funcionesAsociadas;
-   
-    public Pelicula() {
-        this( 0, "", "", "APTA", LocalDate.now().toString(), "", false);
-    }
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  private LocalDate fechaEstreno;
+  @NotBlank
+  private String director;
+  @NotNull
+  private boolean cartelera;
 
-    public Pelicula(int id) {
-        this.idPelicula = id;
-    }
+  @OneToMany(mappedBy = "pelicula", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Funcion> funcionesAsociadas;
 
-    public Pelicula( int duracionMin, String nombre_pelicula, String sinopsis, String cal,
-            String fechaDeEstreno, String director, boolean bol) {
-       
-        this.duracionMin = duracionMin;
-        this.nombre = nombre_pelicula;
-        this.sinopsis = sinopsis;
-        this.calif = cal;
-        setFechaDeEstreno(fechaDeEstreno);
-        this.director = director;
-        this.cartelera = bol;
+  public Pelicula() {
+    this(0, "", "", "APTA", LocalDate.now().toString(), "", false);
+  }
 
-    }
-    
-    public void setFechaDeEstreno(String fechaDeEstreno){
-        fechaEstreno = LocalDate.parse(fechaDeEstreno);
-    }
+  public Pelicula(int id) {
+    this.idPelicula = id;
+  }
 
-    @Override
-    public String toString() {
-        return "Pelicula{" + "idPelicula=" + idPelicula + ", duracionMin=" + duracionMin + ", nombre=" + nombre + ", sinopsis=" + sinopsis + ", calif=" + calif + ", fechaEstreno=" + fechaEstreno + ", director=" + director + ", cartelera=" + cartelera + '}';
-    }
-    
+  public Pelicula(int duracionMin, String nombre_pelicula, String sinopsis, String cal,
+      String fechaDeEstreno, String director, boolean bol) {
+
+    this.duracionMin = duracionMin;
+    this.nombre = nombre_pelicula;
+    this.sinopsis = sinopsis;
+    this.calif = cal;
+    setFechaDeEstreno(fechaDeEstreno);
+    this.director = director;
+    this.cartelera = bol;
+
+  }
+
+  public void setFechaDeEstreno(String fechaDeEstreno) {
+    fechaEstreno = LocalDate.parse(fechaDeEstreno);
+  }
+
+  @Override
+  public String toString() {
+    return "Pelicula{" + "idPelicula=" + idPelicula + ", duracionMin=" + duracionMin + ", nombre=" + nombre
+        + ", sinopsis=" + sinopsis + ", calif=" + calif + ", fechaEstreno=" + fechaEstreno + ", director=" + director
+        + ", cartelera=" + cartelera + '}';
+  }
+
 }

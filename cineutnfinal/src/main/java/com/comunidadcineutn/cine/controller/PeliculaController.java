@@ -6,6 +6,7 @@ package com.comunidadcineutn.cine.controller;
 
 import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
+import com.comunidadcineutn.cine.exception.PeliculaConFuncionesException;
 import com.comunidadcineutn.cine.model.CalificacionPelicula;
 import com.comunidadcineutn.cine.model.Pelicula;
 import com.comunidadcineutn.cine.service.InterfaceServicePelicula;
@@ -43,8 +44,6 @@ public class PeliculaController {
 
   @Autowired
   private InterfaceServicePelicula peliculaService;
-
-
 
   @GetMapping("/buscar/{id}")
   @Operation(summary = "Obtener película por ID")
@@ -97,7 +96,7 @@ public class PeliculaController {
   public String eliminarPelicula(@PathVariable("id") int idPelicula, Model m) {
 
     try {
-      PeliculaEdicionDTO peliculaEliminada = peliculaService.getPeliculaEdicion(idPelicula);
+      Pelicula peliculaEliminada = peliculaService.findPeliculaPorId(idPelicula);
       m.addAttribute("pelicula", peliculaEliminada);
       return "peliculas/eliminarpelicula";
     } catch (ExceptionNotFound ex) {
@@ -111,8 +110,8 @@ public class PeliculaController {
   public String agregarPelicula(
       @Valid @ModelAttribute("pelicula") Pelicula p,
       BindingResult bindingResult,
-      RedirectAttributes ra){
-    
+      RedirectAttributes ra) {
+
     if (bindingResult.hasErrors()) {
       // Mantiene los errores en el formulario
       return "peliculas/formulariodealta";
@@ -125,11 +124,20 @@ public class PeliculaController {
 
   @DeleteMapping("/eliminar")
   @Operation(summary = "Eliminar película por ID")
-  public String eliminarPelicula(@RequestParam(required = true, name = "id") Integer id,
+  public String eliminarPelicula(@RequestParam("idPelicula") Integer id,
       RedirectAttributes ra) {
-    Pelicula p = peliculaService.findPeliculaPorId(id);    
-    peliculaService.deletePeliculaPorId(id);
-    ra.addFlashAttribute("mensaje", "Película " + p.getNombre() + " eliminada con éxito!");
+    try {
+      Pelicula p = peliculaService.findPeliculaPorId(id);
+      if (p.getFuncionesAsociadas() != null && !p.getFuncionesAsociadas().isEmpty()) {
+        throw new PeliculaConFuncionesException("la pelicula seleccionada tiene "+p.getFuncionesAsociadas().size()+" funciones asociadas");
+      }
+      peliculaService.deletePeliculaPorId(id);
+      ra.addFlashAttribute("mensaje", "Película " + p.getNombre() + " eliminada con éxito!");
+
+    } catch (Exception e) {
+      ra.addFlashAttribute("error",
+            e.getMessage());
+    }
 
     return "redirect:/cineutn/pelicula/crudpeliculas";
   }

@@ -34,10 +34,7 @@
     <div class="container px-4 px-lg-5">
       <div class="text-center">
         <h2>CARTELERA</h2>
-        <!-- Enlace a ABM Películas (solo para admin) -->
-        <div th:if="${userLogueado?.rolUsuario == 'ADMIN'}">
-          <a th:href="@{/edicionpeliculas}" class="btn btn-outline-primary mt-3">ABM PELICULAS</a>
-        </div>
+
       </div>
     </div>
     <div class="container px-4 px-lg-5 mt-5">
@@ -77,11 +74,6 @@
   <section id="ProximamenteCine" class="py-5">
     <div class="container px-4 px-lg-5 my-5 text-center">
       <h2>PROXIMAMENTE</h2>
-      <!-- Enlace a ABM Estrenos (solo para admin) -->
-      <div th:if="${userLogueado?.rolUsuario == 'ADMIN'}">
-        <a th:href="@{/edicionpeliculas}" class="btn btn-outline-primary">ABM ESTRENOS</a>
-      </div>
-    </div>
 
     <div class="container px-4 px-lg-5 mt-5">
       <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -100,7 +92,7 @@
               <!-- Acciones -->
               <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                 <div class="text-center">
-                  <a class="btn btn-outline-dark mt-auto" href="#">Info</a>
+                  <a class="btn btn-outline-dark mt-auto" th:href="@{/cineutn/pelicula/buscar/{id}(id=${pelicula.idPelicula})}">Info</a>
                 </div>
               </div>
             </div>

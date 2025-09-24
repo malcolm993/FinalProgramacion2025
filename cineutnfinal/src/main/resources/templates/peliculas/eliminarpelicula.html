@@ -76,7 +76,7 @@
               función(es) programada(s)
             </p>
           </div>
-          <div class="mt-2" th:unless="${not #lists.isEmpty(pelicula.funciones)}">
+          <div class="mt-2" th:unless="${not #lists.isEmpty(pelicula.funcionesAsociadas)}">
             <p class="text-success">
               <i class="fas fa-check-circle"></i>
               No hay funciones activas para esta película
@@ -108,29 +108,29 @@
 
     <!-- Botones de acción -->
     <div class="d-flex justify-content-center mt-4">
-      <form id="formBorrarPelicula" th:action="@{/cineutn/pelicula/eliminar/{id}(id=${pelicula.id})}" method="post">
-        <input type="hidden" name="_method" value="delete">
-        <input type="hidden" name="id" th:value="${pelicula.id}" />
+      <form id="formBorrarPelicula" th:action="@{/cineutn/pelicula/eliminar}" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="idPelicula" th:value="${pelicula.idPelicula}" />
         
         <button type="submit" class="btn btn-danger me-2" 
-                th:disabled="${not #lists.isEmpty(pelicula.funciones)}"
+                th:disabled="${not #lists.isEmpty(pelicula.funcionesAsociadas)}"
                 onclick="return confirm('¿Está seguro que desea eliminar esta película?\nEsta acción no se puede deshacer.');">
           <i class="fas fa-trash-alt me-1"></i> Confirmar Eliminación
         </button>
         
-        <a th:href="@{/peliculas/crud}" class="btn btn-secondary" id="btnVolver">
+        <a th:href="@{/cineutn/pelicula/crudpeliculas}" class="btn btn-secondary" id="btnVolver">
           <i class="fas fa-times me-1"></i> Cancelar
         </a>
       </form>
     </div>
 
     <!-- Información adicional si no se puede eliminar -->
-    <div th:if="${not #lists.isEmpty(pelicula.funciones)}" class="text-center mt-3">
+    <div th:if="${not #lists.isEmpty(pelicula.funcionesAsociadas)}" class="text-center mt-3">
       <p class="text-muted">
         <small>
           <i class="fas fa-info-circle me-1"></i>
           Para eliminar esta película, primero debe eliminar las 
-          <span th:text="${#lists.size(pelicula.funciones)}"></span> función(es) activa(s)
+          <span th:text="${#lists.size(pelicula.funcionesAsociadas)}"></span> función(es) activa(s)
         </small>
       </p>
       <a th:href="@{/cineutn/funcion/crudfunciones}" class="btn btn-outline-primary btn-sm">
