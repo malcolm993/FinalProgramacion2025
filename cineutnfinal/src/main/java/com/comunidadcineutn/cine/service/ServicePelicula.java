@@ -85,6 +85,7 @@ public class ServicePelicula implements InterfaceServicePelicula {
         pdto.setFechaEstreno(p.getFechaEstreno());
         pdto.setCartelera(p.isCartelera());
         pdto.setSinopsis(p.getSinopsis());
+        pdto.setCantidadDeFuncionesAsociadas(p.getFuncionesAsociadas().size());
         return pdto;
 
     }

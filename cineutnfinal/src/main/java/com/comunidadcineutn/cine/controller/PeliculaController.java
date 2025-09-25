@@ -82,11 +82,12 @@ public class PeliculaController {
   public String obtenerFormularioEdicion(@PathVariable("id") int idPelicula, Model m) {
     try {
       PeliculaEdicionDTO peliculaEditada = peliculaService.getPeliculaEdicion(idPelicula);
+      //Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula);
       m.addAttribute("pelicula", peliculaEditada);
       m.addAttribute("clasificaciones", CalificacionPelicula.values());
       return "peliculas/formulariodeedicion";
-    } catch (ExceptionNotFound ex) {
-      m.addAttribute("error", ex.getErrorMensaje());
+    } catch (Exception ex) {
+      m.addAttribute("error", ex.getMessage());
       return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
     }
   }
@@ -149,6 +150,7 @@ public class PeliculaController {
       RedirectAttributes ra) {
     if (bindingResult.hasErrors()) {
       // Mantiene los errores en el formulario
+      System.out.println(bindingResult);
       return "peliculas/agregar";
     }
     System.out.println("nueva edicion de pelicula " + p.toString());

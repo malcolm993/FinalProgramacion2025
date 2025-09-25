@@ -19,13 +19,14 @@
     <!-- Información de la película -->
     <div class="card p-4">
       <h2 class="text-center mb-4">Editar datos Película: <span th:text="${pelicula.nombre}"></span></h2>
-      
+
       <form id="formEditarPelicula" th:action="@{/cineutn/pelicula/editar}" method="post" th:object="${pelicula}">
 
         <input type="hidden" name="_method" value="put" />
-        
-        <!-- ✅ CAMPO ID OCULTO DENTRO DEL FORMULARIO -->
+
+        <!--CAMPO ID OCULTO DENTRO DEL FORMULARIO -->
         <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{cantidadDeFuncionesAsociadas}" />
 
         <!-- Campo Nombre -->
         <div class="mb-3 row">
@@ -35,22 +36,36 @@
             <div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
           </div>
         </div>
-
-        <!-- Campo Duración -->
+        <!-- Campo Duración con bloqueo condicional -->
         <div class="mb-3 row">
           <label for="duracion" class="col-sm-2 col-form-label">Duración (min):</label>
           <div class="col-sm-10">
-            <input type="number" id="duracion" th:field="*{duracionMin}" class="form-control" required>
+            <input type="number" id="duracion" th:field="*{duracionMin}" class="form-control"
+              th:readonly="${pelicula.cantidadDeFuncionesAsociadas > 0}" min="1" max="300">
+
+            <!-- Mensaje explicativo condicional -->
+            <div th:if="${pelicula.cantidadDeFuncionesAsociadas > 0}" class="form-text text-warning">
+              <i class="fas fa-exclamation-triangle"></i>
+              La duración no puede modificarse porque la película tiene
+              <span th:text="${pelicula.cantidadDeFuncionesAsociadas}"></span> función(es) programada(s).
+              Modificar la duración afectaría los horarios de las funciones existentes.
+            </div>
+
+            <div th:unless="${pelicula.cantidadDeFuncionesAsociadas > 0}" class="form-text text-muted">
+              <i class="fas fa-info-circle"></i>
+              Duración en minutos. Puede modificarse libremente ya que no hay funciones asociadas.
+            </div>
+
             <div class="invalid-feedback" th:if="${#fields.hasErrors('duracionMin')}" th:errors="*{duracionMin}"></div>
           </div>
         </div>
-
         <!-- Campo Fecha de Estreno -->
         <div class="mb-3 row">
           <label for="fechaEstreno" class="col-sm-2 col-form-label">Fecha de estreno:</label>
           <div class="col-sm-10">
             <input type="date" id="fechaEstreno" th:field="*{fechaEstreno}" class="form-control" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaEstreno')}" th:errors="*{fechaEstreno}"></div>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('fechaEstreno')}" th:errors="*{fechaEstreno}">
+            </div>
           </div>
         </div>
 
@@ -82,7 +97,7 @@
           </div>
         </div>
 
-        <!-- ✅ BOTONES DENTRO DEL FORMULARIO -->
+        <!-- BOTONES DENTRO DEL FORMULARIO -->
         <div class="mb-3 row">
           <div class="col-sm-12 text-center">
             <button type="submit" class="btn btn-success me-2">Confirmar cambios</button>
@@ -90,7 +105,7 @@
           </div>
         </div>
 
-      </form> <!-- ✅ CIERRE CORRECTO DEL FORMULARIO -->
+      </form> <!--CIERRE DEL FORMULARIO -->
     </div>
 
     <!-- Botón de regresar -->

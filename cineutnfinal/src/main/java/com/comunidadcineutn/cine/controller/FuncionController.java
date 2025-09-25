@@ -72,7 +72,6 @@ public class FuncionController {
     return "funciones/crud-funciones";
   }
 
-
   @GetMapping("/agregar")
   @Operation(summary = "Obtengo el formulario para crear funcion")
   public String vistaAgregarFuncion(Model m) {
@@ -92,15 +91,23 @@ public class FuncionController {
   public String agregarFuncion(@Valid @ModelAttribute("funcion") FuncionAltaDTO f,
       BindingResult br,
       RedirectAttributes ra) {
+    String destino = "";
     if (br.hasErrors()) {
       System.out.println(br.getAllErrors());
-      return "funciones/alta-funcion";
+      destino = "funciones/alta-funcion";
+    } else {
+      try {
+        Funcion funcion = funcionService.toFuncionFromFuncionDTO(f);
+        Funcion creada = funcionService.addFuncion(funcion);
+        ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
+            " " + creada.getPelicula().getNombre() + " ha sido creada");
+        destino = "redirect:/cineutn/funcion/crudfunciones";
+      } catch (Exception e) {
+        ra.addFlashAttribute("error", e.getMessage());
+        destino = "redirect:/cineutn/funcion/crudfunciones";
+      }
     }
-    Funcion funcion = funcionService.toFuncionFromFuncionDTO(f);
-    Funcion creada = funcionService.addFuncion(funcion);
-    ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
-        " " + creada.getPelicula().getNombre() + " ha sido creada");
-    return "redirect:/cineutn/funcion/crudfunciones";
+    return destino;
   }
 
   @GetMapping("/eliminar/{id}")
@@ -130,17 +137,22 @@ public class FuncionController {
 
   @GetMapping("/editar/{id}")
   @Operation(summary = "obtengo formulario para la edicion de la funcion")
-  public String obtenerFormularioEdicion(@PathVariable Integer id, Model m) {
+  public String obtenerFormularioEdicion(@PathVariable Integer id, Model m,
+      RedirectAttributes ra) {
     try {
+      Funcion porEditar = funcionService.findFuncionPorId(id);
+      if (porEditar.getCantButacasReservadas() > 0) {
+        throw new Exception("Funcion con reservas hechas");
+      }
       FuncionAltaDTO funcionEditada = funcionService.getFuncionEdicion(id);
       m.addAttribute("listaPeliculas", peliculaService.getAll());
       m.addAttribute("listaSalas", salaService.getAllSalas());
       m.addAttribute("fechas", funcionService.fechasHabilitadas());
       m.addAttribute("funcion", funcionEditada);
       return "funciones/editar-funcion";
-    } catch (ExceptionNotFound ex) {
-      m.addAttribute("error", ex.getErrorMensaje());
-      return "funciones/crud-funciones"; // reenvio a la pagina crud de peliculas
+    } catch (Exception ex) {
+      ra.addFlashAttribute("error", ex.getMessage());
+      return "redirect:/cineutn/funcion/crudfunciones"; // reenvio a la pagina crud de peliculas
     }
   }
 

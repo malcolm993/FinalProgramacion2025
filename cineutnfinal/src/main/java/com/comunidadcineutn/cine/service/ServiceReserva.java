@@ -35,6 +35,9 @@ public class ServiceReserva implements InterfaceServiceReserva {
 
     @Override
     public Reserva addReserva(Reserva r) {
+        Funcion f = funcionService.findFuncionPorId(r.getFuncionReservada().getIdFuncion());
+        f.setCantButacasReservadas(f.getCantButacasReservadas()+r.getCantidadEntradas());
+        System.out.println(" servidor reserva addReserva funcion: " + f);
         return repositorioReservas.save(r);
     }
 

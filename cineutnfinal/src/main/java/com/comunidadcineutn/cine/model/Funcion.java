@@ -47,7 +47,7 @@ public class Funcion {
     @NotNull
     private LocalDateTime horaFin;
     private boolean funcionHabilitada;
-    private int cantButacasReservadas =0;
+    private int cantButacasReservadas;
     private int precio;
 
     public Funcion() {
@@ -61,6 +61,7 @@ public class Funcion {
         this.horaInicio = inicioFuncion;
         this.horaFin = getHoraInicio().plusMinutes(peliculaFuncion.getDuracionMin()+30);
         this.funcionHabilitada = true;
+        this.cantButacasReservadas = 0;
         
     }
 

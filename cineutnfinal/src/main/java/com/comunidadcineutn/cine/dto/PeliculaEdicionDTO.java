@@ -36,6 +36,8 @@ public class PeliculaEdicionDTO {
   @NotNull
   private boolean cartelera;
 
+  private int cantidadDeFuncionesAsociadas;
+
   public PeliculaEdicionDTO() {
     
   }
@@ -43,7 +45,7 @@ public class PeliculaEdicionDTO {
 
 
   public PeliculaEdicionDTO(int duracionMin, String nombre_pelicula, String sinopsis, String cal,
-      LocalDate fechaDeEstreno, String director, boolean bol) {
+      LocalDate fechaDeEstreno, String director, boolean bol, int cantidadFunciones ) {
 
     this.duracionMin = duracionMin;
     this.nombre = nombre_pelicula;
@@ -52,6 +54,7 @@ public class PeliculaEdicionDTO {
     this.fechaEstreno = fechaDeEstreno;
     this.director = director;
     this.cartelera = bol;
+    this.cantidadDeFuncionesAsociadas = cantidadFunciones;
 
   }
 
