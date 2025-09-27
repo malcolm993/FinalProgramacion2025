@@ -8,6 +8,7 @@ public class ButacasInsuficientesException extends RuntimeException {
   private final String errorMensaje;
 
   public ButacasInsuficientesException(final String error) {
+    super(error);
     this.errorMensaje = error;
   }
 }

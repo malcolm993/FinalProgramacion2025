@@ -123,6 +123,7 @@ public class ServicePelicula implements InterfaceServicePelicula {
         sinActualizar.setSinopsis(dtoP.getSinopsis());
         sinActualizar.setFechaEstreno(dtoP.getFechaEstreno());
         sinActualizar.setDirector(dtoP.getDirector());
+        sinActualizar.setCalif(dtoP.getCalif());
     }
 
     @Override

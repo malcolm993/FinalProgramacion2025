@@ -50,25 +50,25 @@ public class FuncionController {
 
   @GetMapping("/revisar/{id}")
   @Operation(summary = "Obtener funcion por ID")
-  public String buscarPeliculaPorId(@PathVariable Integer id, Model m) {
+  public String buscarPeliculaPorId(@PathVariable Integer id, Model m, RedirectAttributes ra) {
+    String destino = null;
     try {
       Funcion f = funcionService.findFuncionPorId(id);
       m.addAttribute("funcion", f);
+      destino="funciones/revisar-funcion";
     } catch (ExceptionNotFound ex) {
-      m.addAttribute("error", ex.getErrorMensaje());
-      return "funciones/crud-funciones";
+      ra.addFlashAttribute("error", ex.getErrorMensaje());
+      destino= "redirect:/cineutn/funcion/crudfunciones";
     }
 
-    return "funciones/revisar-funcion";
+    return destino;
   }
 
   @GetMapping("/crudfunciones")
   @Operation(summary = "Obtener crud de las funciones")
   public String getAllFunciones(Model m) {
     List<Funcion> listaFunciones = funcionService.getAllFuncion();
-    System.out.println("paso la lista" + listaFunciones.toString());
     m.addAttribute("listaFunciones", listaFunciones);
-    System.out.println("HOLA ACA LLEGA O NO ]???");
     return "funciones/crud-funciones";
   }
 

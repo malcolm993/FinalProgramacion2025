@@ -8,6 +8,7 @@ public class ExceptionNotFound extends RuntimeException {
   private final String errorMensaje;
 
   public ExceptionNotFound (final String error){
+    super(error);
     this.errorMensaje=error;
   }
 }

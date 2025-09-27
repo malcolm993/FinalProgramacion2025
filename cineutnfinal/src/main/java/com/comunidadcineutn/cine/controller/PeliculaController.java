@@ -47,17 +47,17 @@ public class PeliculaController {
 
   @GetMapping("/buscar/{id}")
   @Operation(summary = "Obtener película por ID")
-  public String buscarPeliculaPorId(@PathVariable Integer id, Model m) {
+  public String buscarPeliculaPorId(@PathVariable Integer id, Model m, RedirectAttributes ra) {
+    String destino = null;
     try {
       PeliculaEdicionDTO p = peliculaService.getPeliculaEdicion(id);
       m.addAttribute("pelicula", p);
-      System.out.println("nombre :" + p.getNombre());
-
+      destino = "peliculas/revision-pelicula";
     } catch (ExceptionNotFound ex) {
-      m.addAttribute("error", ex.getErrorMensaje());
-      return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
+      ra.addFlashAttribute("error", ex.getErrorMensaje());
+      destino = "redirect:/cineutn/pelicula/crudpeliculas"; // reenvio a la pagina crud de peliculas
     }
-    return "peliculas/revision-pelicula";
+    return destino;
   }
 
   @GetMapping("/agregar")
@@ -71,39 +71,41 @@ public class PeliculaController {
   @GetMapping("/crudpeliculas")
   @Operation(summary = "obtener crud de las peliculas")
   public String mostrarCRUDPeliculas(Model model) {
-    // Asegúrate de agregar los datos necesarios al modelo
     model.addAttribute("listaPeliculas", peliculaService.getAll());
-    // System.out.println("hola " + peliculaService.getAll());
     return "peliculas/crudpelicula";
   }
 
   @GetMapping("/editar/{id}")
   @Operation(summary = "obtengo formulario para la edicion de la pelicula")
-  public String obtenerFormularioEdicion(@PathVariable("id") int idPelicula, Model m) {
+  public String obtenerFormularioEdicion(@PathVariable("id") int idPelicula, Model m, RedirectAttributes ra) {
+    String destino = null;
     try {
       PeliculaEdicionDTO peliculaEditada = peliculaService.getPeliculaEdicion(idPelicula);
-      //Pelicula peliculaEditada = peliculaService.findPeliculaPorId(idPelicula);
       m.addAttribute("pelicula", peliculaEditada);
       m.addAttribute("clasificaciones", CalificacionPelicula.values());
-      return "peliculas/formulariodeedicion";
+      destino = "peliculas/formulariodeedicion";
     } catch (Exception ex) {
-      m.addAttribute("error", ex.getMessage());
-      return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
+      ra.addFlashAttribute("error", ex.getMessage());
+      System.out.println("error :" + ex.getMessage());
+      destino = "redirect:/cineutn/pelicula/crudpeliculas"; // reenvio a la pagina crud de peliculas
     }
+    return destino;
   }
 
   @GetMapping("/eliminar/{id}")
   @Operation(summary = "obtengo vista de eliminacion de pelicula")
-  public String eliminarPelicula(@PathVariable("id") int idPelicula, Model m) {
-
+  public String eliminarPelicula(@PathVariable("id") int idPelicula, Model m, RedirectAttributes ra) {
+    String destino = null;
     try {
       Pelicula peliculaEliminada = peliculaService.findPeliculaPorId(idPelicula);
       m.addAttribute("pelicula", peliculaEliminada);
-      return "peliculas/eliminarpelicula";
+      destino = "peliculas/eliminarpelicula";
     } catch (ExceptionNotFound ex) {
-      m.addAttribute("error", ex.getErrorMensaje());
-      return "peliculas/crudpelicula"; // reenvio a la pagina crud de peliculas
+      ra.addFlashAttribute("error", ex.getErrorMensaje());
+      destino = "redirect:/cineutn/pelicula/crudpeliculas"; // reenvio a la pagina crud de peliculas
     }
+
+    return destino;
   }
 
   @PostMapping("/agregar")
@@ -112,15 +114,20 @@ public class PeliculaController {
       @Valid @ModelAttribute("pelicula") Pelicula p,
       BindingResult bindingResult,
       RedirectAttributes ra) {
-
-    if (bindingResult.hasErrors()) {
-      // Mantiene los errores en el formulario
-      return "peliculas/formulariodealta";
+    String destino = null;    
+    try {
+      if(bindingResult.hasErrors()){
+        destino = "peliculas/formulariodealta";
+        throw new Exception("Error en la validacion de datos para alta de pelicula");
+      }
+      Pelicula agregada = peliculaService.addPelicula(p);
+      ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito proximo a estrenarse");
+      destino = "redirect:/cineutn/pelicula/crudpeliculas";
+    } catch (Exception e) {
+      ra.addFlashAttribute("error", e.getMessage());
+      destino = "peliculas/formulariodealta";
     }
-
-    Pelicula agregada = peliculaService.addPelicula(p);
-    ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito proximo a estrenarse");
-    return "redirect:/cineutn/pelicula/crudpeliculas";
+    return destino;
   }
 
   @DeleteMapping("/eliminar")
@@ -130,14 +137,15 @@ public class PeliculaController {
     try {
       Pelicula p = peliculaService.findPeliculaPorId(id);
       if (p.getFuncionesAsociadas() != null && !p.getFuncionesAsociadas().isEmpty()) {
-        throw new PeliculaConFuncionesException("la pelicula seleccionada tiene "+p.getFuncionesAsociadas().size()+" funciones asociadas");
+        throw new PeliculaConFuncionesException(
+            "la pelicula seleccionada tiene " + p.getFuncionesAsociadas().size() + " funciones asociadas");
       }
       peliculaService.deletePeliculaPorId(id);
       ra.addFlashAttribute("mensaje", "Película " + p.getNombre() + " eliminada con éxito!");
 
     } catch (Exception e) {
       ra.addFlashAttribute("error",
-            e.getMessage());
+          e.getMessage());
     }
 
     return "redirect:/cineutn/pelicula/crudpeliculas";
@@ -148,16 +156,21 @@ public class PeliculaController {
   public String edicionPeliculaPost(@Valid @ModelAttribute("pelicula") PeliculaEdicionDTO p,
       BindingResult bindingResult,
       RedirectAttributes ra) {
-    if (bindingResult.hasErrors()) {
-      // Mantiene los errores en el formulario
-      System.out.println(bindingResult);
-      return "peliculas/agregar";
+    String destino = null;
+    try {
+      if (bindingResult.hasErrors()) {
+        destino = "peliculas/formulariodeedicion";
+        throw new Exception(" fallas en el binding al editar la pelicula");
+      }
+      Pelicula editada = peliculaService.actualizarPelicula(p.getId(), p);
+      ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");
+      destino = "redirect:/cineutn/pelicula/crudpeliculas";
+    } catch (Exception e) {
+      ra.addFlashAttribute("error", e.getMessage());
+      destino = "peliculas/formulariodeedicion";
     }
     System.out.println("nueva edicion de pelicula " + p.toString());
-    Pelicula editada = peliculaService.actualizarPelicula(p.getId(), p);
-    ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");
-
-    return "redirect:/cineutn/pelicula/crudpeliculas";
+    return destino;
   }
 
   @GetMapping("/cartelera")

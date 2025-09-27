@@ -70,8 +70,8 @@
 
     <!-- Botón de confirmación -->
     <div class="d-flex justify-content-center mt-4">
-      <form id="formBorrarSala" th:action="@{/cineutn/sala/eliminar/{id}(id=${sala.idSala})}" method="post">
-        <input type="hidden" name="_method" value="delete">
+      <form id="formBorrarSala" th:action="@{/cineutn/sala/eliminar}" method="post">
+        <input type="hidden" name="_method" value="DELETE">
         <input type="hidden" name="idSala" th:value="*{sala.idSala}" />
         <button type="submit" class="btn btn-danger me-2"
           th:disabled="${not #lists.isEmpty(sala.funcionesRealizadasSala)}">

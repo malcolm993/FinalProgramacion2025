@@ -91,7 +91,7 @@
                 title="Eliminar" onclick="return confirm('¿Está seguro que desea eliminar esta sala?');">
                 <i class="fas fa-trash-alt"></i>
               </a>
-              <a th:href="@{/edicionsalas/funcionesSala(id=${sala.idSala})}" class="btn btn-sm btn-outline-primary"
+              <a th:href="@{/cineutn/sala/funcionesAsociadas/{id}(id=${sala.idSala})}" class="btn btn-sm btn-outline-primary"
                 title="Ver funciones">
                 <i class="fas fa-calendar-alt"></i>
               </a>
