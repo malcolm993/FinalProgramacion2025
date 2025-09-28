@@ -113,27 +113,30 @@ public class PeliculaController {
   public String agregarPelicula(
       @Valid @ModelAttribute("pelicula") Pelicula p,
       BindingResult bindingResult,
+      Model m,
       RedirectAttributes ra) {
-    String destino = null;    
-    try {
-      if(bindingResult.hasErrors()){
-        destino = "peliculas/formulariodealta";
-        throw new Exception("Error en la validacion de datos para alta de pelicula");
-      }
-      Pelicula agregada = peliculaService.addPelicula(p);
-      ra.addFlashAttribute("mensaje", "Película " + agregada.getNombre() + " guardada con éxito proximo a estrenarse");
-      destino = "redirect:/cineutn/pelicula/crudpeliculas";
-    } catch (Exception e) {
-      ra.addFlashAttribute("error", e.getMessage());
+    String destino = null;
+    if (bindingResult.hasErrors()) {
       destino = "peliculas/formulariodealta";
+    } else {
+      try {
+        Pelicula agregada = peliculaService.addPelicula(p);
+        ra.addFlashAttribute("mensaje",
+            "Película " + agregada.getNombre() + " guardada con éxito proximo a estrenarse");
+        destino = "redirect:/cineutn/pelicula/crudpeliculas";
+      } catch (Exception e) {
+        m.addAttribute("error", e.getMessage());
+        destino = "peliculas/formulariodealta";
+      }
     }
     return destino;
   }
 
   @DeleteMapping("/eliminar")
   @Operation(summary = "Eliminar película por ID")
-  public String eliminarPelicula(@RequestParam("idPelicula") Integer id,
+  public String eliminarPelicula(@RequestParam( name="idPelicula", required =  true) Integer id,
       RedirectAttributes ra) {
+
     try {
       Pelicula p = peliculaService.findPeliculaPorId(id);
       if (p.getFuncionesAsociadas() != null && !p.getFuncionesAsociadas().isEmpty()) {
@@ -155,19 +158,21 @@ public class PeliculaController {
   @Operation(summary = "Editar película")
   public String edicionPeliculaPost(@Valid @ModelAttribute("pelicula") PeliculaEdicionDTO p,
       BindingResult bindingResult,
+      Model m,
       RedirectAttributes ra) {
     String destino = null;
-    try {
-      if (bindingResult.hasErrors()) {
-        destino = "peliculas/formulariodeedicion";
-        throw new Exception(" fallas en el binding al editar la pelicula");
-      }
-      Pelicula editada = peliculaService.actualizarPelicula(p.getId(), p);
-      ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");
-      destino = "redirect:/cineutn/pelicula/crudpeliculas";
-    } catch (Exception e) {
-      ra.addFlashAttribute("error", e.getMessage());
+
+    if (bindingResult.hasErrors()) {
       destino = "peliculas/formulariodeedicion";
+    } else {
+      try {        
+        Pelicula editada = peliculaService.actualizarPelicula(p.getId(), p);
+        ra.addFlashAttribute("mensaje", "Película " + editada.getNombre() + " editada con éxito!");
+        destino = "redirect:/cineutn/pelicula/crudpeliculas";
+      } catch (Exception e) {
+        m.addAttribute("error", e.getMessage());
+        destino = "peliculas/formulariodeedicion";
+      }
     }
     System.out.println("nueva edicion de pelicula " + p.toString());
     return destino;

@@ -48,7 +48,7 @@
               <li>
                 <hr class="dropdown-divider" />
               </li>
-              <li><a class="dropdown-item" th:href="@{/cineutn/reserva/misReservas}">Revisar Compras</a></li>
+              <li><a class="dropdown-item" th:href="@{/cineutn/reserva/misReservas}">Revisar Mis Compras</a></li>
               <li><a class="dropdown-item" th:href="@{/cineutn/usuario/perfil}">Revisar Usuario</a></li>
               <div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                 <li><a class="dropdown-item" th:href="@{/cineutn/gestionCine}">Gestion de Cine</a></li>

@@ -37,6 +37,12 @@
 
       </div>
     </div>
+
+    <div th:if="${error != null}" class="alert alert-danger">
+      <strong>Error!</strong>
+      <span th:text="${error}"></span>
+    </div> 
+    
     <div class="container px-4 px-lg-5 mt-5">
       <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
         <!-- Películas en cartelera -->
@@ -56,7 +62,7 @@
               <!-- Acciones -->
               <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                 <div class="text-center">
-                  <!-- ✅ BOTÓN MODIFICADO: Ahora incluye el ID de la película -->
+                  <!-- BOTÓN MODIFICADO: Ahora incluye el ID de la película -->
                   <a th:href="@{/cineutn/reserva/funcionesPelicula/{id}(id=${pelicula.idPelicula})}"
                     class="btn btn-outline-dark mt-auto">
                     Comprar Entradas

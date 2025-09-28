@@ -3,6 +3,7 @@ package com.comunidadcineutn.cine.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,12 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.dto.ReservaFormDTO;
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Funcion;
@@ -42,6 +42,7 @@ public class ReservasController {
   @Autowired
   private InterfaceServiceFuncion funcionService;
 
+  @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
   @GetMapping("/funcionesPelicula/{id}")
   @Operation(summary = "Obtengo el listado de funciones para reservar")
   public String vistaFuncionesPelicula(@PathVariable("id") Integer id, Model m) {
@@ -51,18 +52,29 @@ public class ReservasController {
     return "reservas/user-reserva";
   }
 
+   @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
   @PostMapping("/comprar")
   @Operation(summary = "Obtengo el formulario para realizar la reserva")
-  public String vistaComprarEntrada(@RequestParam("idFuncion") Integer id, Model m) {
-    Funcion f = funcionService.findFuncionPorId(id);
-    ReservaFormDTO r = new ReservaFormDTO();
-    r.setIdFuncion(id);
-    System.out.println("la funcion seleccionada es : " + f.toString());
-    m.addAttribute("funcion", f);
-    m.addAttribute("reservaForm", r);
-    return "reservas/formulario-reserva";
+  public String vistaComprarEntrada(@RequestParam(name = "idFuncion", required = true) Integer id,
+      Model m,
+      RedirectAttributes ra) {
+    String destino = null;
+    try {
+      Funcion f = funcionService.findFuncionPorId(id);
+      ReservaFormDTO r = new ReservaFormDTO();
+      r.setIdFuncion(id);
+      m.addAttribute("funcion", f);
+      m.addAttribute("reservaForm", r);
+      destino = "reservas/formulario-reserva";
+    } catch (ExceptionNotFound e) {
+      ra.addFlashAttribute("error", e.getMessage());
+      destino = "redirect:/cineutn/inicio";
+    }
+
+    return destino;
   }
 
+   @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
   @PostMapping("/confirmacionCompra")
   @Operation(summary = "confirmar la reservar")
   public String reservaEntrada(
@@ -71,72 +83,72 @@ public class ReservasController {
       @AuthenticationPrincipal Usuario actual,
       Model model,
       RedirectAttributes ra) {
-
+    String destino = null;
     if (bindingResult.hasErrors()) {
       Funcion funcion = funcionService.findFuncionPorId(reserva.getIdFuncion());
       model.addAttribute("funcion", funcion);
       model.addAttribute("reserva", reserva);
-      return "reservas/formulario-reserva";
-    }
+      destino = "reservas/formulario-reserva";
+    } else {
 
-    try {
-      // Convertir DTO a Entidad
-      Reserva creada = reservaService.crearReservaFromDTO(actual, reserva);
-      reservaService.addReserva(creada);
-      ra.addFlashAttribute("mensajeExito", "Reserva confirmada exitosamente");
-      ra.addFlashAttribute("reserva", creada);
-      return "redirect:/cineutn/reserva/exito";
+      try {
+        // Convertir DTO a Entidad
+        Reserva creada = reservaService.crearReservaFromDTO(actual, reserva);
+        reservaService.addReserva(creada);
+        ra.addFlashAttribute("mensajeExito", "Reserva confirmada exitosamente");
+        ra.addFlashAttribute("reserva", creada);
+        destino = "redirect:/cineutn/reserva/exito";
 
-    } catch (Exception e) {
-      // También en el catch hay que agregar el DTO
-      model.addAttribute("error", "Error al procesar la reserva: " + e.getMessage());
-      Funcion funcion = funcionService.findFuncionPorId(reserva.getIdFuncion());
-      model.addAttribute("funcion", funcion);
-      model.addAttribute("reserva", reserva); // ← Agregar el DTO aquí también
-      return "reservas/formulario-reserva";
+      } catch (Exception e) {
+        // También en el catch hay que agregar el DTO
+        model.addAttribute("error", "Error al procesar la reserva: " + e.getMessage());
+        Funcion funcion = funcionService.findFuncionPorId(reserva.getIdFuncion());
+        model.addAttribute("funcion", funcion);
+        model.addAttribute("reserva", reserva); //
+        destino = "reservas/formulario-reserva";
+      }
     }
+    return destino;
   }
 
+   @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
   @GetMapping("/exito")
-  @Operation(summary = "obtener crud de las peliculas")
-  public String exitoReservaVista(Model m) {
+  @Operation(summary = "obtener vista Exito en generacion de reserva")
+  public String exitoReservaVista(Model m, RedirectAttributes ra) {
+    String destino = "null";
     if (!m.containsAttribute("reserva")) {
-      // Redirigir o mostrar mensaje de error
-      return "redirect:/cineutn/reserva/error?msg=no-reserva";
+      ra.addFlashAttribute("error", "RESERVE UNA FUNCION ");
+      destino = "redirect:/cineutn/inicio";
+    } else {
+      Reserva r = (Reserva) m.getAttribute("reserva");
+      m.addAttribute("reserva", r);
+      destino = "reservas/exito-reserva";
+
     }
-    Reserva r = (Reserva) m.getAttribute("reserva");
-    m.addAttribute("reserva", r);
-    return "reservas/exito-reserva";
+    return destino;
   }
 
-  
+  @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
   @GetMapping("/misReservas")
   @Operation(summary = "Obtener las reservas del usuario")
-  public String buscarPeliculaPorId(Model m,@AuthenticationPrincipal Usuario actual) {
-   
-      List<Reserva> reservas = reservaService.getRerservasPorIdUsario(actual.getId());
-      m.addAttribute("reservas", reservas);
-      return "reservas/lista-reservas-hechas";
- 
+  public String buscarPeliculaPorId(Model m, @AuthenticationPrincipal Usuario actual) {
+
+    List<Reserva> reservas = reservaService.getRerservasPorIdUsario(actual.getId());
+    m.addAttribute("reservas", reservas);
+    return "reservas/lista-reservas-usuario";
+
   }
+
+   @Secured({"ROLE_ADMIN"})
+  @GetMapping("/reservasAll")
+  @Operation(summary = "obtener todas las reservas de los usuarios")
+  public String mostrarTodasReservas(Model model) {
+    List<Reserva> listaReservas = reservaService.getAll();
+    model.addAttribute("listaReservas", listaReservas);
+    return "reservas/reservas-all";
+  }
+
   // DE ACA EN ADELANTE FALTA TERMINAR LAS RUTAS DEL CONTROLADOR
-  @GetMapping("/crud")
-  @Operation(summary = "obtener crud de las peliculas")
-  public String mostrarCRUDPeliculas(Model model) {
-
-    return "peliculas/crudpelicula";
-  }
-
-  @GetMapping("/editar/{id}")
-  @Operation(summary = "obtengo formulario para la edicion de la pelicula")
-  public String obtenerFormularioEdicion(@PathVariable("id") int idPelicula, Model m) {
-    try {
-
-    } catch (ExceptionNotFound ex) {
-
-    }
-    return "null";
-  }
 
   @GetMapping("/eliminar/{id}")
   @Operation(summary = "obtengo vista de eliminacion de pelicula")
@@ -156,18 +168,6 @@ public class ReservasController {
       RedirectAttributes ra) {
 
     return "redirect:/cineutn/pelicula/crudpeliculas";
-  }
-
-  @PutMapping("/editar")
-  @Operation(summary = "Editar película")
-  public String edicionPeliculaPost(@Valid @ModelAttribute("pelicula") PeliculaEdicionDTO p,
-      BindingResult bindingResult,
-      RedirectAttributes ra) {
-    if (bindingResult.hasErrors()) {
-      // Mantiene los errores en el formulario
-      return "peliculas/agregar";
-    }
-    return "null";
   }
 
 }

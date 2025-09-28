@@ -16,7 +16,7 @@ public class ExceptionController {
     RedirectAttributes ra){
 
       ra.addFlashAttribute("error", ex.getMessage());
-      return "redirect:/cineutn/pelicula/crudpeliculas";
+      return "redirect:/";
     }
 
 }

@@ -74,6 +74,7 @@ public class ServiceFuncion implements InterfaceServiceFuncion {
   @Override
   public void deleteFuncionPorId(Integer id) {
     repositoriofuncion.deleteById(id);
+
   }
 
   @Override

@@ -76,16 +76,16 @@ public class SalaController {
 
   @GetMapping("/funcionesAsociadas/{id}")
   @Operation(summary = "vista de funciones asociadas a la Sala")
-  public String vistaListaFuncionesAsociadas(@PathVariable("id") Integer idSala, Model m , RedirectAttributes ra){
+  public String vistaListaFuncionesAsociadas(@PathVariable("id") Integer idSala, Model m, RedirectAttributes ra) {
     String destino = null;
     try {
       Sala s = salaService.findSalaPorId(idSala);
       List<Funcion> funcionesAsociadas = s.getFuncionesRealizadasSala();
-      if(funcionesAsociadas.size()==0){
+      if (funcionesAsociadas.size() == 0) {
         throw new Exception("La sala no tiene funciones Asociadas");
       }
       m.addAttribute("sala", s);
-      destino= "salas/funciones";
+      destino = "salas/funciones";
     } catch (Exception e) {
       ra.addFlashAttribute("error", e.getMessage());
       destino = "redirect:/cineutn/sala/crudsalas";
@@ -104,7 +104,7 @@ public class SalaController {
     } else {
       Sala agregada = salaService.addSala(s);
       ra.addFlashAttribute("mensaje", "La sala con ID : " + agregada.getIdSala() + " fue correctamente creada");
-      destino= "redirect:/cineutn/sala/crudsalas";
+      destino = "redirect:/cineutn/sala/crudsalas";
     }
     return destino;
   }
@@ -144,10 +144,14 @@ public class SalaController {
   @Operation(summary = "Eliminar sala por ID en URL")
   public String eliminarSala(@RequestParam(required = true, name = "idSala") Integer id,
       RedirectAttributes ra) {
-    Sala s = salaService.findSalaPorId(id);
-    salaService.deleteSalaPorId(id);
-    ra.addFlashAttribute("mensaje", "Sala con Id : " + s.getIdSala() + " eliminada con éxito!");
 
+    try {
+      Sala s = salaService.findSalaPorId(id);
+      salaService.deleteSalaPorId(id);
+      ra.addFlashAttribute("mensaje", "Sala con Id : " + s.getIdSala() + " eliminada con éxito!");
+    } catch (Exception e) {
+      ra.addFlashAttribute("error", e.getMessage());
+    }
     return "redirect:/cineutn/sala/crudsalas";
   }
 
@@ -157,14 +161,16 @@ public class SalaController {
       @Valid @ModelAttribute("sala") Sala s,
       BindingResult br,
       RedirectAttributes ra) {
+    String destino = null;
     if (br.hasErrors()) {
-      return "peliculas/formulario-alta";
+      destino = "peliculas/formulario-alta";
+    } else {
+      Sala salaEditada = salaService.editSala(s);
+      ra.addFlashAttribute("mensaje", "Sala Id:" + salaEditada.getIdSala() + "editada con exito");
+      destino = "redirect:/cineutn/sala/crudsalas";
     }
-    Sala salaEditada = salaService.editSala(s);
-    ra.addFlashAttribute("null", "Sala Id:" + salaEditada.getIdSala() + "editada con exito");
-    return "redirect:/cineutn/sala/crudsalas";
+
+    return destino;
   }
-
-
 
 }

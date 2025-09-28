@@ -114,7 +114,7 @@
               <i class="bi bi-ticket-perforated card-icon text-danger"></i>
               <h3 class="card-title">Visualizar Reservas</h3>
               <p class="card-text">Consulta y gestiona todas las reservas del sistema.</p>
-              <a th:href="@{/cineutn/reserva/reservasall}" class="btn btn-danger btn-lg">
+              <a th:href="@{/cineutn/reserva/reservasAll}" class="btn btn-danger btn-lg">
                 <i class="bi bi-list-check me-2"></i>Ver Reservas
               </a>
             </div>
@@ -138,29 +138,7 @@
       </div>
     </div>
   </section>
-
-  <!-- Sección de Acciones Rápidas -->
-  <section class="py-5 bg-light">
-    <div class="container px-4 px-lg-5">
-      <div class="text-center">
-        <h2 class="fw-bolder mb-4">Acciones Rápidas</h2>
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-          <a th:href="@{/cineutn/edicionpeliculas/nueva}" class="btn btn-outline-primary">
-            <i class="bi bi-plus-circle me-2"></i>Nueva Película
-          </a>
-          <a th:href="@{/cineutn/edicionfunciones/nueva}" class="btn btn-outline-success">
-            <i class="bi bi-plus-circle me-2"></i>Nueva Función
-          </a>
-          <a th:href="@{/cineutn/salas/nueva}" class="btn btn-outline-warning">
-            <i class="bi bi-plus-circle me-2"></i>Nueva Sala
-          </a>
-          <a th:href="@{/cineutn/usuarios/nuevo}" class="btn btn-outline-info">
-            <i class="bi bi-person-plus me-2"></i>Nuevo Usuario
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+ 
 
   <!-- Footer -->
   <div th:replace="~{fragments/footer :: footer}"></div>

@@ -78,8 +78,7 @@ public class ServiceReserva implements InterfaceServiceReserva {
 
     @Override
     public List<Reserva> getRerservasPorIdUsario(Integer id) {
-        return repositorioReservas.findByUsuarioCompradorId(id);
-        
+        return repositorioReservas.findByUsuarioCompradorId(id); 
     }
 
 }

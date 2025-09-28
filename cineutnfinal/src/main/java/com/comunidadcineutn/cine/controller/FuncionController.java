@@ -99,8 +99,8 @@ public class FuncionController {
       try {
         Funcion funcion = funcionService.toFuncionFromFuncionDTO(f);
         Funcion creada = funcionService.addFuncion(funcion);
-        ra.addFlashAttribute("mensaje", "Funcion con id " + creada.getIdFuncion() +
-            " " + creada.getPelicula().getNombre() + " ha sido creada");
+        ra.addFlashAttribute("mensaje", "Funcion con id: " + creada.getIdFuncion() +
+            " Pelicula: " + creada.getPelicula().getNombre() + " ha sido creada");
         destino = "redirect:/cineutn/funcion/crudfunciones";
       } catch (Exception e) {
         ra.addFlashAttribute("error", e.getMessage());
@@ -113,21 +113,24 @@ public class FuncionController {
   @GetMapping("/eliminar/{id}")
   @Operation(summary = "Obtener vista Eliminar funcion ")
   public String eliminarFuncion(@PathVariable("id") Integer id,
-      Model m) {
+      Model m,
+      RedirectAttributes ra) {
+    String destino = null;
+
     try {
       Funcion f = funcionService.findFuncionPorId(id);
       m.addAttribute("funcion", f);
-      return "funciones/eliminar-funcion";
+      destino= "funciones/eliminar-funcion";
     } catch (ExceptionNotFound ex) {
-      m.addAttribute("error", ex.getErrorMensaje());
-      return "funciones/eliminar-funcion";
+      ra.addFlashAttribute("error", ex.getErrorMensaje());
+      destino= "redirect:/cineutn/funcion/crudfunciones";
     }
-
+    return destino;
   }
 
   @DeleteMapping("/eliminar")
   @Operation(summary = "Eliminar funcion por ID")
-  public String eliminarPelicula(@RequestParam(required = true, name = "idFuncion") Integer id,
+  public String eliminarFuncion(@RequestParam(required = true, name = "idFuncion") Integer id,
       RedirectAttributes ra) {
     Funcion f = funcionService.findFuncionPorId(id);
     funcionService.deleteFuncionPorId(id);
