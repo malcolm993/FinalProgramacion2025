@@ -158,9 +158,8 @@
 
     <!-- Botones de acción -->
     <div class="d-flex justify-content-center mt-4">
-      <form id="formCancelarReserva" th:action="@{/cineutn/reserva/cancelar}" method="post">
+      <form id="formCancelarReserva" th:action="@{/cineutn/reserva/eliminar/{id}(id=${reserva.id})}" method="post">
         <input type="hidden" name="_method" value="DELETE">
-        <input type="hidden" name="idReserva" th:value="${reserva.id}" />
         
         <button type="submit" class="btn btn-danger me-2" 
                 th:disabled="${not reserva.cancelable or reserva.expirada}"

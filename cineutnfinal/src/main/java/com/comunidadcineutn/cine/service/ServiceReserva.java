@@ -10,6 +10,7 @@ import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Funcion;
 import com.comunidadcineutn.cine.model.Reserva;
 import com.comunidadcineutn.cine.model.Usuario;
+import com.comunidadcineutn.cine.repository.InterfaceFuncionRepository;
 import com.comunidadcineutn.cine.repository.InterfaceReservaRepository;
 
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class ServiceReserva implements InterfaceServiceReserva {
   private InterfaceReservaRepository repositorioReservas;
 
   @Autowired
-  private InterfaceServiceFuncion funcionService;
+  private InterfaceFuncionRepository repositorioFuncion;
 
   @Override
   public List<Reserva> getAll() {
@@ -39,7 +40,10 @@ public class ServiceReserva implements InterfaceServiceReserva {
 
   @Override
   public Reserva addReserva(Reserva r) {
-    Funcion f = funcionService.findFuncionPorId(r.getFuncionReservada().getIdFuncion());
+    // Funcion f =
+    // funcionService.findFuncionPorId(r.getFuncionReservada().getIdFuncion());
+    Funcion f = repositorioFuncion.findById(r.getFuncionReservada().getIdFuncion())
+        .orElseThrow(() -> new ExceptionNotFound("no se encontro la funcion con el Id"));
     f.setCantButacasReservadas(f.getCantButacasReservadas() + r.getCantidadEntradas());
     System.out.println(" servidor reserva addReserva funcion: " + f);
     return repositorioReservas.save(r);
@@ -54,11 +58,12 @@ public class ServiceReserva implements InterfaceServiceReserva {
     if (!r.isCancelable()) {
       throw new IllegalStateException("Esta funcion no puede ser cancelada ya que es se proyectara en menos de 24 hs");
     }
-    Funcion funcion = r.getFuncionReservada();
+    Funcion funcion = repositorioFuncion.findById(r.getFuncionReservada().getIdFuncion()).orElseThrow(() -> 
+    new ExceptionNotFound("No se encontro la funcion con el Id solicitado"));
     funcion.setCantButacasReservadas(
         funcion.getCantButacasReservadas() - r.getCantidadEntradas());
-    funcionService.editFuncion(funcion);
-    repositorioReservas.deleteById(idUsario);
+    repositorioFuncion.save(funcion);
+    repositorioReservas.deleteById(idReserva);
     System.out.println(" se elimino correctamente la reserva jejeee");
   }
 
@@ -81,7 +86,10 @@ public class ServiceReserva implements InterfaceServiceReserva {
   @Override
   public Reserva crearReservaFromDTO(Usuario u, ReservaFormDTO r) {
     // TODO Auto-generated method stub
-    Funcion funcion = funcionService.findFuncionPorId(r.getIdFuncion());
+    Funcion funcion = repositorioFuncion.findById(r.getIdFuncion())
+        .orElseThrow(() -> new ExceptionNotFound("No existe funcion con el Id ingresado"));
+    ;
+
     int costoTotal = funcion.getPrecio() * r.getCantidadEntradas();
     Reserva toReservaEntidad = new Reserva();
     if (r.getCantidadEntradas() > funcion.getButacasDisponibles()) {
@@ -104,11 +112,13 @@ public class ServiceReserva implements InterfaceServiceReserva {
 
   @Override
   public List<Reserva> findReservasExpiradas() {
+    repositorioReservas.expirarTodasLasReservasVencidas(LocalDateTime.now());
     return repositorioReservas.findByExpiradaTrue();
   }
 
   @Override
   public List<Reserva> findReservasNoExpirada() {
+    repositorioReservas.expirarTodasLasReservasVencidas(LocalDateTime.now());
     return repositorioReservas.findByExpiradaFalse();
   }
 

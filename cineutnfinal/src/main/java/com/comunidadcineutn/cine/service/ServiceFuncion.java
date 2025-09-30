@@ -88,9 +88,7 @@ public class ServiceFuncion implements InterfaceServiceFuncion {
 
   @Override
   public Funcion editFuncion(Funcion f) {
-
-    repositoriofuncion.save(f);
-    return findFuncionPorId(f.getIdFuncion());
+    return  repositoriofuncion.save(f);
   }
 
   @Override

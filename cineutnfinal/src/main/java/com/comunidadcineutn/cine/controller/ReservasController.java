@@ -162,21 +162,35 @@ public class ReservasController {
     String destino = null;
     try {
       Reserva porEliminar = reservaService.findReservaPorId(id);
+      if (usuarioActual.getId()!=porEliminar.getUsuarioComprador().getId()) {
+        throw new Exception("Usuario no validado");
+      }
       m.addAttribute("reserva", porEliminar);
       destino = "reservas/confirmacion-eliminar";
     } catch (Exception ex) {
       ra.addFlashAttribute("error", ex.getMessage());
-      destino = "redirec:/cineutn/reserva/misReservas";
+      destino = "redirect:/cineutn/reserva/misReservas";
     }
     return destino;
   }
 
-  @DeleteMapping("/eliminar")
+  @Secured({ "ROLE_ADMIN", "ROLE_CLIENTE" })
+  @DeleteMapping("/eliminar/{id}")
   @Operation(summary = "Eliminar película por ID")
-  public String eliminarPelicula(@RequestParam(required = true, name = "id") Integer id,
+  public String eliminarPeliculaPost(@PathVariable("id") int id, Model m,
+      @AuthenticationPrincipal Usuario usuarioActual,
       RedirectAttributes ra) {
 
-    return "redirect:/cineutn/pelicula/crudpeliculas";
+    try {
+      reservaService.deleteReservaPorId(id, usuarioActual.getId());
+      ra.addFlashAttribute("mensaje", "Se elimino las reserva con exito");
+    } catch (Exception e) {
+      ra.addFlashAttribute("error", e.getMessage());
+
+      System.out.println(e.getMessage());
+      System.out.println(e.toString());
+    }
+    return "redirect:/cineutn/inicio";
   }
 
 }

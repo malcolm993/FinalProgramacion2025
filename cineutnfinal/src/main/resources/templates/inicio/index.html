@@ -38,11 +38,26 @@
       </div>
     </div>
 
-    <div th:if="${error != null}" class="alert alert-danger">
-      <strong>Error!</strong>
-      <span th:text="${error}"></span>
-    </div> 
-    
+    <!-- Mensajes de Alerta -->
+    <div class="container mt-3">
+      <!-- Mensaje de ERROR -->
+      <div th:if="${error != null and not #strings.isEmpty(error)}"
+        class="alert alert-danger alert-dismissible fade show">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>Error: </strong>
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+
+      <!-- Mensaje de ÉXITO -->
+      <div th:if="${mensaje != null and not #strings.isEmpty(mensaje)}"
+        class="alert alert-success alert-dismissible fade show">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${mensaje}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    </div>
+
     <div class="container px-4 px-lg-5 mt-5">
       <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
         <!-- Películas en cartelera -->
@@ -81,31 +96,32 @@
     <div class="container px-4 px-lg-5 my-5 text-center">
       <h2>PROXIMAMENTE</h2>
 
-    <div class="container px-4 px-lg-5 mt-5">
-      <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-        <!-- Películas próximamente -->
-        <div th:each="pelicula : ${listaPeliculas}" th:unless="${pelicula.cartelera}">
-          <div class="col mb-5">
-            <div class="card h-100">
-              <!-- Imagen película -->
-              <img class="card-img-top" th:src="@{/img/placeholder.jpg}" alt="imagen pelicula" />
-              <!-- Detalles película -->
-              <div class="card-body p-4">
-                <div class="text-center">
-                  <h5 class="fw-bolder" th:text="${pelicula.nombre}">Nombre Película</h5>
+      <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+          <!-- Películas próximamente -->
+          <div th:each="pelicula : ${listaPeliculas}" th:unless="${pelicula.cartelera}">
+            <div class="col mb-5">
+              <div class="card h-100">
+                <!-- Imagen película -->
+                <img class="card-img-top" th:src="@{/img/placeholder.jpg}" alt="imagen pelicula" />
+                <!-- Detalles película -->
+                <div class="card-body p-4">
+                  <div class="text-center">
+                    <h5 class="fw-bolder" th:text="${pelicula.nombre}">Nombre Película</h5>
+                  </div>
                 </div>
-              </div>
-              <!-- Acciones -->
-              <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                <div class="text-center">
-                  <a class="btn btn-outline-dark mt-auto" th:href="@{/cineutn/pelicula/buscar/{id}(id=${pelicula.idPelicula})}">Info</a>
+                <!-- Acciones -->
+                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                  <div class="text-center">
+                    <a class="btn btn-outline-dark mt-auto"
+                      th:href="@{/cineutn/pelicula/buscar/{id}(id=${pelicula.idPelicula})}">Info</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
   </section>
 
   <!-- Footer -->
