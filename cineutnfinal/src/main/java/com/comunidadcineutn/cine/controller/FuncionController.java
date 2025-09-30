@@ -67,7 +67,7 @@ public class FuncionController {
   @GetMapping("/crudfunciones")
   @Operation(summary = "Obtener crud de las funciones")
   public String getAllFunciones(Model m) {
-    List<Funcion> listaFunciones = funcionService.getAllFuncion();
+    List<Funcion> listaFunciones = funcionService.getAllFuncionesHabilitadas();
     m.addAttribute("listaFunciones", listaFunciones);
     return "funciones/crud-funciones";
   }
@@ -144,8 +144,8 @@ public class FuncionController {
       RedirectAttributes ra) {
     try {
       Funcion porEditar = funcionService.findFuncionPorId(id);
-      if (porEditar.getCantButacasReservadas() > 0) {
-        throw new Exception("Funcion con reservas hechas");
+      if (porEditar.getCantButacasReservadas() > 0 || !porEditar.isFuncionHabilitada()) {
+        throw new Exception("No se puede editar la funcion tiene reservas hechas o expiro");
       }
       FuncionAltaDTO funcionEditada = funcionService.getFuncionEdicion(id);
       m.addAttribute("listaPeliculas", peliculaService.getAll());

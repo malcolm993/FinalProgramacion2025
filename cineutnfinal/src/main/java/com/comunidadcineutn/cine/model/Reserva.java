@@ -51,7 +51,8 @@ public class Reserva {
     private int cantidadEntradas;
 
     private LocalDateTime fechaHoraCreacion;
-
+    
+    private boolean expirada;
     public Reserva() {
     }
 
@@ -61,6 +62,7 @@ public class Reserva {
         this.usuarioComprador = usuarioComprador;
         this.costoReserva = costoReserva;
         this.cantidadEntradas = cantidadEntradas;
+        expirada = false;
     }
     @PrePersist
     protected void onCreate() {

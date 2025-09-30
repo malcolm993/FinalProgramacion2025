@@ -12,21 +12,21 @@
       transition: transform 0.2s;
       border-left: 4px solid #0d6efd;
     }
-    
+
     .reserva-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    
+
     .badge-estado {
       font-size: 0.85em;
       padding: 0.5em 0.75em;
     }
-    
+
     .cancelable {
       border-left-color: #198754;
     }
-    
+
     .no-cancelable {
       border-left-color: #dc3545;
     }
@@ -43,7 +43,7 @@
         <h1 class="text-center mb-4">
           <i class="fas fa-ticket-alt text-primary me-2"></i>Mis Reservas
         </h1>
-        
+
         <div class="alert alert-info">
           <i class="fas fa-info-circle me-2"></i>
           Aquí puedes ver todas tus reservas activas y su estado.
@@ -92,7 +92,7 @@
                 </span>
               </div>
             </div>
-            
+
             <div class="card-body">
               <!-- Información de la Película -->
               <div class="mb-3">
@@ -107,27 +107,28 @@
                 <div class="col-md-6">
                   <p class="mb-1">
                     <i class="fas fa-calendar-day me-2"></i>
-                    <strong>Fecha:</strong> 
+                    <strong>Fecha:</strong>
                     <span th:text="${#temporals.format(reserva.funcionReservada.horaInicio, 'dd/MM/yyyy')}"></span>
                   </p>
                   <p class="mb-1">
                     <i class="fas fa-clock me-2"></i>
-                    <strong>Horario:</strong> 
-                    <span th:text="${#temporals.format(reserva.funcionReservada.horaInicio, 'HH:mm')}"></span> - 
+                    <strong>Horario:</strong>
+                    <span th:text="${#temporals.format(reserva.funcionReservada.horaInicio, 'HH:mm')}"></span> -
                     <span th:text="${#temporals.format(reserva.funcionReservada.horaFin, 'HH:mm')}"></span>
                   </p>
                 </div>
                 <div class="col-md-6">
                   <p class="mb-1">
                     <i class="fas fa-door-open me-2"></i>
-                    <strong>Sala:</strong> 
+                    <strong>Sala:</strong>
                     <span th:text="${reserva.funcionReservada.sala.idSala}"></span> -
                     <span th:text="${reserva.funcionReservada.sala.tipoSala.descripcion}"></span>
                   </p>
                   <p class="mb-1">
                     <i class="fas fa-ticket-alt me-2"></i>
-                    <strong>Precio unitario:</strong> 
-                    $<span th:text="${#numbers.formatDecimal(reserva.funcionReservada.precio, 0, 'COMMA', 2, 'POINT')}"></span>
+                    <strong>Precio unitario:</strong>
+                    $<span
+                      th:text="${#numbers.formatDecimal(reserva.funcionReservada.precio, 0, 'COMMA', 2, 'POINT')}"></span>
                   </p>
                 </div>
               </div>
@@ -138,35 +139,38 @@
                   <div class="col-md-6">
                     <p class="mb-1">
                       <i class="fas fa-users me-2"></i>
-                      <strong>Butacas:</strong> 
+                      <strong>Butacas:</strong>
                       <span th:text="${reserva.cantidadEntradas}"></span>
                     </p>
                     <p class="mb-1">
                       <i class="fas fa-money-bill-wave me-2"></i>
-                      <strong>Total pagado:</strong> 
+                      <strong>Total pagado:</strong>
                       $<span th:text="${#numbers.formatDecimal(reserva.costoReserva, 0, 'COMMA', 2, 'POINT')}"></span>
                     </p>
                   </div>
                   <div class="col-md-6">
                     <p class="mb-1">
                       <i class="fas fa-calendar-check me-2"></i>
-                      <strong>Reservado el:</strong> 
+                      <strong>Reservado el:</strong>
                       <span th:text="${#temporals.format(reserva.fechaHoraCreacion, 'dd/MM/yyyy HH:mm')}"></span>
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div class="card-footer bg-transparent">
               <div class="d-flex justify-content-between">
-                <button th:if="${reserva.cancelable}" class="btn btn-outline-danger btn-sm">
+                <!-- Botón Cancelar con URL -->
+                <a th:if="${reserva.cancelable}" th:href="@{/cineutn/reserva/eliminar/{id}(id=${reserva.id})}"
+                  class="btn btn-outline-danger btn-sm"
+                  th:onclick="'return confirm(\'¿Estás seguro de que deseas cancelar la reserva #' + ${reserva.id} + '?\');'">
                   <i class="fas fa-times-circle me-1"></i>Cancelar Reserva
-                </button>
+                </a>
+
                 <button th:unless="${reserva.cancelable}" class="btn btn-outline-secondary btn-sm" disabled>
                   <i class="fas fa-ban me-1"></i>No cancelable
                 </button>
-
               </div>
             </div>
           </div>

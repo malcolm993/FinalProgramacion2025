@@ -21,7 +21,7 @@ public interface InterfaceServiceReserva {
     
     public Reserva addReserva(Reserva r);
     
-    public void deleteReservaPorId(Integer id);
+    public void deleteReservaPorId(Integer idReserva, Integer idUsuario) throws Exception;
     
     public Reserva findReservaPorId(Integer id);
     
@@ -30,4 +30,9 @@ public interface InterfaceServiceReserva {
     public Reserva crearReservaFromDTO(Usuario u, ReservaFormDTO r);
 
     public List<Reserva> getRerservasPorIdUsario(Integer id);
+
+    public List<Reserva> findReservasExpiradas();
+
+    public List<Reserva> findReservasNoExpirada();
+
 }

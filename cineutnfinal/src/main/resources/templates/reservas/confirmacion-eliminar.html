@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>Cancelar Reserva - Cine UTN</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    .reserva-info {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 25px;
+      border-left: 5px solid #dc3545;
+    }
+
+    .reserva-icon {
+      font-size: 2.5rem;
+      color: #dc3545;
+    }
+
+    .badge-estado {
+      font-size: 0.9em;
+      padding: 0.5em 0.75em;
+    }
+
+    .info-box {
+      background-color: #e9ecef;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+  <div class="container mt-5">
+    <h1 class="text-center text-danger">
+      <i class="fas fa-ticket-alt"></i> Confirmar Cancelación de Reserva
+    </h1>
+
+    <!-- Información de la reserva -->
+    <div class="reserva-info mt-4" th:object="${reserva}">
+      <div class="row align-items-center">
+        <div class="col-md-2 text-center">
+          <i class="fas fa-receipt reserva-icon"></i>
+        </div>
+        <div class="col-md-10">
+          <h3>Reserva #<span th:text="*{id}"></span></h3>
+          
+          <!-- Información de la Película -->
+          <div class="info-box">
+            <h5 class="text-primary">
+              <i class="fas fa-film"></i> 
+              <span th:text="*{funcionReservada.pelicula.nombre}"></span>
+            </h5>
+            <p class="mb-1"><strong>Duración:</strong> 
+              <span th:text="*{funcionReservada.pelicula.duracionMin} + ' minutos'"></span>
+            </p>
+          </div>
+
+          <!-- Información de la Función -->
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <p><strong><i class="fas fa-calendar-day"></i> Fecha:</strong>
+                <span th:text="${#temporals.format(reserva.funcionReservada.horaInicio, 'dd/MM/yyyy')}"></span>
+              </p>
+              <p><strong><i class="fas fa-clock"></i> Horario:</strong>
+                <span th:text="${#temporals.format(reserva.funcionReservada.horaInicio, 'HH:mm')}"></span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p><strong><i class="fas fa-door-open"></i> Sala:</strong>
+                <span th:text="*{funcionReservada.sala.idSala}"></span> -
+                <span th:text="*{funcionReservada.sala.tipoSala.descripcion}"></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Detalles de la Reserva -->
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <p><strong><i class="fas fa-user"></i> Reservado por:</strong>
+                <span th:text="*{usuarioComprador.nombre} + ' ' + *{usuarioComprador.apellido}"></span>
+              </p>
+              <p><strong><i class="fas fa-calendar-check"></i> Fecha reserva:</strong>
+                <span th:text="${#temporals.format(reserva.fechaHoraCreacion, 'dd/MM/yyyy HH:mm')}"></span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p><strong><i class="fas fa-chair"></i> Butacas reservadas:</strong>
+                <span class="badge bg-info" th:text="*{cantidadEntradas}"></span>
+              </p>
+              <p><strong><i class="fas fa-money-bill-wave"></i> Total pagado:</strong>
+                $<span th:text="${#numbers.formatDecimal(reserva.costoReserva, 0, 'COMMA', 2, 'POINT')}"></span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Estado de la reserva -->
+          <div class="mt-3">
+            <p><strong><i class="fas fa-info-circle"></i> Estado:</strong>
+              <span th:if="${reserva.expirada}" class="badge bg-secondary badge-estado">
+                <i class="fas fa-ban"></i> Expirada
+              </span>
+              <span th:unless="${reserva.expirada}" class="badge bg-success badge-estado">
+                <i class="fas fa-check-circle"></i> Activa
+              </span>
+            </p>
+            
+            <!-- Información de cancelabilidad -->
+            <div th:if="${reserva.cancelable}" class="alert alert-success mt-2">
+              <i class="fas fa-check-circle"></i>
+              <strong>Esta reserva puede ser cancelada</strong>
+              <br>
+              <small>Puedes cancelar hasta 1 día antes de la función</small>
+            </div>
+            
+            <div th:unless="${reserva.cancelable}" class="alert alert-warning mt-2">
+              <i class="fas fa-exclamation-triangle"></i>
+              <strong>Esta reserva no puede ser cancelada</strong>
+              <br>
+              <small th:if="${reserva.expirada}">La reserva ya ha expirado</small>
+              <small th:unless="${reserva.expirada}">El plazo de cancelación ha vencido (máximo 1 día antes)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alertas importantes -->
+    <div class="alert alert-warning mt-4">
+      <h4 class="alert-heading"><i class="fas fa-exclamation-circle"></i> ¡Atención!</h4>
+      <p class="mb-2"><strong>AL CANCELAR LA RESERVA:</strong></p>
+      <ul class="mb-0">
+        <li>Se liberarán <strong th:text="${reserva.cantidadEntradas}"></strong> butacas para otros espectadores</li>
+        <li>El monto pagado será reembolsado según las políticas de cancelación</li>
+        <li>Esta acción no se puede deshacer</li>
+      </ul>
+    </div>
+
+    <!-- Mensajes de error o éxito -->
+    <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show mt-3">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <span th:text="${error}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${mensajeExito != null}" class="alert alert-success alert-dismissible fade show mt-3">
+      <i class="fas fa-check-circle me-2"></i>
+      <span th:text="${mensajeExito}"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="d-flex justify-content-center mt-4">
+      <form id="formCancelarReserva" th:action="@{/cineutn/reserva/cancelar}" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="idReserva" th:value="${reserva.id}" />
+        
+        <button type="submit" class="btn btn-danger me-2" 
+                th:disabled="${not reserva.cancelable or reserva.expirada}"
+                th:onclick="'return confirm(\'¿Está seguro que desea cancelar la reserva #' + ${reserva.id} + '?\\nSe liberarán ' + ${reserva.cantidadEntradas} + ' butacas.\');'">
+          <i class="fas fa-times-circle me-1"></i> Confirmar Cancelación
+        </button>
+        
+        <a th:href="@{/cineutn/reserva/mis-reservas}" class="btn btn-secondary" id="btnVolver">
+          <i class="fas fa-arrow-left me-1"></i> Volver a Mis Reservas
+        </a>
+      </form>
+    </div>
+
+    <!-- Información adicional si no se puede cancelar -->
+    <div th:if="${not reserva.cancelable or reserva.expirada}" class="text-center mt-3">
+      <p class="text-muted">
+        <small>
+          <i class="fas fa-info-circle me-1"></i>
+          Esta reserva no cumple con los requisitos para ser cancelada
+        </small>
+      </p>
+    </div>
+
+    <!-- Políticas de cancelación -->
+    <div class="card mt-4">
+      <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="fas fa-file-contract me-2"></i>Políticas de Cancelación</h5>
+      </div>
+      <div class="card-body">
+        <ul class="mb-0">
+          <li>Las reservas pueden cancelarse hasta <strong>1 día antes</strong> de la función</li>
+          <li>El reembolso se procesará en un plazo de 3-5 días hábiles</li>
+          <li>No se permiten cancelaciones el mismo día de la función</li>
+          <li>Las reservas expiradas no pueden ser canceladas</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JavaScript para mejoras de UX -->
+  <script>
+    // Función para volver a la página anterior
+    document.getElementById('btnVolver').addEventListener('click', function(e) {
+      if (document.referrer && document.referrer !== window.location.href) {
+        e.preventDefault();
+        window.history.back();
+      }
+    });
+
+    // Validación adicional del formulario
+    document.getElementById('formCancelarReserva').addEventListener('submit', function(e) {
+      const boton = this.querySelector('button[type="submit"]');
+      if (boton.disabled) {
+        e.preventDefault();
+        alert('Esta reserva no puede ser cancelada. Verifique las políticas de cancelación.');
+      }
+    });
+  </script>
+</body>
+
+</html>

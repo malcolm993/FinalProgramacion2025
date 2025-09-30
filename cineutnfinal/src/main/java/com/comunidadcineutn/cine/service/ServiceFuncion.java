@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@Transactional
 public class ServiceFuncion implements InterfaceServiceFuncion {
 
   private static final int PRECIO_SALA2D = 1000;
@@ -115,7 +117,7 @@ public class ServiceFuncion implements InterfaceServiceFuncion {
   }
 
   @Override
-  public List<Funcion> getFuncionHabilitada() {
+  public List<Funcion> getAllFuncionesHabilitadas() {
     return repositoriofuncion.findByFuncionHabilitadaTrue();
   }
 
@@ -152,5 +154,12 @@ public class ServiceFuncion implements InterfaceServiceFuncion {
     Funcion auxFuncion = new Funcion(0, s, p, fechaHora);
     return auxFuncion;
   }
+
+  @Override
+  public List<Funcion> getListaFuncionesHabilitadasPorId(Integer id) {
+    repositoriofuncion.cambioEstadoFuncionesExpirada(id, LocalDateTime.now());
+    return repositoriofuncion.findByPeliculaIdPeliculaAndFuncionHabilitadaTrue(id);
+  }
+
 
 }

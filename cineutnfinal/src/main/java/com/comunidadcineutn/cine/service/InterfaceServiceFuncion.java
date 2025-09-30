@@ -35,7 +35,7 @@ public interface InterfaceServiceFuncion {
 
     public List<LocalDate> fechasHabilitadas();
 
-    public List<Funcion> getFuncionHabilitada();
+    public List<Funcion> getAllFuncionesHabilitadas();
 
     public boolean isHorarioOcupadoFuncion(Funcion funcionNueva);
 
@@ -44,4 +44,6 @@ public interface InterfaceServiceFuncion {
     public List<Funcion> getListaFuncionesPorIdPelicula(Integer id);
 
     public Funcion toFuncionFromFuncionDTO (FuncionAltaDTO f);
+
+    public List<Funcion> getListaFuncionesHabilitadasPorId(Integer id);
 }

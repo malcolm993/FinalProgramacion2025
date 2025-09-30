@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.comunidadcineutn.cine.dto.ReservaFormDTO;
-import com.comunidadcineutn.cine.exception.ExceptionNotFound;
 import com.comunidadcineutn.cine.model.Funcion;
 import com.comunidadcineutn.cine.model.Reserva;
 import com.comunidadcineutn.cine.model.Usuario;
@@ -42,17 +41,17 @@ public class ReservasController {
   @Autowired
   private InterfaceServiceFuncion funcionService;
 
-  @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
+  @Secured({ "ROLE_ADMIN", "ROLE_CLIENTE" })
   @GetMapping("/funcionesPelicula/{id}")
   @Operation(summary = "Obtengo el listado de funciones para reservar")
   public String vistaFuncionesPelicula(@PathVariable("id") Integer id, Model m) {
-    List<Funcion> listaFunciones = funcionService.getListaFuncionesPorIdPelicula(id);
+    List<Funcion> listaFunciones = funcionService.getListaFuncionesHabilitadasPorId(id);
     System.out.println(listaFunciones);
     m.addAttribute("funciones", listaFunciones);
     return "reservas/user-reserva";
   }
 
-   @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
+  @Secured({ "ROLE_ADMIN", "ROLE_CLIENTE" })
   @PostMapping("/comprar")
   @Operation(summary = "Obtengo el formulario para realizar la reserva")
   public String vistaComprarEntrada(@RequestParam(name = "idFuncion", required = true) Integer id,
@@ -61,12 +60,15 @@ public class ReservasController {
     String destino = null;
     try {
       Funcion f = funcionService.findFuncionPorId(id);
+      if (!f.isFuncionHabilitada()) {
+        throw new Exception("Error funcion no habilitada");
+      }
       ReservaFormDTO r = new ReservaFormDTO();
       r.setIdFuncion(id);
       m.addAttribute("funcion", f);
       m.addAttribute("reservaForm", r);
       destino = "reservas/formulario-reserva";
-    } catch (ExceptionNotFound e) {
+    } catch (Exception e) {
       ra.addFlashAttribute("error", e.getMessage());
       destino = "redirect:/cineutn/inicio";
     }
@@ -74,7 +76,7 @@ public class ReservasController {
     return destino;
   }
 
-   @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
+  @Secured({ "ROLE_ADMIN", "ROLE_CLIENTE" })
   @PostMapping("/confirmacionCompra")
   @Operation(summary = "confirmar la reservar")
   public String reservaEntrada(
@@ -111,7 +113,7 @@ public class ReservasController {
     return destino;
   }
 
-   @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
+  @Secured({ "ROLE_ADMIN", "ROLE_CLIENTE" })
   @GetMapping("/exito")
   @Operation(summary = "obtener vista Exito en generacion de reserva")
   public String exitoReservaVista(Model m, RedirectAttributes ra) {
@@ -128,7 +130,7 @@ public class ReservasController {
     return destino;
   }
 
-  @Secured({"ROLE_ADMIN", "ROLE_CLIENTE"})
+  @Secured({ "ROLE_ADMIN", "ROLE_CLIENTE" })
   @GetMapping("/misReservas")
   @Operation(summary = "Obtener las reservas del usuario")
   public String buscarPeliculaPorId(Model m, @AuthenticationPrincipal Usuario actual) {
@@ -139,27 +141,34 @@ public class ReservasController {
 
   }
 
-   @Secured({"ROLE_ADMIN"})
+  @Secured({ "ROLE_ADMIN" })
   @GetMapping("/reservasAll")
   @Operation(summary = "obtener todas las reservas de los usuarios")
   public String mostrarTodasReservas(Model model) {
-    List<Reserva> listaReservas = reservaService.getAll();
-    model.addAttribute("listaReservas", listaReservas);
+    List<Reserva> listaReservasExpiradas = reservaService.findReservasExpiradas();
+    List<Reserva> listaReservasNoExpiradas = reservaService.findReservasNoExpirada();
+    model.addAttribute("listaReservasActivas", listaReservasNoExpiradas);
+    model.addAttribute("listaReservasInactivas", listaReservasExpiradas);
     return "reservas/reservas-all";
   }
 
   // DE ACA EN ADELANTE FALTA TERMINAR LAS RUTAS DEL CONTROLADOR
-
+  @Secured({ "ROLE_ADMIN", "ROLE_CLIENTE" })
   @GetMapping("/eliminar/{id}")
   @Operation(summary = "obtengo vista de eliminacion de pelicula")
-  public String eliminarPelicula(@PathVariable("id") int idPelicula, Model m) {
-
+  public String eliminarPelicula(@PathVariable("id") int id, Model m,
+      @AuthenticationPrincipal Usuario usuarioActual,
+      RedirectAttributes ra) {
+    String destino = null;
     try {
-
-    } catch (ExceptionNotFound ex) {
-
+      Reserva porEliminar = reservaService.findReservaPorId(id);
+      m.addAttribute("reserva", porEliminar);
+      destino = "reservas/confirmacion-eliminar";
+    } catch (Exception ex) {
+      ra.addFlashAttribute("error", ex.getMessage());
+      destino = "redirec:/cineutn/reserva/misReservas";
     }
-    return "null";
+    return destino;
   }
 
   @DeleteMapping("/eliminar")
