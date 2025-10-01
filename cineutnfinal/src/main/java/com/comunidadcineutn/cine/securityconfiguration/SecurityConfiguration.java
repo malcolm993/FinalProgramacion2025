@@ -26,7 +26,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration {
 
   @Autowired
-  private CustomUserDetailsService usuarioDetailService; // ✅ Nombre corregido
+  private CustomUserDetailsService usuarioDetailService; 
 
   @Bean
   public static PasswordEncoder encriptadorPassword() {
@@ -37,13 +37,14 @@ public class SecurityConfiguration {
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(a -> a.disable())
-        // ❌ ELIMINAR esta línea: .userDetailsService(usuarioDetailService)
+        // desactivo csrf
         .authorizeHttpRequests((aux) -> aux
             .requestMatchers("/css/**").permitAll()
             .requestMatchers("/icon/**").permitAll()
             .requestMatchers("/js/**").permitAll()
             .requestMatchers("/img/**").permitAll()
             .requestMatchers("/").permitAll()
+            .requestMatchers("/nosotros").permitAll()
             .requestMatchers("/cineutn/inicio/**").permitAll()
             .requestMatchers("/cineutn/usuario/signup").permitAll()
             .requestMatchers("/cineutn/usuario/login").permitAll() // ✅ AÑADIR
@@ -68,7 +69,6 @@ public class SecurityConfiguration {
     return http.build();
   }
 
-  // ✅ CONFIGURACIÓN CORRECTA del AuthenticationManager
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     auth.userDetailsService(usuarioDetailService)

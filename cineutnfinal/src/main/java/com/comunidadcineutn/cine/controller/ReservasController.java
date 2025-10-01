@@ -152,7 +152,6 @@ public class ReservasController {
     return "reservas/reservas-all";
   }
 
-  // DE ACA EN ADELANTE FALTA TERMINAR LAS RUTAS DEL CONTROLADOR
   @Secured({ "ROLE_ADMIN", "ROLE_CLIENTE" })
   @GetMapping("/eliminar/{id}")
   @Operation(summary = "obtengo vista de eliminacion de pelicula")

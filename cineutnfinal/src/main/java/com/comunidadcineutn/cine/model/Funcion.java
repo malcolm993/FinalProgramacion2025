@@ -13,10 +13,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
-
 
 import lombok.Getter;
 import lombok.Setter;
@@ -51,30 +51,33 @@ public class Funcion {
     private boolean funcionHabilitada;
     @PositiveOrZero
     private int cantButacasReservadas;
+
+    @Positive
     private int precio;
 
     public Funcion() {
     }
 
-    public Funcion( Integer id ,Sala sala, Pelicula peliculaFuncion
-           ,LocalDateTime inicioFuncion ) {
-        this.idFuncion =id;
+    public Funcion(Integer id, Sala sala, Pelicula peliculaFuncion, LocalDateTime inicioFuncion) {
+        this.idFuncion = id;
         this.sala = sala;
         this.pelicula = peliculaFuncion;
         this.horaInicio = inicioFuncion;
-        this.horaFin = getHoraInicio().plusMinutes(peliculaFuncion.getDuracionMin()+30);
+        this.horaFin = getHoraInicio().plusMinutes(peliculaFuncion.getDuracionMin() + 30);
         this.funcionHabilitada = true;
         this.cantButacasReservadas = 0;
-        
+
     }
 
-    public int getButacasDisponibles(){
-        return sala.getCantDeButacas()-cantButacasReservadas;
+    public int getButacasDisponibles() {
+        return sala.getCantDeButacas() - cantButacasReservadas;
     }
 
     @Override
     public String toString() {
-        return "Funcion{" + "idFuncion=" + idFuncion + ", sala=" + sala + ", pelicula=" + pelicula + ", horaInicio=" + horaInicio + ", horaFin=" + horaFin + ", funcionHabilitada=" + funcionHabilitada + " ,precio:"+ precio+'}';
+        return "Funcion{" + "idFuncion=" + idFuncion + ", sala=" + sala + ", pelicula=" + pelicula + ", horaInicio="
+                + horaInicio + ", horaFin=" + horaFin + ", funcionHabilitada=" + funcionHabilitada + " ,precio:"
+                + precio + '}';
     }
 
 }

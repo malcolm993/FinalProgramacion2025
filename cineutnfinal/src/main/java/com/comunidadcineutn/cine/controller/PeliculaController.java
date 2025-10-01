@@ -73,7 +73,7 @@ public class PeliculaController {
   public String mostrarCRUDPeliculas(Model model) {
     model.addAttribute("listaPeliculas", peliculaService.getAll());
     return "peliculas/crudpelicula";
-  }
+  }             
 
   @GetMapping("/editar/{id}")
   @Operation(summary = "obtengo formulario para la edicion de la pelicula")
