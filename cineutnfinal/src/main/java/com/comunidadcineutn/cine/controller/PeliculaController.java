@@ -6,9 +6,11 @@ package com.comunidadcineutn.cine.controller;
 
 import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
-import com.comunidadcineutn.cine.exception.PeliculaConFuncionesException;
+
 import com.comunidadcineutn.cine.model.CalificacionPelicula;
+import com.comunidadcineutn.cine.model.Funcion;
 import com.comunidadcineutn.cine.model.Pelicula;
+import com.comunidadcineutn.cine.service.InterfaceServiceFuncion;
 import com.comunidadcineutn.cine.service.InterfaceServicePelicula;
 
 import org.springframework.ui.Model;
@@ -44,6 +46,9 @@ public class PeliculaController {
 
   @Autowired
   private InterfaceServicePelicula peliculaService;
+
+  @Autowired 
+  private InterfaceServiceFuncion funcionService;
 
   @GetMapping("/buscar/{id}")
   @Operation(summary = "Obtener película por ID")
@@ -98,7 +103,9 @@ public class PeliculaController {
     String destino = null;
     try {
       Pelicula peliculaEliminada = peliculaService.findPeliculaPorId(idPelicula);
+      List<Funcion> funcionesHabilitadas = funcionService.getListaFuncionesHabilitadasPorId(idPelicula);
       m.addAttribute("pelicula", peliculaEliminada);
+      m.addAttribute("listaFuncionesHabilitadas",funcionesHabilitadas );
       destino = "peliculas/eliminarpelicula";
     } catch (ExceptionNotFound ex) {
       ra.addFlashAttribute("error", ex.getErrorMensaje());
@@ -139,10 +146,6 @@ public class PeliculaController {
 
     try {
       Pelicula p = peliculaService.findPeliculaPorId(id);
-      if (p.getFuncionesAsociadas() != null && !p.getFuncionesAsociadas().isEmpty()) {
-        throw new PeliculaConFuncionesException(
-            "la pelicula seleccionada tiene " + p.getFuncionesAsociadas().size() + " funciones asociadas");
-      }
       peliculaService.deletePeliculaPorId(id);
       ra.addFlashAttribute("mensaje", "Película " + p.getNombre() + " eliminada con éxito!");
 

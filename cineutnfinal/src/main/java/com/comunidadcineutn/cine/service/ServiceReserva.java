@@ -50,7 +50,7 @@ public class ServiceReserva implements InterfaceServiceReserva {
   }
 
   @Override
-  public void deleteReservaPorId(Integer idReserva, Integer idUsario) throws Exception {
+  public void deleteReservaPorId(Integer idReserva, Integer idUsario) {
     Reserva r = findReservaPorId(idReserva);
     if (!validacionUsuario(idUsario, r)) {
       throw new SecurityException("ERROR EN LA VALIDACION DE USUARIO");

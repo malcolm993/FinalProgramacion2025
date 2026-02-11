@@ -34,7 +34,7 @@
 
   <div class="container mt-5">
     <h1 class="text-center text-danger">
-      <i class="fas fa-film"></i> Confirmar Eliminación de Película
+      <i class="fas fa-film"></i> Confirmar Eliminación de Película de Cartelera
     </h1>
 
     <!-- Información de la película -->
@@ -69,14 +69,14 @@
           </div>
           
           <!-- Información de funciones existentes -->
-          <div class="mt-3" th:if="${not #lists.isEmpty(pelicula.funcionesAsociadas)}">
+          <div class="mt-3" th:if="${not #lists.isEmpty(listaFuncionesHabilitadas)}">
             <p class="text-warning">
               <i class="fas fa-exclamation-triangle"></i>
-              Esta película tiene <span th:text="${#lists.size(pelicula.funcionesAsociadas)}"></span> 
+              Esta película tiene <span th:text="${#lists.size(listaFuncionesHabilitadas)}"></span> 
               función(es) programada(s)
             </p>
           </div>
-          <div class="mt-2" th:unless="${not #lists.isEmpty(pelicula.funcionesAsociadas)}">
+          <div class="mt-2" th:unless="${not #lists.isEmpty(listaFuncionesHabilitadas)}">
             <p class="text-success">
               <i class="fas fa-check-circle"></i>
               No hay funciones activas para esta película
@@ -91,6 +91,7 @@
       <h4 class="alert-heading"><i class="fas fa-exclamation-circle"></i> ¡Atención!</h4>
       <p class="mb-2"><strong>NO SE ELIMINARÁN PELÍCULAS QUE TENGAN FUNCIONES ACTIVAS.</strong></p>
       <p class="mb-0">Si la película no tiene funciones asociadas, se eliminará permanentemente del sistema junto con toda su información.</p>
+      <p class="mb-0">Si la película tiene funciones asociadas que no estan habilidatadas con reservas ya vencidas se procedera a quitar de cartelera.</p>
     </div>
 
     <!-- Mensajes de error o éxito -->
@@ -113,7 +114,7 @@
         <input type="hidden" name="idPelicula" th:value="${pelicula.idPelicula}" />
         
         <button type="submit" class="btn btn-danger me-2" 
-                th:disabled="${not #lists.isEmpty(pelicula.funcionesAsociadas)}"
+                th:disabled="${not #lists.isEmpty(listaFuncionesHabilitadas)}"
                 onclick="return confirm('¿Está seguro que desea eliminar esta película?\nEsta acción no se puede deshacer.');">
           <i class="fas fa-trash-alt me-1"></i> Confirmar Eliminación
         </button>
@@ -125,12 +126,12 @@
     </div>
 
     <!-- Información adicional si no se puede eliminar -->
-    <div th:if="${not #lists.isEmpty(pelicula.funcionesAsociadas)}" class="text-center mt-3">
+    <div th:if="${not #lists.isEmpty(listaFuncionesHabilitadas)}" class="text-center mt-3">
       <p class="text-muted">
         <small>
           <i class="fas fa-info-circle me-1"></i>
           Para eliminar esta película, primero debe eliminar las 
-          <span th:text="${#lists.size(pelicula.funcionesAsociadas)}"></span> función(es) activa(s)
+          <span th:text="${#lists.size(listaFuncionesHabilitadas)}"></span> función(es) activa(s)
         </small>
       </p>
       <a th:href="@{/cineutn/funcion/crudfunciones}" class="btn btn-outline-primary btn-sm">

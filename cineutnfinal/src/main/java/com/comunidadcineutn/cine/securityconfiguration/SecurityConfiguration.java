@@ -47,10 +47,10 @@ public class SecurityConfiguration {
             .requestMatchers("/nosotros").permitAll()
             .requestMatchers("/cineutn/inicio/**").permitAll()
             .requestMatchers("/cineutn/usuario/signup").permitAll()
-            .requestMatchers("/cineutn/usuario/login").permitAll() // ✅ AÑADIR
+            .requestMatchers("/cineutn/usuario/login").permitAll() // 
             .requestMatchers("/fragments/**").permitAll()
-            .requestMatchers("/error").permitAll() // ✅ AÑADIR para páginas de error
-            .requestMatchers("/public/**").permitAll() // ✅ OPCIONAL: para contenido público
+            .requestMatchers("/error").permitAll() // 
+            .requestMatchers("/public/**").permitAll() // 
             .requestMatchers("/cineutn/gestionCine").hasRole("ADMIN")
             .requestMatchers("/cineutn/pelicula/**").hasRole("ADMIN")
             .requestMatchers("/cineutn/funcion/**").hasRole("ADMIN")

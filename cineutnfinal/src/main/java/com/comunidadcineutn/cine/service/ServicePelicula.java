@@ -3,11 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.comunidadcineutn.cine.service;
+
 import com.comunidadcineutn.cine.dto.PeliculaAltaFuncionDTO;
 import com.comunidadcineutn.cine.dto.PeliculaEdicionDTO;
 import com.comunidadcineutn.cine.exception.ExceptionNotFound;
-
+import com.comunidadcineutn.cine.exception.PeliculaConFuncionesException;
+import com.comunidadcineutn.cine.model.Funcion;
 import com.comunidadcineutn.cine.model.Pelicula;
+import com.comunidadcineutn.cine.repository.InterfaceFuncionRepository;
 import com.comunidadcineutn.cine.repository.InterfacePeliculaRepository;
 
 import java.util.ArrayList;
@@ -22,115 +25,125 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ServicePelicula implements InterfaceServicePelicula {
-    @Autowired
-    private InterfacePeliculaRepository repositorioPelicula;
+  @Autowired
+  private InterfacePeliculaRepository repositorioPelicula;
 
+  @Autowired
+  private InterfaceFuncionRepository funcionRepository;
 
-    @Override
-    public List<Pelicula> getAll() {
-        return repositorioPelicula.findAll();
+  @Override
+  public List<Pelicula> getAll() {
+    return repositorioPelicula.findAll();
+  }
+
+  @Override
+  public Pelicula addPelicula(Pelicula p) {
+    return repositorioPelicula.save(p);
+  }
+
+  @Override
+  public void deletePeliculaPorId(Integer id) {
+    Pelicula p = findPeliculaPorId(id);
+
+    if (!p.getFuncionesAsociadas().isEmpty()) {
+      p.setCartelera(false);
+      repositorioPelicula.save(p);
+    } else {
+      repositorioPelicula.delete(p);
     }
 
-    @Override
-    public Pelicula addPelicula(Pelicula p) {
-        return repositorioPelicula.save(p);
+  }
+
+  @Override
+  public Pelicula findPeliculaPorId(Integer id) {
+    return repositorioPelicula.findById(id).orElseThrow(
+        () -> new ExceptionNotFound("No existe pelicula con el Id ingresado"));
+  }
+
+  @Override
+  public Pelicula editPelicula(Pelicula peli) {
+    repositorioPelicula.save(peli);
+    return peli;
+  }
+
+  @Override
+  public boolean existePeliculaById(Integer id) {
+    return repositorioPelicula.existsById(id);
+  }
+
+  @Override
+  public List<Pelicula> peliculasEnCartelera() {
+    return repositorioPelicula.findByCarteleraTrue();
+  }
+
+  @Override
+  public List<Pelicula> peliculasEstreno() {
+    return repositorioPelicula.findByCarteleraFalse();
+  }
+
+  @Override
+  public PeliculaEdicionDTO getPeliculaEdicion(Integer id) {
+    Pelicula p = findPeliculaPorId(id);
+    return conversionPeliculaDTO(p);
+
+  }
+
+  private PeliculaEdicionDTO conversionPeliculaDTO(Pelicula p) {
+    PeliculaEdicionDTO pdto = new PeliculaEdicionDTO();
+    pdto.setId(p.getIdPelicula());
+    pdto.setNombre(p.getNombre());
+    pdto.setDuracionMin(p.getDuracionMin());
+    pdto.setDirector(p.getDirector());
+    pdto.setCalif(p.getCalif());
+    pdto.setFechaEstreno(p.getFechaEstreno());
+    pdto.setCartelera(p.isCartelera());
+    pdto.setSinopsis(p.getSinopsis());
+    pdto.setCantidadDeFuncionesAsociadas(p.getFuncionesAsociadas().size());
+    return pdto;
+
+  }
+
+  @Override
+  public List<PeliculaAltaFuncionDTO> getListadoPeliculasAltaFuncion() {
+    List<Pelicula> todas = getAll();
+    List<PeliculaAltaFuncionDTO> listaDTO = new ArrayList<>();
+    for (Pelicula p : todas) {
+      listaDTO.add(conversionPeliculaFuncionDTO(p));
     }
 
-    @Override
-    public void deletePeliculaPorId(Integer id) {
-        repositorioPelicula.deleteById(id);
-    }
+    return listaDTO;
+  }
 
-    @Override
-    public Pelicula findPeliculaPorId(Integer id) {
-        return repositorioPelicula.findById(id).orElseThrow(
-                () -> new ExceptionNotFound("No existe pelicula con el Id ingresado"));
-    }
+  private PeliculaAltaFuncionDTO conversionPeliculaFuncionDTO(Pelicula p) {
+    PeliculaAltaFuncionDTO pdto = new PeliculaAltaFuncionDTO();
+    pdto.setId(p.getIdPelicula());
+    pdto.setNombre(p.getNombre());
 
-    @Override
-    public Pelicula editPelicula(Pelicula peli) {
-        repositorioPelicula.save(peli);
-        return peli;
-    }
+    return pdto;
+  }
 
-    @Override
-    public boolean existePeliculaById(Integer id) {
-        return repositorioPelicula.existsById(id);
-    }
+  @Override
+  public Pelicula actualizarPelicula(Integer id, PeliculaEdicionDTO p) {
+    Pelicula sinActualizar = findPeliculaPorId(id);
+    mapeoPeliculaDtoToPelicula(sinActualizar, p);
+    return repositorioPelicula.save(sinActualizar);
+  }
 
-    @Override
-    public List<Pelicula> peliculasEnCartelera() {
-        return repositorioPelicula.findByCarteleraTrue();
-    }
+  private void mapeoPeliculaDtoToPelicula(Pelicula sinActualizar, PeliculaEdicionDTO dtoP) {
+    sinActualizar.setIdPelicula(dtoP.getId());
+    sinActualizar.setDuracionMin(dtoP.getDuracionMin());
+    sinActualizar.setNombre(dtoP.getNombre());
+    sinActualizar.setSinopsis(dtoP.getSinopsis());
+    sinActualizar.setFechaEstreno(dtoP.getFechaEstreno());
+    sinActualizar.setDirector(dtoP.getDirector());
+    sinActualizar.setCalif(dtoP.getCalif());
+  }
 
-    @Override
-    public List<Pelicula> peliculasEstreno() {
-        return repositorioPelicula.findByCarteleraFalse();
-    }
-
-    @Override
-    public PeliculaEdicionDTO getPeliculaEdicion(Integer id) {
-        Pelicula p = findPeliculaPorId(id);
-        return conversionPeliculaDTO(p);
-
-    }
-
-    private PeliculaEdicionDTO conversionPeliculaDTO(Pelicula p) {
-        PeliculaEdicionDTO pdto = new PeliculaEdicionDTO();
-        pdto.setId(p.getIdPelicula());
-        pdto.setNombre(p.getNombre());
-        pdto.setDuracionMin(p.getDuracionMin());
-        pdto.setDirector(p.getDirector());
-        pdto.setCalif(p.getCalif());
-        pdto.setFechaEstreno(p.getFechaEstreno());
-        pdto.setCartelera(p.isCartelera());
-        pdto.setSinopsis(p.getSinopsis());
-        pdto.setCantidadDeFuncionesAsociadas(p.getFuncionesAsociadas().size());
-        return pdto;
-
-    }
-
-    @Override
-    public List<PeliculaAltaFuncionDTO> getListadoPeliculasAltaFuncion() {
-        List<Pelicula> todas = getAll();
-        List<PeliculaAltaFuncionDTO> listaDTO = new ArrayList<>();
-        for (Pelicula p : todas) {
-            listaDTO.add(conversionPeliculaFuncionDTO(p));
-        }
-
-        return listaDTO;
-    }
-
-    private PeliculaAltaFuncionDTO conversionPeliculaFuncionDTO(Pelicula p) {
-        PeliculaAltaFuncionDTO pdto = new PeliculaAltaFuncionDTO();
-        pdto.setId(p.getIdPelicula());
-        pdto.setNombre(p.getNombre());
-
-        return pdto;
-    }
-
-    @Override
-    public Pelicula actualizarPelicula(Integer id, PeliculaEdicionDTO p) {
-        Pelicula sinActualizar = findPeliculaPorId(id);
-        mapeoPeliculaDtoToPelicula(sinActualizar, p);
-        return repositorioPelicula.save(sinActualizar);
-    }
-
-    private void mapeoPeliculaDtoToPelicula(Pelicula sinActualizar, PeliculaEdicionDTO dtoP) {
-        sinActualizar.setIdPelicula(dtoP.getId());
-        sinActualizar.setDuracionMin(dtoP.getDuracionMin());
-        sinActualizar.setNombre(dtoP.getNombre());
-        sinActualizar.setSinopsis(dtoP.getSinopsis());
-        sinActualizar.setFechaEstreno(dtoP.getFechaEstreno());
-        sinActualizar.setDirector(dtoP.getDirector());
-        sinActualizar.setCalif(dtoP.getCalif());
-    }
-
-    @Override
-    public void cambioPeliculaToCartelera(Integer id) {
-        Pelicula p = findPeliculaPorId(id);
-        p.setCartelera(true);
-        repositorioPelicula.save(p);
-    }
+  @Override
+  public void cambioPeliculaToCartelera(Integer id) {
+    Pelicula p = findPeliculaPorId(id);
+    p.setCartelera(true);
+    repositorioPelicula.save(p);
+  }
 
 }
