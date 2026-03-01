@@ -26,7 +26,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration {
 
   @Autowired
-  private CustomUserDetailsService usuarioDetailService; 
+  private CustomUserDetailsService usuarioDetailService;
 
   @Bean
   public static PasswordEncoder encriptadorPassword() {
@@ -64,7 +64,11 @@ public class SecurityConfiguration {
             .permitAll())
         .logout(deslogueo -> deslogueo
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .permitAll());
+            .permitAll())
+        .exceptionHandling(exception -> exception
+            .accessDeniedHandler((request, response, ex) -> {
+                response.sendRedirect("/cineutn/inicio?error=forbidden");
+            }));
 
     return http.build();
   }
